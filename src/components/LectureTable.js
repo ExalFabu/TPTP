@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/button';
 import { AddIcon, LinkIcon } from '@chakra-ui/icons';
-import { Center, Container, Grid, Text} from '@chakra-ui/layout';
+import { Container, Grid, Text} from '@chakra-ui/layout';
 import {
   Table,
   TableCaption,

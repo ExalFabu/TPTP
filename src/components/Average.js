@@ -4,13 +4,13 @@ import React from 'react';
 const CFU_DA_LEVARE = 18;
 
 const calculateAverage = (allLectures, setLectures) => {
-    const changeLectureBG = (lec, value) => {
-        const modifiedLectures = allLectures.map( el => {
-            if (el._id === lec._id){
-                el.isRemoved = value;
-            }
-        })
-    }
+    // const changeLectureBG = (lec, value) => {
+    //     const modifiedLectures = allLectures.map( el => {
+    //         if (el._id === lec._id){
+    //             el.isRemoved = value;
+    //         }
+    //     })
+    // }
 
     let weights = 0;
   let sum = 0;

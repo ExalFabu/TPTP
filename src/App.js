@@ -2,14 +2,11 @@ import React, { useState } from 'react';
 import {
   ChakraProvider,
   theme,
-  Box,
   Container,
-  Button,
   Heading,
   Center,
   Grid,
 } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
 
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { LectureType } from './components/Lecture';

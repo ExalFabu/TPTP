@@ -7,9 +7,6 @@ import {
   Td,
   Center,
   IconButton,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 
