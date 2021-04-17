@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/button';
-import { AddIcon, LinkIcon } from '@chakra-ui/icons';
-import { Container, Grid, Text } from '@chakra-ui/layout';
+import { AddIcon } from '@chakra-ui/icons';
+import { Center, Container, Grid, Text } from '@chakra-ui/layout';
 import React from 'react';
 import Lecture, { LectureType } from './Lecture';
 
@@ -10,36 +10,25 @@ function LectureTable({ allLectures, setLectures }) {
     setLectures(newLectures);
   };
 
-  const urlToClipboard = () => {
-    const basename = window.location.origin;
-    const path = '?lectures=' + encodeURIComponent(JSON.stringify(allLectures));
-    const url = basename + path;
-    navigator.clipboard.writeText(url);
-    window.history.replaceState(null, null, path);
-  };
+  
   return (
     <Container maxW="100%" alignContent="center">
-      <Grid templateColumns="auto auto" columnGap={100}>
-        <Button leftIcon={<LinkIcon />} onClick={urlToClipboard}>
-          Copia URL
-        </Button>
-        <Button leftIcon={<AddIcon />} onClick={addEmptyLecture}>
-          Aggiungi Materia
-        </Button>
-      </Grid>
+      {/* <Grid templateColumns="auto auto" columnGap={100}>
+        
+      </Grid> */}
       <Grid
         templateColumns="minmax(max-content, 2fr) repeat(5, min-content)"
         columnGap={5}
         rowGap={2}
       >
         <>
-          <Text>Nome Materia</Text>
-          <Text>CFU</Text>
-          <Text>Voto</Text>
-          <Text>Lode</Text>
-          <Text>Caratterizzante</Text>
+          <Center><Text>Nome Materia</Text></Center>
+          <Center><Text>CFU</Text></Center>
+          <Center><Text>Voto</Text></Center>
+          <Center><Text>Lode</Text></Center>
+          <Center><Text>Caratterizzante</Text></Center>
 
-          <Text>Rimuovi</Text>
+          <Center><Text>Rimuovi</Text></Center>
         </>
         {allLectures.map(el => {
           return (
@@ -52,6 +41,9 @@ function LectureTable({ allLectures, setLectures }) {
             // </Tr>
           );
         })}
+        <Button leftIcon={<AddIcon />} onClick={addEmptyLecture}>
+          Aggiungi Materia
+        </Button>
       </Grid>
     </Container>
   );

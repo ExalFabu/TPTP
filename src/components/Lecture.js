@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Checkbox,
-  Input,
-  Center,
-  IconButton,
-  Switch,
-} from '@chakra-ui/react';
+import { Checkbox, Input, Center, IconButton, Switch } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 
 export class LectureType {
@@ -30,18 +24,18 @@ export class LectureType {
 // }
 
 export default function Lecture({ allLectures, setLectures, lecture }) {
-  const changeValue = event => {
+  const changeValue = (name, value) => {
     const modifiedLectures = allLectures.map(lec => {
       if (lecture._id === lec._id) {
-        lec[event.target.name] = event.target.value;
+        lec[name] = value;
       }
       return lec;
     });
     setLectures(modifiedLectures);
   };
 
-  const removeLecture = (_) => {
-    console.log(`Removing ${lecture.name}`)
+  const removeLecture = _ => {
+    console.log(`Removing ${lecture.name}`);
     const modifiedLectures = allLectures.filter(el => el._id !== lecture._id);
     setLectures(modifiedLectures);
   };
@@ -55,7 +49,7 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
         variant="filled"
         placeholder="Nome della materia"
         value={lecture.name}
-        onChange={changeValue}
+        onChange={e => changeValue(e.target.name, e.target.value)}
       />
       {/* CFU Input */}
       <Input
@@ -65,10 +59,11 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
         step={1}
         min={0}
         type="number"
-        onChange={changeValue}
+        onChange={e => changeValue(e.target.name, parseInt(e.target.value))}
         placeholder="CFU"
         value={lecture.cfu}
-        minW="2em"
+        minW="3em"
+        textAlign="center"
       ></Input>
 
       {/* Grade Input */}
@@ -78,13 +73,17 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
         name="grade"
         aria-label="Voto"
         step={1}
-        isInvalid={(lecture.grade < 18 || lecture.grade > 30) && lecture.grade !== ""}
+        isInvalid={
+          (lecture.grade < 18 || lecture.grade > 30) && lecture.grade !== ''
+        }
         min={18}
         max={30}
-        onChange={changeValue}
+        onChange={e => changeValue(e.target.name, parseInt(e.target.value))}
         value={lecture.grade}
         placeholder="Voto"
-        minW="4em"
+        minW="3em"
+        textAlign="center"
+
       ></Input>
 
       {/* Lode Checkbox */}
@@ -93,14 +92,7 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
           value={lecture.lode}
           name="lode"
           aria-label="Lode"
-          onChange={event => {
-            changeValue({
-              target: {
-                name: event.target.name,
-                value: event.target.checked,
-              },
-            });
-          }}
+          onChange={e => changeValue(e.target.name, e.target.checked)}
           isInvalid={parseInt(lecture.grade) !== 30 && lecture.lode}
         ></Checkbox>
       </Center>
@@ -111,14 +103,7 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
           value={lecture.caratt}
           name="caratt"
           aria-label="Caratterizzante"
-          onChange={event => {
-            changeValue({
-              target: {
-                name: event.target.name,
-                value: event.target.checked,
-              },
-            });
-          }}
+          onChange={e => changeValue(e.target.name, e.target.checked)}
         ></Switch>
       </Center>
 
