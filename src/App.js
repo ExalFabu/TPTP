@@ -41,6 +41,11 @@ const checkUrlParams = urlLocation => {
 
   return null;
 };
+
+// Default lectures are, in order
+// 1. URL Parameters
+// 2. LocalStorage
+// 3. None
 const defaultLectures =
   checkUrlParams(window.location) ||
   JSON.parse(localStorage.getItem('lectures')) ||
