@@ -6,14 +6,12 @@ import {
   Heading,
   Center,
   Grid,
-  Button,
 } from '@chakra-ui/react';
 
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { LectureType } from './components/Lecture';
 import LectureTable from './components/LectureTable';
 import Average from './components/Average';
-import { LinkIcon } from '@chakra-ui/icons';
 
 const checkUrlParams = urlLocation => {
   if (
@@ -36,10 +34,10 @@ const checkUrlParams = urlLocation => {
       return null;
     }
     console.log(`Using url lectures`);
-    window.history.replaceState(null, null, "/");
+    window.history.replaceState(null, null, '/');
     return lec_arr;
   }
-  window.history.replaceState(null, null, "/");
+  window.history.replaceState(null, null, '/');
 
   return null;
 };
@@ -53,19 +51,8 @@ const defaultLectures =
   JSON.parse(localStorage.getItem('lectures')) ||
   [];
 
-  const urlToClipboard = (allLectures) => {
-    const basename = window.location.origin;
-    const path = '?lectures=' + encodeURIComponent(JSON.stringify(allLectures));
-    const url = basename + path;
-    navigator.clipboard.writeText(url);
-    // window.history.replaceState(null, null, path);
-  };
-
 function App() {
-
   let [lectures, setLecturesState] = useState(defaultLectures);
-
-  
 
   // Funzione wrapper a setLecturesState così da salvare anche in LocalStorage ogni volta.
   const setLectures = l => {
@@ -81,11 +68,7 @@ function App() {
         </Center>
         <ColorModeSwitcher justifySelf="flex-end" />
       </Grid>
-      <Container>
-      <Button leftIcon={<LinkIcon />} onClick={() => urlToClipboard(lectures)}>
-          Copia URL
-        </Button>
-      </Container>
+
       <Container maxW="100%" alignContent="center" mt="15px">
         <LectureTable
           key={0}
