@@ -1,10 +1,11 @@
 import React from 'react';
 import { Checkbox, Input, Center, IconButton, Switch } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
+import { nanoid } from 'nanoid'
 
 export class LectureType {
   constructor(name, cfu, grade, lode, caratt, isRemoved) {
-    this._id = LectureType.incCount();
+    this._id = nanoid(22)
     this.name = name || '';
     this.cfu = cfu || 0;
     this.grade = grade || 0;
