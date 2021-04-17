@@ -52,30 +52,36 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
     >
       <SimpleGrid
         templateColumns={{
-          base: 'minmax(max-content, 2fr) repeat(3, min-content)',
-          md: 'minmax(max-content, 2fr) repeat(6, min-content)',
+          // base: 'minmax(max-content, 2fr) repeat(3, min-content)',
+          md: 'minmax(max-content, 2fr) repeat(5, min-content)',
         }}
         columnGap={5}
         rowGap={2}
-        columns={{ base: 4, md: 7 }}
+        // columns={{ base: 4, md: 7 }}
+        templateAreas={{
+          base: `'name cfu removeBtn' 'caratt grade lode'`,
+          md: `'name cfu grade lode caratt removeBtn'`
+        }}
+
         alignItems="center"
         justifyItems="center"
-        ml={5}
       >
         {/* Name input */}
-        <GridItem w="100%" rowSpan={{ base: 2, md: 1 }}>
+        <GridItem gridArea="name" w="100%" rowSpan={{ base: 2, md: 1 }}>
           <Input
+            size="sm"
             name="name"
             aria-label="Nome Materia"
             variant="outline"
             placeholder="Nome della materia"
             value={lecture.name}
             onChange={e => changeValue(e.target.name, e.target.value)}
+            isTruncated={true}
           />
         </GridItem>
         {/* CFU Input */}
-        <GridItem w="100%">
-          <InputGroup>
+        <GridItem w="100%" gridArea="cfu">
+          <InputGroup size="sm">
             <InputLeftAddon children={'CFU'} />
 
             <Input
@@ -97,7 +103,7 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
         </GridItem>
 
         {/* Grade Input */}
-        <InputGroup>
+        <InputGroup size="sm" gridArea="grade">
           <InputLeftAddon children={'Voto'} />
           <Input
             type="number"
@@ -122,9 +128,10 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
         </InputGroup>
 
         {/* Lode Checkbox */}
-        <GridItem>
+        <GridItem gridArea="lode">
           <Center>
             <Button
+              size="sm"
               name="lode"
               variant={
                 lecture.grade !== 30
@@ -145,9 +152,10 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
         </GridItem>
 
         {/* Caratt switch */}
-        <GridItem colSpan={2}>
+        <GridItem gridArea="caratt" >
           <Center>
             <Button
+              size="sm"
               name="caratt"
               aria-label="Caratterizzante"
               variant={lecture.caratt ? 'solid' : 'outline'}
@@ -161,9 +169,10 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
         </GridItem>
 
         {/* Delete Button */}
-        <GridItem>
+        <GridItem gridArea="removeBtn">
           <Center>
             <IconButton
+              size="sm"
               icon={<DeleteIcon />}
               aria-label="Rimuovi materia"
               onClick={removeLecture}
