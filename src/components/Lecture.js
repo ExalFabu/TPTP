@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Checkbox,
-  Input,
-  NumberInput,
-  NumberInputField,
-  Td,
-  Center,
-  IconButton,
-} from '@chakra-ui/react';
+import { Checkbox, Input, Center, IconButton, Switch } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 
 export class LectureType {
@@ -31,139 +23,99 @@ export class LectureType {
 //   return `${el._id} ${el.name} ${el.grade}`
 // }
 
-
 export default function Lecture({ allLectures, setLectures, lecture }) {
-  const changeValue = event => {
+  const changeValue = (name, value) => {
     const modifiedLectures = allLectures.map(lec => {
       if (lecture._id === lec._id) {
-        lec[event.target.name] = event.target.value;
+        lec[name] = value;
       }
       return lec;
     });
     setLectures(modifiedLectures);
   };
 
-  const removeLecture = event => {
-    console.log(allLectures);
-    console.log(lecture._id);
+  const removeLecture = _ => {
+    console.log(`Removing ${lecture.name}`);
     const modifiedLectures = allLectures.filter(el => el._id !== lecture._id);
     setLectures(modifiedLectures);
-    console.log(allLectures);
   };
 
   return (
-    // <Grid templateColumns="0.5fr 3fr 1fr 1fr" columnGap={5}>
     <>
-      <Td>
-        {/* Name input */}
-        <Input
-          name="name"
-          aria-label="Nome Materia"
-          variant="flushed"
-          placeholder="Nome della materia"
-          value={lecture.name}
-          onChange={changeValue}
-        />
-      </Td>
-      <Td>
-        {/* CFU Input */}
-        <NumberInput
-          variant="flushed"
-          name="cfu"
-          aria-label="CFU"
-          step={1}
-          min={0}
-          allowMouseWheel
-          onChange={(_, num) => {
-            changeValue({
-              target: {
-                name: 'cfu',
-                value: num,
-              },
-            });
-          }}
-          placeholder="CFU"
-          value={lecture.cfu}
-          minW="4em"
+      {/* Name input */}
+      <Input
+        name="name"
+        aria-label="Nome Materia"
+        variant="filled"
+        placeholder="Nome della materia"
+        value={lecture.name}
+        onChange={e => changeValue(e.target.name, e.target.value)}
+      />
+      {/* CFU Input */}
+      <Input
+        variant="flushed"
+        name="cfu"
+        aria-label="CFU"
+        step={1}
+        min={0}
+        type="number"
+        onChange={e => changeValue(e.target.name, parseInt(e.target.value))}
+        placeholder="CFU"
+        value={lecture.cfu}
+        minW="3em"
+        textAlign="center"
+      ></Input>
 
-        >
-          <NumberInputField />
-        </NumberInput>
-      </Td>
-      <Td >
-        {/* Grade Input */}
-        <NumberInput
-          variant="flushed"
-          name="grade"
-          aria-label="Voto"
-          step={1}
-          isInvalid={lecture.grade < 18 || lecture.grade > 30}
-          min={0}
-          max={30}
-          allowMouseWheel
-          onChange={(_, num) => {
-            changeValue({
-              target: {
-                name: 'grade',
-                value: num,
-              },
-            });
-          }}
-          value={lecture.grade}
-          placeholder="Voto"
-          minW="4em"
-        >
-          <NumberInputField />
-        </NumberInput>
-      </Td>
-      <Td>
-        {/* Lode Checkbox */}
-        <Center>
-          <Checkbox
-            value={lecture.lode}
-            name="lode"
-            aria-label="Lode"
-            onChange={event => {
-              changeValue({
-                target: {
-                  name: event.target.name,
-                  value: event.target.checked,
-                },
-              });
-            }}
-            isDisabled={parseInt(lecture.grade) !== 30}
-          ></Checkbox>
-        </Center>
-      </Td>
-      <Td>
-        {/* Caratt Checkbox */}
-        <Center>
-          <Checkbox
-            value={lecture.caratt}
-            name="caratt"
-            aria-label="Caratterizzante"
-            onChange={event => {
-              changeValue({
-                target: {
-                  name: event.target.name,
-                  value: event.target.checked,
-                },
-              });
-            }}
-          ></Checkbox>
-        </Center>
-      </Td>
-      <Td>
-        {/* Delete Button */}
-        <Center>
-          <IconButton
-            icon={<DeleteIcon />}
-            aria-label="Rimuovi materia"
-            onClick={removeLecture}
-          ></IconButton>
-        </Center>
-      </Td>
-      {/* </Grid> */}
+      {/* Grade Input */}
+      <Input
+        type="number"
+        variant="flushed"
+        name="grade"
+        aria-label="Voto"
+        step={1}
+        isInvalid={
+          (lecture.grade < 18 || lecture.grade > 30) && lecture.grade !== ''
+        }
+        min={18}
+        max={30}
+        onChange={e => changeValue(e.target.name, parseInt(e.target.value))}
+        value={lecture.grade}
+        placeholder="Voto"
+        minW="3em"
+        textAlign="center"
+
+      ></Input>
+
+      {/* Lode Checkbox */}
+      <Center>
+        <Checkbox
+          value={lecture.lode}
+          name="lode"
+          aria-label="Lode"
+          onChange={e => changeValue(e.target.name, e.target.checked)}
+          isInvalid={parseInt(lecture.grade) !== 30 && lecture.lode}
+        ></Checkbox>
+      </Center>
+
+      {/* Caratt switch */}
+      <Center>
+        <Switch
+          value={lecture.caratt}
+          name="caratt"
+          aria-label="Caratterizzante"
+          onChange={e => changeValue(e.target.name, e.target.checked)}
+        ></Switch>
+      </Center>
+
+      {/* Delete Button */}
+      <Center>
+        <IconButton
+          icon={<DeleteIcon />}
+          aria-label="Rimuovi materia"
+          onClick={removeLecture}
+          variant="ghost"
+        ></IconButton>
+      </Center>
     </>
   );
 }
