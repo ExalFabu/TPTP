@@ -5,7 +5,6 @@ import {
   Container,
   Center,
   SimpleGrid,
-  GridItem,
 } from '@chakra-ui/react';
 
 import { LectureType } from './components/Lecture';

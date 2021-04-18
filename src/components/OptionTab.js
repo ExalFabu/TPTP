@@ -1,20 +1,14 @@
 import { Checkbox } from '@chakra-ui/checkbox';
-import { FormControl, FormLabel } from '@chakra-ui/form-control';
 import {
   Input,
   InputGroup,
-  InputLeftAddon,
-  InputRightAddon,
 } from '@chakra-ui/input';
 import {
   Box,
   Center,
   GridItem,
   SimpleGrid,
-  Spacer,
-  Stack,
 } from '@chakra-ui/layout';
-import { Radio, RadioGroup } from '@chakra-ui/radio';
 import React from 'react';
 
 /* 
