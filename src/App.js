@@ -4,12 +4,15 @@ import {
   theme,
   Container,
   Center,
+  SimpleGrid,
+  GridItem,
 } from '@chakra-ui/react';
 
 import { LectureType } from './components/Lecture';
 import LectureTable from './components/LectureTable';
 import Average from './components/Average';
 import Header from './components/Header';
+import OptionTab from './components/OptionTab';
 
 const checkUrlParams = urlLocation => {
   if (
@@ -49,8 +52,21 @@ const defaultLectures =
   JSON.parse(localStorage.getItem('lectures')) ||
   [];
 
+  /** @type {Map} */
+const baseOptions = {
+  "cfu_or_mat": "cfu",
+  "cfu_value": 18,
+  "mat_value": 0,
+  "ptlode": 0.5,
+  "incorso": 2,
+  "erasmus": 1,
+}
+
+const defaultOptions = JSON.parse(localStorage.getItem("options")) || baseOptions
+
 function App() {
   let [lectures, setLecturesState] = useState(defaultLectures);
+  let [options, setOptionsState] = useState(defaultOptions)
 
   // Funzione wrapper a setLecturesState così da salvare anche in LocalStorage ogni volta.
   const setLectures = l => {
@@ -58,21 +74,45 @@ function App() {
     localStorage.setItem('lectures', JSON.stringify(l));
   };
 
+  const setOptions = (o) => {
+    setOptionsState(o)
+    localStorage.setItem('options', JSON.stringify(o))
+  }
+
   return (
     <ChakraProvider theme={theme}>
-      <Container w="100%">
-      <Header allLectures={lectures} setLectures={setLectures}/>
-      
-        <Container w="100%" alignContent="center" >
-          <LectureTable
-            allLectures={lectures}
-            setLectures={setLectures}
-          />
-        </Container>
-        <Center>
-          <Average allLectures={lectures} setLectures={setLectures} />
-        </Center>
-      </Container>
+        <SimpleGrid
+          templateColumns={{
+            base: "1fr",
+            md: "repeat(2, 1fr)"
+          }}
+          templateAreas={{
+            base: `
+                  "Header"
+                  "LectureTable"
+                  "OptionsTab"
+                  "Average"
+                  `,
+            md: ` "Header Header"
+                  "LectureTable LectureTable"
+                  "OptionsTab Average"
+                  `,
+          }}
+          w="100%"
+        >
+          <Container gridArea="Header">
+          <Header allLectures={lectures} setLectures={setLectures} />
+          </Container>
+          <Container gridArea="LectureTable" w="100%" alignContent="center">
+            <LectureTable allLectures={lectures} setLectures={setLectures} />
+          </Container>
+          <Center gridArea="OptionsTab">
+            <OptionTab options={options} setOptions={setOptions} />
+          </Center>
+          <Center gridArea="Average">
+            <Average allLectures={lectures} setLectures={setLectures} />
+          </Center>
+      </SimpleGrid>
     </ChakraProvider>
   );
 }
