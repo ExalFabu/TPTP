@@ -3,12 +3,7 @@ import {
   ChakraProvider,
   theme,
   Container,
-  Heading,
   Center,
-  Grid,
-  Flex,
-  SimpleGrid,
-  GridItem,
 } from '@chakra-ui/react';
 
 import { LectureType } from './components/Lecture';
