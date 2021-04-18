@@ -6,12 +6,15 @@ import {
   Heading,
   Center,
   Grid,
+  Flex,
+  SimpleGrid,
+  GridItem,
 } from '@chakra-ui/react';
 
-import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { LectureType } from './components/Lecture';
 import LectureTable from './components/LectureTable';
 import Average from './components/Average';
+import Header from './components/Header';
 
 const checkUrlParams = urlLocation => {
   if (
@@ -62,23 +65,19 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      <Grid row={1} templateColumns="auto 1em">
+      <Header />
+      <Container>
+        <Container maxW="100%" alignContent="center" mt="15px">
+          <LectureTable
+            key={0}
+            allLectures={lectures}
+            setLectures={setLectures}
+          />
+        </Container>
         <Center>
-          <Heading>TPTP</Heading>
+          <Average allLectures={lectures} setLectures={setLectures} />
         </Center>
-        <ColorModeSwitcher justifySelf="flex-end" />
-      </Grid>
-
-      <Container maxW="100%" alignContent="center" mt="15px">
-        <LectureTable
-          key={0}
-          allLectures={lectures}
-          setLectures={setLectures}
-        />
       </Container>
-      <Center>
-        <Average allLectures={lectures} setLectures={setLectures} />
-      </Center>
     </ChakraProvider>
   );
 }
