@@ -110,7 +110,7 @@ function App() {
             <OptionTab options={options} setOptions={setOptions} />
           </Center>
           <Center gridArea="Average">
-            <Average allLectures={lectures} setLectures={setLectures} />
+            <Average allLectures={lectures} options={options} />
           </Center>
       </SimpleGrid>
     </ChakraProvider>
