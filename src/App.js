@@ -60,11 +60,11 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      <Header />
-      <Container>
-        <Container maxW="100%" alignContent="center" mt="15px">
+      <Container w="100%">
+      <Header allLectures={lectures} setLectures={setLectures}/>
+      
+        <Container w="100%" alignContent="center" >
           <LectureTable
-            key={0}
             allLectures={lectures}
             setLectures={setLectures}
           />

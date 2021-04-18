@@ -92,7 +92,7 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
               min={0}
               type="number"
               onChange={e =>
-                changeValue(e.target.name, parseInt(e.target.value) || 0)
+                {changeValue(e.target.name, parseInt(e.target.value) || 0)}
               }
               placeholder="CFU"
               value={lecture.cfu}
