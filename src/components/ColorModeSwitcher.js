@@ -12,7 +12,7 @@ export const ColorModeSwitcher = props => {
   const { toggleColorMode } = useColorMode();
   const text = useColorModeValue('Modalità scura', 'Modalità chiara');
   const SwitchIcon = useColorModeValue(FaMoon, FaSun);
-  const format = useBreakpointValue({ base: 'base', md: 'md' });
+  const format = useBreakpointValue({ base: 'base', sm: 'sm' });
 
   return format === 'base' ? (
     <IconButton
