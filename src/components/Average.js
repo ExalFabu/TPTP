@@ -1,4 +1,6 @@
+import { InfoIcon } from '@chakra-ui/icons';
 import { Grid, Text } from '@chakra-ui/layout';
+import { Tooltip } from '@chakra-ui/tooltip';
 import React from 'react';
 
 // const CFU_DA_LEVARE = 18;
@@ -41,10 +43,10 @@ const calculateWeightedAverage = allLectures => {
   return isNaN(avg) ? '' : avg;
 };
 /**
- * 
- * @param {import('../model/LectureType').Lecture[]} allLectures 
- * @param {import('../model/PreferencesType').Preferences} preferences 
- * @returns 
+ *
+ * @param {import('../model/LectureType').Lecture[]} allLectures
+ * @param {import('../model/PreferencesType').Preferences} preferences
+ * @returns
  */
 const calculateUnipaAverage = (allLectures, preferences) => {
   // Calcolo la media ponderata, salvandomi somme pesate e pesi.
@@ -115,27 +117,31 @@ const calculateUnipaAverage = (allLectures, preferences) => {
   return isNaN(avg) ? '' : avg;
 };
 /**
- * 
- * @param {import('../model/LectureType').Lecture[]} allLectures 
- * @param {import('../model/PreferencesType').Preferences} preferences 
- * @returns 
+ *
+ * @param {import('../model/LectureType').Lecture[]} allLectures
+ * @param {import('../model/PreferencesType').Preferences} preferences
+ * @returns
  */
 const votoFinale = (allLectures, preferences) => {
   const avg = calculateUnipaAverage(allLectures, preferences);
   const num_lodi = allLectures.reduce(
-    (prev, curr) => prev + (curr.lode && curr.grade === 30 ? 1 : 0), 0
+    (prev, curr) => prev + (curr.lode && curr.grade === 30 ? 1 : 0),
+    0
   );
   console.log('num lodi ' + num_lodi);
   const votoDiBase = Math.round(((avg * 11) / 3) * 100) / 100;
   return (
-    votoDiBase + num_lodi * preferences.ptlode + parseFloat(preferences.erasmus) + parseFloat(preferences.incorso)
+    votoDiBase +
+    num_lodi * preferences.ptlode +
+    parseFloat(preferences.erasmus) +
+    parseFloat(preferences.incorso)
   );
 };
 
 /**
- * 
- * @param {import('../model/LectureType').Lecture[]} props.allLectures 
- * @param {import('../model/PreferencesType').Preferences} props.preferences 
+ *
+ * @param {import('../model/LectureType').Lecture[]} props.allLectures
+ * @param {import('../model/PreferencesType').Preferences} props.preferences
  * @returns {React.FC}
  */
 export default function Average({ allLectures, preferences }) {
@@ -143,8 +149,16 @@ export default function Average({ allLectures, preferences }) {
     <Grid column={3}>
       <Text>Media aritmetica: {calculateArithmeticAverage(allLectures)}</Text>
       <Text>Media ponderata: {calculateWeightedAverage(allLectures)}</Text>
-      <Text>Media UNIPA: {calculateUnipaAverage(allLectures, preferences)}</Text>
-      <Text>Voto finale: {votoFinale(allLectures, preferences)}</Text>
+      <Text>
+        Media UNIPA: {calculateUnipaAverage(allLectures, preferences)}
+      </Text>
+      <Text>
+        Voto finale:
+        {votoFinale(allLectures, preferences)}
+      </Text>
+      <Tooltip label="(WIP) A questo valore vanno aggiunti i punti bonus in base alla media">
+        <InfoIcon ml={5} />
+      </Tooltip>
     </Grid>
   );
 }
