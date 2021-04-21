@@ -34,14 +34,21 @@ Struttura opzioni
 }
 */
 
-export default function OptionTab({ options, setOptions }) {
+
+/**
+ * @param {Object} props 
+ * @param {import('../model/PreferencesType').Preferences} props.options
+ * */
+export default function PreferencesTab({ options: preferences, setOptions }) {
+
   const handleChange = e => {
     console.log(e);
     setOptions({
-      ...options,
+      ...preferences,
       [e.target.name]: e.target.valueAsNumber || e.target.value,
     });
   };
+  
 
   return (
     <Box as="fieldset" border="2px" borderColor="gray.500" borderRadius="lg">
@@ -50,7 +57,6 @@ export default function OptionTab({ options, setOptions }) {
         templateColumns="repeat(2, 1fr)"
         templateAreas={`  
                         "Rimuovi Bonus"
-                        
                     `}
         ml="3px"
         gap={2}
@@ -74,23 +80,23 @@ export default function OptionTab({ options, setOptions }) {
             >
               <Checkbox
                 name="cfu_checkbox"
-                isChecked={options.cfu_or_mat === 'cfu'}
+                isChecked={preferences.removeCFU}
                 onChange={e => {
                   if (e.target.checked === false) return;
                   setOptions({
-                    ...options,
-                    cfu_or_mat: 'cfu',
+                    ...preferences,
+                    removeCFU: e.target.checked,
                   });
                 }}
               />
               <Checkbox
                 name="cfu_checkbox"
-                isChecked={options.cfu_or_mat === 'mat'}
+                isChecked={!preferences.removeCFU}
                 onChange={e => {
                   if (e.target.checked === false) return;
                   setOptions({
-                    ...options,
-                    cfu_or_mat: 'mat',
+                    ...preferences,
+                    removeCFU: false,
                   });
                 }}
               />
@@ -104,18 +110,24 @@ export default function OptionTab({ options, setOptions }) {
                     variant="flushed"
                     type="number"
                     min={0}
-                    value={options.cfu_value}
+                    value={preferences.cfu_value}
                     onChange={e => {
                       setOptions({
-                        ...options,
-                        cfu_or_mat: 'cfu',
+                        ...preferences,
+                        removeCFU: true,
                         cfu_value: e.target.valueAsNumber,
                       });
                     }}
                     textAlign="center"
+                    onClick={e => {
+                      setOptions({
+                        ...preferences,
+                        removeCFU: true,
+                      })
+                    }}
                   />
+                  
                   <label for="cfu_val">CFU</label>
-                  {/* <InputRightAddon children="CFU" bg="none" border="none" /> */}
                 </Center>
               </InputGroup>
               <InputGroup gridArea="mats" size="sm">
@@ -127,15 +139,21 @@ export default function OptionTab({ options, setOptions }) {
                     variant="flushed"
                     type="number"
                     min={0}
-                    value={options.mat_value}
+                    value={preferences.mat_value}
                     onChange={e => {
                       setOptions({
-                        ...options,
-                        cfu_or_mat: 'mat',
+                        ...preferences,
+                        removeCFU: false,
                         mat_value: e.target.valueAsNumber,
                       });
                     }}
                     textAlign="center"
+                    onClick={e => {
+                      setOptions({
+                        ...preferences,
+                        removeCFU: false,
+                      })
+                    }}
                   />
                   <label for="mat_val">Materie</label>
                 </Center>
@@ -169,7 +187,7 @@ export default function OptionTab({ options, setOptions }) {
                   step={0.5}
                   min={0}
                   textAlign="center"
-                  value={options.ptlode}
+                  value={preferences.ptlode}
                   onChange={handleChange}
                 />
               </GridItem>
@@ -189,7 +207,7 @@ export default function OptionTab({ options, setOptions }) {
                   step={0.5}
                   min={0}
                   textAlign="center"
-                  value={options.erasmus}
+                  value={preferences.erasmus}
                   onChange={handleChange}
                 />
               </GridItem>
@@ -208,7 +226,7 @@ export default function OptionTab({ options, setOptions }) {
                   step={0.5}
                   min={0}
                   textAlign="center"
-                  value={options.incorso}
+                  value={preferences.incorso}
                   onChange={handleChange}
                 />
               </GridItem>

@@ -40,8 +40,13 @@ const calculateWeightedAverage = allLectures => {
   let avg = Math.round((sum / weights) * 100) / 100;
   return isNaN(avg) ? '' : avg;
 };
-
-const calculateUnipaAverage = (allLectures, options) => {
+/**
+ * 
+ * @param {import('../model/LectureType').Lecture[]} allLectures 
+ * @param {import('../model/PreferencesType').Preferences} preferences 
+ * @returns 
+ */
+const calculateUnipaAverage = (allLectures, preferences) => {
   // Calcolo la media ponderata, salvandomi somme pesate e pesi.
   let weights = 0;
   let sum = 0;
@@ -73,12 +78,12 @@ const calculateUnipaAverage = (allLectures, options) => {
   let cfu_levati = 0,
     count = 0;
   let upper_bound;
-  if (options.cfu_or_mat === 'cfu') {
+  if (preferences.removeCFU) {
     upper_bound = () =>
-      cfu_levati < options.cfu_value && count < non_caratt_lecture.length;
+      cfu_levati < preferences.cfu_value && count < non_caratt_lecture.length;
   } else {
     upper_bound = () =>
-      count < non_caratt_lecture.length && count < options.mat_value;
+      count < non_caratt_lecture.length && count < preferences.mat_value;
   }
 
   while (upper_bound()) {
@@ -90,11 +95,11 @@ const calculateUnipaAverage = (allLectures, options) => {
 
     // Se sforo i ${CFU_DA_LEVARE} la ricalcolo con il peso giusto
     if (
-      options.cfu_or_mat === 'cfu' &&
-      non_caratt_lecture[count].cfu + cfu_levati > options.cfu_value
+      preferences.removeCFU &&
+      non_caratt_lecture[count].cfu + cfu_levati > preferences.cfu_value
     ) {
       new_weight =
-        non_caratt_lecture[count].cfu + cfu_levati - options.cfu_value;
+        non_caratt_lecture[count].cfu + cfu_levati - preferences.cfu_value;
       sum += non_caratt_lecture[count].grade * new_weight;
       weights += new_weight;
     }
@@ -109,26 +114,37 @@ const calculateUnipaAverage = (allLectures, options) => {
 
   return isNaN(avg) ? '' : avg;
 };
-
-const votoFinale = (allLectures, options) => {
-  const avg = calculateUnipaAverage(allLectures, options);
+/**
+ * 
+ * @param {import('../model/LectureType').Lecture[]} allLectures 
+ * @param {import('../model/PreferencesType').Preferences} preferences 
+ * @returns 
+ */
+const votoFinale = (allLectures, preferences) => {
+  const avg = calculateUnipaAverage(allLectures, preferences);
   const num_lodi = allLectures.reduce(
     (prev, curr) => prev + (curr.lode && curr.grade === 30 ? 1 : 0), 0
   );
   console.log('num lodi ' + num_lodi);
   const votoDiBase = Math.round(((avg * 11) / 3) * 100) / 100;
   return (
-    votoDiBase + num_lodi * options.ptlode + parseFloat(options.erasmus) + parseFloat(options.incorso)
+    votoDiBase + num_lodi * preferences.ptlode + parseFloat(preferences.erasmus) + parseFloat(preferences.incorso)
   );
 };
 
-export default function Average({ allLectures, options }) {
+/**
+ * 
+ * @param {import('../model/LectureType').Lecture[]} props.allLectures 
+ * @param {import('../model/PreferencesType').Preferences} props.preferences 
+ * @returns {React.FC}
+ */
+export default function Average({ allLectures, preferences }) {
   return (
     <Grid column={3}>
       <Text>Media aritmetica: {calculateArithmeticAverage(allLectures)}</Text>
       <Text>Media ponderata: {calculateWeightedAverage(allLectures)}</Text>
-      <Text>Media UNIPA: {calculateUnipaAverage(allLectures, options)}</Text>
-      <Text>Voto finale: {votoFinale(allLectures, options)}</Text>
+      <Text>Media UNIPA: {calculateUnipaAverage(allLectures, preferences)}</Text>
+      <Text>Voto finale: {votoFinale(allLectures, preferences)}</Text>
     </Grid>
   );
 }

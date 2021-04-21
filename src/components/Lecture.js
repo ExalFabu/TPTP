@@ -24,6 +24,14 @@ export class LectureType {
   }
 }
 
+/**
+ * 
+ * @param {Object} props
+ * @param {import('../model/LectureType').Lecture[]} props.allLectures
+ * @param {CallableFunction} props.setLectures
+ * @param {import('../model/LectureType').Lecture} props.lecture 
+ * @returns {React.FC}
+ */
 export default function Lecture({ allLectures, setLectures, lecture }) {
   const changeValue = (name, value) => {
     const modifiedLectures = allLectures.map(lec => {

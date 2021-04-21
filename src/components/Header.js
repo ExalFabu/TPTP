@@ -1,29 +1,18 @@
 import {
-  Center,
   Flex,
   SimpleGrid,
-  Spacer,
 } from '@chakra-ui/layout';
 import React from 'react';
 import AddLectureButton from './AddLectureButton';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { Logo } from './Logo';
 
-export default function Header({ allLectures, setLectures }) {
+export default function Header({ allLectures, setLectures, ...props}) {
   return (
-    <Center
-      w="100%"
-      // as="div"
-      // position="fixed"
-      // backgroundColor="gray.500"
 
-      top={0}
-      // justifySelf="center"
-    >
-      <Flex width="100%" m={5} maxW="100%" alignItems="center">
+      <Flex {...props} width="100%" my={5} justifyContent="space-between">
         <Logo maxH="5em" />
-        <Spacer />
-        <SimpleGrid columns={1} gap={2} justifyItems="right">
+        <SimpleGrid columns={1} gap={2} >
           <ColorModeSwitcher />
           <AddLectureButton
             allLectures={allLectures}
@@ -31,6 +20,5 @@ export default function Header({ allLectures, setLectures }) {
           />
         </SimpleGrid>
       </Flex>
-    </Center>
   );
 }
