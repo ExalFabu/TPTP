@@ -1,4 +1,7 @@
 export const exactWidth = {
-    base: "390px",
-    md: "720px"
+    base: "320px",
+    sm: "350px",
+    md: "720px",
 }
+
+export const borderColor = "gray.500"

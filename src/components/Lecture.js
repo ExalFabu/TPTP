@@ -25,11 +25,11 @@ export class LectureType {
 }
 
 /**
- * 
+ *
  * @param {Object} props
  * @param {import('../model/LectureType').Lecture[]} props.allLectures
  * @param {CallableFunction} props.setLectures
- * @param {import('../model/LectureType').Lecture} props.lecture 
+ * @param {import('../model/LectureType').Lecture} props.lecture
  * @returns {React.FC}
  */
 export default function Lecture({ allLectures, setLectures, lecture }) {
@@ -55,12 +55,11 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
       borderBottom="1px"
       borderColor="gray.500"
       borderRadius="lg"
-
       templateColumns={{
         // base: 'minmax(max-content, 2fr) repeat(3, min-content)',
         md: 'minmax(max-content, 2fr) repeat(5, min-content)',
       }}
-      columnGap={5}
+      columnGap={3}
       rowGap={2}
       // columns={{ base: 4, md: 7 }}
       templateAreas={{
@@ -84,31 +83,29 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
         />
       </GridItem>
       {/* CFU Input */}
-      <GridItem w="100%" gridArea="cfu">
-        <InputGroup size="sm">
-          <InputLeftAddon children={'CFU'} />
+      <InputGroup gridArea="cfu" size="sm" w="100%">
+        <InputLeftAddon children={'CFU'} w="55px"/>
 
-          <Input
-            variant="outline"
-            name="cfu"
-            aria-label="CFU"
-            step={1}
-            min={0}
-            type="number"
-            onChange={e => {
-              changeValue(e.target.name, parseInt(e.target.value) || 0);
-            }}
-            placeholder="CFU"
-            value={lecture.cfu}
-            w="4em"
-            textAlign="center"
-          />
-        </InputGroup>
-      </GridItem>
+        <Input
+          variant="outline"
+          name="cfu"
+          aria-label="CFU"
+          step={1}
+          min={0}
+          type="number"
+          onChange={e => {
+            changeValue(e.target.name, parseInt(e.target.value) || 0);
+          }}
+          placeholder="CFU"
+          value={lecture.cfu}
+          w="4em"
+          textAlign="center"
+        />
+      </InputGroup>
 
       {/* Grade Input */}
-      <InputGroup size="sm" gridArea="grade">
-        <InputLeftAddon children={'Voto'} />
+      <InputGroup size="sm" gridArea="grade" w="100%">
+        <InputLeftAddon children={'Voto'} w="55px"/>
         <Input
           type="number"
           variant="outline"
@@ -156,20 +153,19 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
       </GridItem>
 
       {/* Caratt switch */}
-      <GridItem gridArea="caratt">
-        <Center>
-          <Button
-            size="sm"
-            name="caratt"
-            aria-label="Caratterizzante"
-            variant={lecture.caratt ? 'solid' : 'outline'}
-            colorScheme="green"
-            onClick={e => changeValue(e.target.name, !lecture.caratt)}
-            minW="5em"
-          >
-            Caratterizzante
-          </Button>
-        </Center>
+      <GridItem gridArea="caratt" w="100%">
+        <Button
+          size="sm"
+          name="caratt"
+          aria-label="Caratterizzante"
+          variant={lecture.caratt ? 'solid' : 'outline'}
+          colorScheme="green"
+          onClick={e => changeValue(e.target.name, !lecture.caratt)}
+          minW="5em"
+          w="100%"
+        >
+          Caratterizzante
+        </Button>
       </GridItem>
 
       {/* Delete Button */}

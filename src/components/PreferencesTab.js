@@ -2,237 +2,292 @@ import { Checkbox } from '@chakra-ui/checkbox';
 import {
   Input,
   InputGroup,
+  InputLeftAddon,
+  InputRightAddon,
 } from '@chakra-ui/input';
-import {
-  Box,
-  Center,
-  GridItem,
-  SimpleGrid,
-} from '@chakra-ui/layout';
+import { Box, SimpleGrid } from '@chakra-ui/layout';
+import { useBreakpointValue } from '@chakra-ui/media-query';
 import React from 'react';
+import { borderColor, exactWidth } from '../theme';
 
-/* 
-Rimozione dalla media 
-    - [INT] cfu
-    - [INT] n. materie
-    
-Valori utilizzati per calcolare il voto finale
-    - Punti per lode: (0,5)
-    - Punti per Erasmus (1)
-    - Punti per laurea In Corso (2)
-    - Punti in base alla media (vedi tabella nel README)
+const RemoveComponent = ({ preferences, setPreferences, ...props }) => {
+  const borderStyle = useBreakpointValue({
+    base: { borderY: '1px' },
+    md: { border: '1px' },
+  });
+  const legendPosition = useBreakpointValue({
+    base: 'left',
+    md: 'center',
+  });
+  return (
+    <Box
+      {...props}
+      as="fieldset"
+      {...borderStyle}
+      borderColor={borderColor}
+      borderRadius={5}
+      p={2}
+      mx={2}
+      h="min-content"
+    >
+      <legend align={legendPosition}> Rimuovi </legend>
+      <SimpleGrid
+        templateColumns="1fr 1fr"
+        templateAreas={`"cfus mats"`}
+        columnGap={5}
+        alignContent="center"
+        justifyContent="center"
+      >
+        <InputGroup
+          gridArea="cfus"
+          size="sm"
+          justifyContent="center"
+          alignContent="center"
+        >
+          <Checkbox
+            isChecked={preferences.removeCFU}
+            aria-label="Rimuovi CFU"
+            colorScheme="green"
+            onChange={e => {
+              if (e.target.checked === false) return;
+              setPreferences({
+                ...preferences,
+                removeCFU: e.target.checked,
+              });
+            }}
+            size="md"
+            mr={2}
+          />
+          <Input
+            w="2em"
+            aria-label="CFU da rimuovere"
+            id="cfu_val"
+            variant="flushed"
+            type="number"
+            min={0}
+            value={preferences.cfu_value}
+            onChange={e => {
+              setPreferences({
+                ...preferences,
+                removeCFU: true,
+                cfu_value: e.target.valueAsNumber,
+              });
+            }}
+            textAlign="center"
+            onClick={e => {
+              setPreferences({
+                ...preferences,
+                removeCFU: true,
+              });
+            }}
+          />
+          <InputRightAddon
+            as="label"
+            for="cfu_val"
+            children="CFU"
+            borderRadius="md"
+          />
+        </InputGroup>
+        <InputGroup
+          gridArea="mats"
+          size="sm"
+          justifyContent="center"
+          alignContent="center"
+        >
+          <Checkbox
+            isChecked={!preferences.removeCFU}
+            aria-label="Rimuovi Materie"
+            colorScheme="orange"
+            onChange={e => {
+              if (e.target.checked === false) return;
+              setPreferences({
+                ...preferences,
+                removeCFU: false,
+              });
+            }}
+            size="md"
+            mr={2}
+          />
+          <Input
+            w="2em"
+            id="mat_val"
+            aria-label="Materie da rimuovere"
+            variant="flushed"
+            type="number"
+            min={0}
+            value={preferences.mat_value}
+            onChange={e => {
+              setPreferences({
+                ...preferences,
+                removeCFU: false,
+                mat_value: e.target.valueAsNumber,
+              });
+            }}
+            textAlign="center"
+            onClick={e => {
+              setPreferences({
+                ...preferences,
+                removeCFU: false,
+              });
+            }}
+          />
+          <InputRightAddon
+            as="label"
+            for="mat_val"
+            borderRadius="md"
+            children="Materie"
+          />
+        </InputGroup>
+      </SimpleGrid>
+    </Box>
+  );
+};
 
-Struttura opzioni
-{
-  "cfu_or_mat": [true|false]
-  "num": [int] (numero di cfu o di materie)
-  "bonus": {
-    "ppl": [int]
-    "erasmus": [int]
-    "incorso": [int]
-  } 
-}
-*/
-
-
-/**
- * @param {Object} props 
- * @param {import('../model/PreferencesType').Preferences} props.options
- * */
-export default function PreferencesTab({ options: preferences, setOptions }) {
-
+const BonusComponent = ({ preferences, setPreferences, ...props }) => {
+  const borderStyle = useBreakpointValue({
+    base: { borderY: '1px' },
+    md: { border: '1px' },
+  });
+  const legendPosition = useBreakpointValue({
+    base: 'left',
+    md: 'center',
+  });
   const handleChange = e => {
     console.log(e);
-    setOptions({
+    setPreferences({
       ...preferences,
-      [e.target.name]: e.target.valueAsNumber || e.target.value,
+      [e.target.name]: e.target.valueAsNumber || 0,
     });
   };
-  
-
   return (
-    <Box as="fieldset" border="2px" borderColor="gray.500" borderRadius="lg">
-      <legend>Personalizza il calcolo</legend>
-      <SimpleGrid
-        templateColumns="repeat(2, 1fr)"
-        templateAreas={`  
-                        "Rimuovi Bonus"
-                    `}
-        ml="3px"
-        gap={2}
+    <Box
+      {...props}
+      as="fieldset"
+      {...borderStyle}
+      borderColor={borderColor}
+      borderRadius={5}
+      p={2}
+      mx={2}
+      display="flex"
+      justifyContent="space-between"
+      justifyItems="center"
+      alignItems="center"
+    >
+      <legend align={legendPosition}> Bonus </legend>
+      <InputGroup
+        size="sm"
+        display="flex"
+        justifyContent="center"
         alignItems="center"
       >
-        <GridItem gridArea="Rimuovi">
-          <Box
-            as="fieldset"
-            border="1px"
-            borderColor="gray.500"
-            borderRadius="md"
-          >
-            <legend>Rimuovi</legend>
-            <SimpleGrid
-              templateColumns="min-content 1fr"
-              templateAreas={`"radios cfus" "radios mats"`}
-              columnGap={5}
-              rowGap={3}
-              alignItems="center"
-              justifyItems="center"
-            >
-              <Checkbox
-                name="cfu_checkbox"
-                isChecked={preferences.removeCFU}
-                onChange={e => {
-                  if (e.target.checked === false) return;
-                  setOptions({
-                    ...preferences,
-                    removeCFU: e.target.checked,
-                  });
-                }}
-              />
-              <Checkbox
-                name="cfu_checkbox"
-                isChecked={!preferences.removeCFU}
-                onChange={e => {
-                  if (e.target.checked === false) return;
-                  setOptions({
-                    ...preferences,
-                    removeCFU: false,
-                  });
-                }}
-              />
-              <InputGroup gridArea="cfus" size="sm">
-                <Center>
-                  <Input
-                  
-                    w="3em"
-                    id="cfu_val"
-                    name="cfu_value"
-                    variant="flushed"
-                    type="number"
-                    min={0}
-                    value={preferences.cfu_value}
-                    onChange={e => {
-                      setOptions({
-                        ...preferences,
-                        removeCFU: true,
-                        cfu_value: e.target.valueAsNumber,
-                      });
-                    }}
-                    textAlign="center"
-                    onClick={e => {
-                      setOptions({
-                        ...preferences,
-                        removeCFU: true,
-                      })
-                    }}
-                  />
-                  
-                  <label for="cfu_val">CFU</label>
-                </Center>
-              </InputGroup>
-              <InputGroup gridArea="mats" size="sm">
-                <Center>
-                  <Input
-                    w="3em"
-                    id='mat_val'
-                    name="mat_value"
-                    variant="flushed"
-                    type="number"
-                    min={0}
-                    value={preferences.mat_value}
-                    onChange={e => {
-                      setOptions({
-                        ...preferences,
-                        removeCFU: false,
-                        mat_value: e.target.valueAsNumber,
-                      });
-                    }}
-                    textAlign="center"
-                    onClick={e => {
-                      setOptions({
-                        ...preferences,
-                        removeCFU: false,
-                      })
-                    }}
-                  />
-                  <label for="mat_val">Materie</label>
-                </Center>
-              </InputGroup>
-            </SimpleGrid>
-          </Box>
-        </GridItem>
-        <GridItem gridArea="Bonus">
-          <Box
-            as="fieldset"
-            border="1px"
-            borderColor="gray.500"
-            borderRadius="md"
-            m={2}
-            p={2}
-          >
-            <legend>Bonus</legend>
-            <SimpleGrid rowGap={3}>
-              <GridItem
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <label for="ptlode"> Punti per Lode </label>
-                <Input
-                  id="ptlode"
-                  name="ptlode"
-                  variant="flushed"
-                  type="number"
-                  w="3em"
-                  step={0.5}
-                  min={0}
-                  textAlign="center"
-                  value={preferences.ptlode}
-                  onChange={handleChange}
-                />
-              </GridItem>
-              <GridItem
-                display="flex"
-                justifyContent="space-around"
-                alignItems="center"
-                w="100%"
-              >
-                <Box as="label" for="erasmus"> Erasmus </Box>
-                <Input
-                  id="erasmus"
-                  name="erasmus"
-                  variant="flushed"
-                  type="number"
-                  w="3em"
-                  step={0.5}
-                  min={0}
-                  textAlign="center"
-                  value={preferences.erasmus}
-                  onChange={handleChange}
-                />
-              </GridItem>
-              <GridItem
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <label for="incorso"> Laurea in Corso </label>
-                <Input
-                  id="incorso"
-                  name="incorso"
-                  variant="flushed"
-                  type="number"
-                  w="3em"
-                  step={0.5}
-                  min={0}
-                  textAlign="center"
-                  value={preferences.incorso}
-                  onChange={handleChange}
-                />
-              </GridItem>
-            </SimpleGrid>
-          </Box>
-        </GridItem>
+        <InputLeftAddon as="label" for="ptlode" children="Lode" borderRadius="md"/>
+        <Input
+          id="ptlode"
+          name="ptlode"
+          variant="flushed"
+          type="number"
+          w="2em"
+          step={0.5}
+          min={0}
+          textAlign="center"
+          value={preferences.ptlode}
+          onChange={handleChange}
+        />
+      </InputGroup>
+      <InputGroup
+        size="sm"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <InputLeftAddon as="label" for="erasmus" children="Erasmus" borderRadius="md"/>
+
+        <Input
+          id="erasmus"
+          name="erasmus"
+          variant="flushed"
+          type="number"
+          w="2em"
+          step={0.5}
+          min={0}
+          textAlign="center"
+          value={preferences.erasmus}
+          onChange={handleChange}
+        />
+      </InputGroup>
+      <InputGroup
+        size="sm"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <InputLeftAddon as="label" for="incorso" children="In Corso" borderRadius="md" />
+        <Input
+          id="incorso"
+          name="incorso"
+          variant="flushed"
+          type="number"
+          w="2em"
+          step={0.5}
+          min={0}
+          textAlign="center"
+          value={preferences.incorso}
+          onChange={handleChange}
+        />
+      </InputGroup>
+    </Box>
+  );
+};
+
+// const MediaComponent = ({ preferences, setPreferences, ...props }) => {};
+
+/**
+ * @param {Object} props
+ * @param {import('../model/PreferencesType').Preferences} props.options
+ * */
+export default function PreferencesTab({
+  preferences,
+  setPreferences,
+  ...props
+}) {
+  const legendPosition = useBreakpointValue({
+    base: 'center',
+    md: 'center',
+  });
+  return (
+    <Box
+      border="1px"
+      borderColor={borderColor}
+      borderRadius="md"
+      as="fieldset"
+      w={exactWidth}
+    >
+      <legend align={legendPosition}>Preferenze</legend>
+      <SimpleGrid
+        templateColumns={{
+          base: '1fr',
+          md: '1fr 2fr',
+        }}
+        templateAreas={{
+          base: `"Rimuovi" "Bonus"`,
+          md: `"Rimuovi Bonus"`,
+        }}
+        gap={2}
+        width="100%"
+        justifyContent="center"
+        py={2}
+        {...props}
+      >
+        <RemoveComponent
+          preferences={preferences}
+          setPreferences={setPreferences}
+          gridArea="Rimuovi"
+        />
+        <BonusComponent
+          gridArea="Bonus"
+          preferences={preferences}
+          setPreferences={setPreferences}
+        />
       </SimpleGrid>
     </Box>
   );

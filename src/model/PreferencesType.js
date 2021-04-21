@@ -1,5 +1,5 @@
 /**
- Options
+ Preferences
  @typedef {Object} Preferences
  @property {string} cfu_or_mat
  @property {boolean} removeCFU

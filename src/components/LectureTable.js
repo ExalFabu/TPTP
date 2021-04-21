@@ -1,10 +1,9 @@
-import { Center, SimpleGrid } from '@chakra-ui/layout';
+import { SimpleGrid } from '@chakra-ui/layout';
 import React from 'react';
 import Lecture from './Lecture';
 
-function LectureTable({ allLectures, setLectures }) {
+function LectureTable({ allLectures, setLectures, ...props}) {
   return (
-    <Center>
       <SimpleGrid
         display="inline-block"
         border="1px"
@@ -13,6 +12,7 @@ function LectureTable({ allLectures, setLectures }) {
         columns={1}
         rowGap={5}
         justifyItems="center"
+        {...props}
       >
         {allLectures.map(el => {
           return (
@@ -25,7 +25,6 @@ function LectureTable({ allLectures, setLectures }) {
           );
         })}
       </SimpleGrid>
-    </Center>
   );
 }
 

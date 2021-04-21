@@ -2,17 +2,16 @@ import React, { useState } from 'react';
 import {
   ChakraProvider,
   theme,
-  Container,
   Center,
   SimpleGrid,
-  GridItem,
+  Flex,
 } from '@chakra-ui/react';
 import { LectureType } from './components/Lecture';
 import LectureTable from './components/LectureTable';
 import Average from './components/Average';
 import Header from './components/Header';
 import PreferencesTab from './components/PreferencesTab';
-import { exactWidth } from './theme'
+import { exactWidth } from './theme';
 
 const checkUrlParams = urlLocation => {
   if (
@@ -47,6 +46,8 @@ const checkUrlParams = urlLocation => {
 // 1. URL Parameters
 // 2. LocalStorage
 // 3. None
+
+/** @type {import('./model/LectureType').Lecture[]} */
 const defaultLectures =
   checkUrlParams(window.location) ||
   JSON.parse(localStorage.getItem('lectures')) ||
@@ -69,11 +70,17 @@ function App() {
   let [lectures, setLecturesState] = useState(defaultLectures);
   let [options, setOptionsState] = useState(defaultOptions);
   // Funzione wrapper a setLecturesState così da salvare anche in LocalStorage ogni volta.
+  /**
+   * @param {import('./model/LectureType').Lecture[]} l - Lecture list
+   */
   const setLectures = l => {
     setLecturesState(l);
     localStorage.setItem('lectures', JSON.stringify(l));
   };
 
+  /**
+   * @param {import('./model/PreferencesType').Preferences} o
+   */
   const setOptions = o => {
     setOptionsState(o);
     localStorage.setItem('options', JSON.stringify(o));
@@ -81,41 +88,47 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      <Center>
-        <SimpleGrid
-          templateColumns={{
-            base: '1fr',
-          }}
-          templateAreas={{
-            base: `
+      <Flex justifyContent="center">
+      <SimpleGrid
+        templateColumns={{
+          base: '1fr',
+        }}
+        templateAreas={{
+          base: `
                   "Header"
                   "LectureTable"
-                  "OptionsTab"
+                  "PreferencesTab"
                   "Average"
                   `,
-          }}
+        }}
+        w={exactWidth}
+        justifyItems="center"
+        alignItems="center"
+        // px={5}
+        alignSelf="center"
+      >
+        <Header
+          gridArea="Header"
+          allLectures={lectures}
+          setLectures={setLectures}
           w={exactWidth}
-          justifyItems="center"
-          alignItems="center"
-          px={5}
-          alignSelf="center"
-        >
-            <Header gridArea="Header" allLectures={lectures} setLectures={setLectures} />
-          <Container
-            gridArea="LectureTable"
-            w={exactWidth}
-            alignContent="center"
-          >
-            <LectureTable allLectures={lectures} setLectures={setLectures} />
-          </Container>
-          <Center gridArea="OptionsTab" w={exactWidth}>
-            <PreferencesTab options={options} setOptions={setOptions} />
-          </Center>
-          <Center gridArea="Average">
-            <Average allLectures={lectures} preferences={options} />
-          </Center>
-        </SimpleGrid>
-      </Center>
+        />
+        <LectureTable
+          gridArea="LectureTable"
+          w={exactWidth}
+          allLectures={lectures}
+          setLectures={setLectures}
+        />
+        <PreferencesTab
+          gridArea="PreferencesTab"
+          preferences={options}
+          setPreferences={setOptions}
+        />
+        <Center gridArea="Average">
+          <Average allLectures={lectures} preferences={options} />
+        </Center>
+      </SimpleGrid>
+      </Flex>
     </ChakraProvider>
   );
 }

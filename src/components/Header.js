@@ -10,7 +10,7 @@ import { Logo } from './Logo';
 export default function Header({ allLectures, setLectures, ...props}) {
   return (
 
-      <Flex {...props} width="100%" my={5} justifyContent="space-between">
+      <Flex {...props} my={5} justifyContent="space-between">
         <Logo maxH="5em" />
         <SimpleGrid columns={1} gap={2} >
           <ColorModeSwitcher />
