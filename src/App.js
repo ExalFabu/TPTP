@@ -104,6 +104,7 @@ function App() {
         w={exactWidth}
         justifyItems="center"
         alignItems="center"
+        rowGap={2}
         // px={5}
         alignSelf="center"
       >

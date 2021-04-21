@@ -1,3 +1,10 @@
+import {
+  Accordion,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  AccordionButton,
+} from '@chakra-ui/accordion';
 import { Checkbox } from '@chakra-ui/checkbox';
 import {
   Input,
@@ -12,7 +19,7 @@ import { borderColor, exactWidth } from '../theme';
 
 const RemoveComponent = ({ preferences, setPreferences, ...props }) => {
   const borderStyle = useBreakpointValue({
-    base: { borderY: '1px' },
+    base: { border: '1px' },
     md: { border: '1px' },
   });
   const legendPosition = useBreakpointValue({
@@ -25,7 +32,7 @@ const RemoveComponent = ({ preferences, setPreferences, ...props }) => {
       as="fieldset"
       {...borderStyle}
       borderColor={borderColor}
-      borderRadius={5}
+      borderRadius="xl"
       p={2}
       mx={2}
       h="min-content"
@@ -145,7 +152,7 @@ const RemoveComponent = ({ preferences, setPreferences, ...props }) => {
 
 const BonusComponent = ({ preferences, setPreferences, ...props }) => {
   const borderStyle = useBreakpointValue({
-    base: { borderY: '1px' },
+    base: { border: '1px' },
     md: { border: '1px' },
   });
   const legendPosition = useBreakpointValue({
@@ -161,17 +168,17 @@ const BonusComponent = ({ preferences, setPreferences, ...props }) => {
   };
   return (
     <Box
-      {...props}
       as="fieldset"
       {...borderStyle}
       borderColor={borderColor}
-      borderRadius={5}
-      p={2}
-      mx={2}
+      borderRadius="xl"
       display="flex"
       justifyContent="space-between"
       justifyItems="center"
       alignItems="center"
+      p={2}
+      {...props}
+
     >
       <legend align={legendPosition}> Bonus </legend>
       <InputGroup
@@ -180,7 +187,12 @@ const BonusComponent = ({ preferences, setPreferences, ...props }) => {
         justifyContent="center"
         alignItems="center"
       >
-        <InputLeftAddon as="label" for="ptlode" children="Lode" borderRadius="md"/>
+        <InputLeftAddon
+          as="label"
+          for="ptlode"
+          children="Lode"
+          borderRadius="md"
+        />
         <Input
           id="ptlode"
           name="ptlode"
@@ -200,7 +212,12 @@ const BonusComponent = ({ preferences, setPreferences, ...props }) => {
         justifyContent="center"
         alignItems="center"
       >
-        <InputLeftAddon as="label" for="erasmus" children="Erasmus" borderRadius="md"/>
+        <InputLeftAddon
+          as="label"
+          for="erasmus"
+          children="Erasmus"
+          borderRadius="md"
+        />
 
         <Input
           id="erasmus"
@@ -221,7 +238,12 @@ const BonusComponent = ({ preferences, setPreferences, ...props }) => {
         justifyContent="center"
         alignItems="center"
       >
-        <InputLeftAddon as="label" for="incorso" children="In Corso" borderRadius="md" />
+        <InputLeftAddon
+          as="label"
+          for="incorso"
+          children="In Corso"
+          borderRadius="md"
+        />
         <Input
           id="incorso"
           name="incorso"
@@ -250,45 +272,67 @@ export default function PreferencesTab({
   setPreferences,
   ...props
 }) {
-  const legendPosition = useBreakpointValue({
-    base: 'center',
-    md: 'center',
-  });
   return (
-    <Box
-      border="1px"
-      borderColor={borderColor}
-      borderRadius="md"
-      as="fieldset"
+    <Accordion
+      // as="fieldset"
       w={exactWidth}
+      allowToggle
+      pt={4}
+      colorScheme="telegram"
+      {...props}
     >
-      <legend align={legendPosition}>Preferenze</legend>
-      <SimpleGrid
-        templateColumns={{
-          base: '1fr',
-          md: '1fr 2fr',
-        }}
-        templateAreas={{
-          base: `"Rimuovi" "Bonus"`,
-          md: `"Rimuovi Bonus"`,
-        }}
-        gap={2}
-        width="100%"
-        justifyContent="center"
-        py={2}
-        {...props}
-      >
-        <RemoveComponent
-          preferences={preferences}
-          setPreferences={setPreferences}
-          gridArea="Rimuovi"
-        />
-        <BonusComponent
-          gridArea="Bonus"
-          preferences={preferences}
-          setPreferences={setPreferences}
-        />
-      </SimpleGrid>
-    </Box>
+      <AccordionItem w="100%" border="none">
+        <h2>
+          <AccordionButton
+            display="flex"
+            justifyContent="center"
+            border="1px"
+            borderColor={borderColor}
+            borderRadius="full"
+            _expanded={{ borderBottomRadius: 'none', borderBottom: 'none' }}
+          >
+            <span>Modifica Valori</span>
+            <AccordionIcon float="right" />
+          </AccordionButton>
+        </h2>
+
+        <AccordionPanel
+          w="100%"
+          border="1px"
+          borderColor={borderColor}
+          borderRadius="3xl"
+          borderTop="none"
+          borderTopRadius="none"
+          display="flex"
+          justifyContent="center"
+        >
+          <SimpleGrid
+            templateColumns={{
+              base: '1fr',
+              md: '1fr 2fr',
+            }}
+            templateAreas={{
+              base: `"Rimuovi" "Bonus"`,
+              md: `"Rimuovi Bonus"`,
+            }}
+            gap={2}
+            width={exactWidth}
+            justifyContent="center"
+            py={2}
+          >
+            <RemoveComponent
+              preferences={preferences}
+              setPreferences={setPreferences}
+              gridArea="Rimuovi"
+            />
+            <BonusComponent
+              gridArea="Bonus"
+              preferences={preferences}
+              setPreferences={setPreferences}
+            />
+          </SimpleGrid>
+        </AccordionPanel>
+      </AccordionItem>
+    </Accordion>
   );
 }
