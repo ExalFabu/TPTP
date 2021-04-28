@@ -3,6 +3,7 @@ import React from 'react';
 import { Validator } from 'jsonschema';
 import { LinkIcon } from '@chakra-ui/icons';
 import { LectureType } from './Lecture';
+import { toast, useToast } from '@chakra-ui/toast';
 
 const PREFIX = '?l=';
 
@@ -54,7 +55,6 @@ export function urlToLectures(url) {
     return null;
   }
   if (v.validate(parsed, lectureArray).valid) {
-    
     return parsed.map(p => {
       return new LectureType(p[0], p[1], null, null, p[2], null);
     });
@@ -63,32 +63,36 @@ export function urlToLectures(url) {
   }
 }
 
-const urlToClipboard = allLectures => {
+const urlToClipboard = ({ allLectures, toast }) => {
   const basename = window.location.origin;
   const path = lecturesToUrl(allLectures);
   const url = basename + path;
-  if(navigator.share){
+  if (navigator.canShare) {
     navigator.share({
-      title: "TPTP",
+      title: 'TPTP',
       url: url,
-      text: "Lista delle materie personalizzata"
-    })
-  }
-  else{
+      text:
+        'TPTP - Calcola la tua media universitaria con le materie impostate da me!',
+    });
+  } else {
     navigator.clipboard.writeText(url);
+    toast({
+      title: 'URL Copiato',
+      status: 'success',
+      isClosable: true,
+    });
   }
-  
-  // window.history.replaceState(null, null, path);
 };
 
 export default function CopyUrlButton({ allLectures }) {
+  const toast = useToast();
   return (
     <Button
       variant="outline"
       fontSize="md"
       size="sm"
       leftIcon={<LinkIcon />}
-      onClick={() => urlToClipboard(allLectures)}
+      onClick={() => urlToClipboard({ allLectures, toast })}
     >
       Condividi Materie
     </Button>
