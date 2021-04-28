@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  ChakraProvider,
-  theme,
-  Center,
-  SimpleGrid,
-  Flex,
-} from '@chakra-ui/react';
+import { ChakraProvider, theme, SimpleGrid } from '@chakra-ui/react';
 import { LectureType } from './components/Lecture';
 import LectureTable from './components/LectureTable';
 import Average from './components/Average';
@@ -88,7 +82,6 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      <Flex justifyContent="center">
       <SimpleGrid
         templateColumns={{
           base: '1fr',
@@ -97,16 +90,19 @@ function App() {
           base: `
                   "Header"
                   "LectureTable"
-                  "PreferencesTab"
                   "Average"
+                  "PreferencesTab"
                   `,
         }}
-        w={exactWidth}
+        // templateRows={{
+        //   base: 'min-content 60% min-content min-content'
+        // }}
         justifyItems="center"
         alignItems="center"
         rowGap={2}
         // px={5}
         alignSelf="center"
+        justifyContent="center"
       >
         <Header
           gridArea="Header"
@@ -119,17 +115,29 @@ function App() {
           w={exactWidth}
           allLectures={lectures}
           setLectures={setLectures}
+          overflowY="auto"
+          css={{
+            '&::-webkit-scrollbar': {
+              width: '0px',
+            },
+            '&::-webkit-scrollbar-track': {
+              width: '0px',
+            },
+          }}
+          maxH="60vh"
         />
         <PreferencesTab
           gridArea="PreferencesTab"
           preferences={options}
           setPreferences={setOptions}
         />
-        <Center gridArea="Average">
-          <Average allLectures={lectures} preferences={options} />
-        </Center>
+        <Average
+          gridArea="Average"
+          allLectures={lectures}
+          preferences={options}
+          w={exactWidth}
+        />
       </SimpleGrid>
-      </Flex>
     </ChakraProvider>
   );
 }
