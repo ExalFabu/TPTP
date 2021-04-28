@@ -32,7 +32,7 @@ export class LectureType {
  * @param {import('../model/LectureType').Lecture} props.lecture
  * @returns {React.FC}
  */
-export default function Lecture({ allLectures, setLectures, lecture }) {
+export default function Lecture({ allLectures, setLectures, lecture, ...props }) {
   const changeValue = (name, value) => {
     const modifiedLectures = allLectures.map(lec => {
       if (lecture._id === lec._id) {
@@ -52,22 +52,21 @@ export default function Lecture({ allLectures, setLectures, lecture }) {
   return (
     <SimpleGrid
       p={2}
-      borderBottom="1px"
+      borderBottom={props.isLast ? "none" : "1px"}
       borderColor="gray.500"
-      borderRadius="lg"
+      borderRadius="md"
       templateColumns={{
-        // base: 'minmax(max-content, 2fr) repeat(3, min-content)',
         md: 'minmax(max-content, 2fr) repeat(5, min-content)',
       }}
       columnGap={3}
       rowGap={2}
-      // columns={{ base: 4, md: 7 }}
       templateAreas={{
         base: `'name cfu removeBtn' 'caratt grade lode'`,
         md: `'name cfu grade lode caratt removeBtn'`,
       }}
       alignItems="center"
       justifyItems="center"
+      {...props}
     >
       {/* Name input */}
       <GridItem gridArea="name" w="100%" rowSpan={{ base: 2, md: 1 }}>

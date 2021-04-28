@@ -1,5 +1,6 @@
 import { SimpleGrid } from '@chakra-ui/layout';
 import React from 'react';
+import { borderColor } from '../theme';
 import Lecture from './Lecture';
 
 function LectureTable({ allLectures, setLectures, ...props}) {
@@ -7,20 +8,21 @@ function LectureTable({ allLectures, setLectures, ...props}) {
       <SimpleGrid
         display="inline-block"
         border="1px"
-        borderColor="gray.500"
-        borderRadius="lg"
+        borderColor={borderColor}
+        borderRadius="md"
         columns={1}
         rowGap={5}
         justifyItems="center"
         {...props}
       >
-        {allLectures.map(el => {
+        {allLectures.map((el, i) => {
           return (
             <Lecture
               key={el._id}
               allLectures={allLectures}
               setLectures={setLectures}
               lecture={el}
+              isLast={i === allLectures.length - 1}
             />
           );
         })}

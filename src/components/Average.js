@@ -1,47 +1,60 @@
-import { InfoIcon } from '@chakra-ui/icons';
-import { Grid, Text } from '@chakra-ui/layout';
-import { Tooltip } from '@chakra-ui/tooltip';
-import React from 'react';
+import { Button } from '@chakra-ui/button';
+import { InfoIcon, WarningIcon } from '@chakra-ui/icons';
+import { Flex, SimpleGrid } from '@chakra-ui/layout';
+import { Text } from '@chakra-ui/layout';
+import {
+  extendTheme,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Tooltip,
+} from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { borderColor } from '../theme';
 
 // const CFU_DA_LEVARE = 18;
 
-const calculateArithmeticAverage = allLectures => {
-  let sum = 0,
-    count = 0;
-  allLectures.forEach(element => {
-    if (
-      element.grade &&
-      element.cfu &&
-      element.grade >= 18 &&
-      element.grade <= 30 &&
-      element.cfu !== 0
-    ) {
-      count += 1;
-      sum += parseInt(element.grade);
-    }
-  });
-  let avg = Math.round((sum / count) * 100) / 100;
-  return isNaN(avg) ? '' : avg;
-};
+// const calculateArithmeticAverage = allLectures => {
+//   let sum = 0,
+//     count = 0;
+//   allLectures.forEach(element => {
+//     if (
+//       element.grade &&
+//       element.cfu &&
+//       element.grade >= 18 &&
+//       element.grade <= 30 &&
+//       element.cfu !== 0
+//     ) {
+//       count += 1;
+//       sum += parseInt(element.grade);
+//     }
+//   });
+//   let avg = Math.round((sum / count) * 100) / 100;
+//   return isNaN(avg) ? '' : avg;
+// };
 
-const calculateWeightedAverage = allLectures => {
-  let weights = 0;
-  let sum = 0;
-  allLectures.forEach(element => {
-    if (
-      element.grade &&
-      element.cfu &&
-      element.grade >= 18 &&
-      element.grade <= 30 &&
-      element.cfu !== 0
-    ) {
-      weights += parseInt(element.cfu);
-      sum += parseInt(element.grade) * parseInt(element.cfu);
-    }
-  });
-  let avg = Math.round((sum / weights) * 100) / 100;
-  return isNaN(avg) ? '' : avg;
-};
+// const calculateWeightedAverage = allLectures => {
+//   let weights = 0;
+//   let sum = 0;
+//   allLectures.forEach(element => {
+//     if (
+//       element.grade &&
+//       element.cfu &&
+//       element.grade >= 18 &&
+//       element.grade <= 30 &&
+//       element.cfu !== 0
+//     ) {
+//       weights += parseInt(element.cfu);
+//       sum += parseInt(element.grade) * parseInt(element.cfu);
+//     }
+//   });
+//   let avg = Math.round((sum / weights) * 100) / 100;
+//   return isNaN(avg) ? '' : avg;
+// };
 /**
  *
  * @param {import('../model/LectureType').Lecture[]} allLectures
@@ -122,7 +135,7 @@ const calculateUnipaAverage = (allLectures, preferences) => {
  * @param {import('../model/PreferencesType').Preferences} preferences
  * @returns
  */
-const votoFinale = (allLectures, preferences) => {
+const votoFinale = (allLectures, preferences, finalAverage) => {
   const avg = calculateUnipaAverage(allLectures, preferences);
   const num_lodi = allLectures.reduce(
     (prev, curr) => prev + (curr.lode && curr.grade === 30 ? 1 : 0),
@@ -133,32 +146,179 @@ const votoFinale = (allLectures, preferences) => {
   return (
     votoDiBase +
     num_lodi * preferences.ptlode +
-    parseFloat(preferences.erasmus) +
-    parseFloat(preferences.incorso)
+    parseFloat(preferences.erasmus) * (finalAverage.hasDoneEramus ? 1 : 0) +
+    parseFloat(preferences.incorso) * (finalAverage.isInCorso ? 1 : 0)
   );
 };
 
 /**
  *
+ * @param {import('../model/LectureType').Lecture[]} lectures
+ */
+const removedLecturesBody = lectures => {
+  const removed = lectures.filter(
+    l => l.new_cfu !== l.cfu && l.cfu !== 0 && l.grade !== 0
+  );
+  if (removed.length === 0) {
+    return (
+      <Text>Non è stata rimossa nessuna materia dal conteggio della media</Text>
+    );
+  }
+  return (
+    <>
+      {removed.map(e => {
+        return (
+          <Flex justifyContent="space-around" alignItems="center">
+            <Text maxW="50%">{e.name}</Text>
+            <Text>{e.new_cfu === 0 ? '❌' : `CFU: ${e.new_cfu}`}</Text>
+          </Flex>
+        );
+      })}
+    </>
+  );
+};
+
+/**
+ * @type {import('../model/FinalAverage').FinalAverage}
+ */
+const defaultFinalAverage = JSON.parse(
+  localStorage.getItem('finalAverage')
+) || {
+  isInCorso: false,
+  hasDoneEramus: false,
+  averageBonus: 0,
+};
+
+/**
+ * @param {Object} props
  * @param {import('../model/LectureType').Lecture[]} props.allLectures
  * @param {import('../model/PreferencesType').Preferences} props.preferences
  * @returns {React.FC}
  */
-export default function Average({ allLectures, preferences }) {
+export default function Average({ allLectures, preferences, ...props }) {
+  const [finalAverage, setFinalAverageState] = useState(defaultFinalAverage);
+  const setFinalAverage = f => {
+    localStorage.setItem('finalAverage', JSON.stringify(f));
+    setFinalAverageState(f);
+  };
+  const theme = extendTheme();
+  console.log(theme);
   return (
-    <Grid column={3}>
-      <Text>Media aritmetica: {calculateArithmeticAverage(allLectures)}</Text>
-      <Text>Media ponderata: {calculateWeightedAverage(allLectures)}</Text>
-      <Text>
-        Media UNIPA: {calculateUnipaAverage(allLectures, preferences)}
-      </Text>
-      <Text>
-        Voto finale:
-        {votoFinale(allLectures, preferences)}
-      </Text>
-      <Tooltip label="(WIP) A questo valore vanno aggiunti i punti bonus in base alla media">
-        <InfoIcon ml={5} />
-      </Tooltip>
-    </Grid>
+    <SimpleGrid
+      {...props}
+      justifyContent="space-evenly"
+      alignContent="space-evenly"
+      border="1px"
+      gridTemplateAreas={{
+        base: `"Buttons . Values" "Buttons . Values"`,
+        md: `"Buttons . Values"`,
+      }}
+      gridTemplateColumns="1fr 1fr max-content"
+      borderColor={borderColor}
+      borderRadius="2xl"
+      p={2}
+    >
+      <Flex
+        gridArea="Buttons"
+        alignContent="space-evenly"
+        justifyContent="space-evenly"
+        wrap="wrap"
+      >
+        <Button
+          colorScheme="messenger"
+          w="85px"
+          variant={finalAverage.isInCorso ? 'solid' : 'outline'}
+          onClick={e =>
+            setFinalAverage({
+              ...finalAverage,
+              isInCorso: !finalAverage.isInCorso,
+            })
+          }
+          my={1}
+        >
+          In Corso
+        </Button>
+        <Button
+          colorScheme="messenger"
+          w="85px"
+          variant={finalAverage.hasDoneEramus ? 'solid' : 'outline'}
+          onClick={e =>
+            setFinalAverage({
+              ...finalAverage,
+              hasDoneEramus: !finalAverage.hasDoneEramus,
+            })
+          }
+          my={1}
+        >
+          Erasmus
+        </Button>
+      </Flex>
+      <Flex
+        gridArea="Values"
+        alignContent="space-evenly"
+        justifyContent="space-evenly"
+        wrap="wrap"
+      >
+        <Tooltip>
+          <SimpleGrid
+            borderBottom="1px"
+            borderRadius="full"
+            p={2}
+            mx={2}
+            templateAreas={`"Titolo info" "Valore Valore"`}
+            justifyItems="center"
+            alignItems="center"
+            columnGap={2}
+          >
+            <Text gridArea="Titolo">Media</Text>
+            <Text gridArea="Valore">
+              {calculateUnipaAverage(allLectures, preferences)}
+            </Text>
+            <Popover gridArea="info">
+              <PopoverTrigger>
+                <InfoIcon color="green.500" />
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader textAlign="center">
+                  Materie ripesate
+                </PopoverHeader>
+                <PopoverBody>{removedLecturesBody(allLectures)}</PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </SimpleGrid>
+        </Tooltip>
+        <SimpleGrid
+          borderBottom="1px"
+          borderRadius="full"
+          p={2}
+          templateAreas={`"Titolo info" "Valore Valore"`}
+          justifyItems="center"
+          alignItems="center"
+          columnGap={2}
+        >
+          <Text gridArea="Titolo">Voto Finale</Text>
+          <Text gridArea="Valore">
+            {votoFinale(allLectures, preferences, finalAverage)}
+          </Text>
+          <Popover gridArea="info">
+            <PopoverTrigger>
+              <WarningIcon color="orange.500" />
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverHeader textAlign="center">Attenzione</PopoverHeader>
+              <PopoverBody>
+                Al voto finale dovrai aggiungere il bonus calcolato in base alla
+                media. Per saperlo cerca il regolamento del tuo Corso di Laurea
+                o chiedi ai tuoi rappresentanti
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </SimpleGrid>
+      </Flex>
+    </SimpleGrid>
   );
 }
