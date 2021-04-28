@@ -8,6 +8,7 @@ import {
 import { SimpleGrid } from '@chakra-ui/layout';
 import React from 'react';
 import { borderColor, exactWidth } from '../theme';
+import AverageBonusComponent from './preferences/AverageBonusComponent';
 import BonusComponent from './preferences/BonusComponent';
 import RemoveComponent from './preferences/RemoveComponent';
 
@@ -18,6 +19,8 @@ import RemoveComponent from './preferences/RemoveComponent';
 export default function PreferencesTab({
   preferences,
   setPreferences,
+  averageBonus,
+  setAverageBonusState,
   ...props
 }) {
   return (
@@ -60,8 +63,8 @@ export default function PreferencesTab({
               md: '1fr 2fr',
             }}
             templateAreas={{
-              base: `"Rimuovi" "Bonus"`,
-              md: `"Rimuovi Bonus"`,
+              base: `"Rimuovi" "Bonus" "AverageBonus"`,
+              md: `"Rimuovi Bonus" "AverageBonus AverageBonus"`,
             }}
             gap={2}
             width={exactWidth}
@@ -77,6 +80,11 @@ export default function PreferencesTab({
               gridArea="Bonus"
               preferences={preferences}
               setPreferences={setPreferences}
+            />
+            <AverageBonusComponent
+              gridArea="AverageBonus"
+              averageBonus={averageBonus}
+              setAverageBonusState={setAverageBonusState}
             />
           </SimpleGrid>
         </AccordionPanel>

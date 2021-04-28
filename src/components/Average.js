@@ -15,45 +15,6 @@ import {
 import React, { useState } from 'react';
 import { borderColor } from '../theme';
 
-// const CFU_DA_LEVARE = 18;
-
-// const calculateArithmeticAverage = allLectures => {
-//   let sum = 0,
-//     count = 0;
-//   allLectures.forEach(element => {
-//     if (
-//       element.grade &&
-//       element.cfu &&
-//       element.grade >= 18 &&
-//       element.grade <= 30 &&
-//       element.cfu !== 0
-//     ) {
-//       count += 1;
-//       sum += parseInt(element.grade);
-//     }
-//   });
-//   let avg = Math.round((sum / count) * 100) / 100;
-//   return isNaN(avg) ? '' : avg;
-// };
-
-// const calculateWeightedAverage = allLectures => {
-//   let weights = 0;
-//   let sum = 0;
-//   allLectures.forEach(element => {
-//     if (
-//       element.grade &&
-//       element.cfu &&
-//       element.grade >= 18 &&
-//       element.grade <= 30 &&
-//       element.cfu !== 0
-//     ) {
-//       weights += parseInt(element.cfu);
-//       sum += parseInt(element.grade) * parseInt(element.cfu);
-//     }
-//   });
-//   let avg = Math.round((sum / weights) * 100) / 100;
-//   return isNaN(avg) ? '' : avg;
-// };
 /**
  *
  * @param {import('../model/LectureType').Lecture[]} allLectures
@@ -131,18 +92,27 @@ const calculateUnipaAverage = (allLectures, preferences) => {
  * @param {import('../model/PreferencesType').Preferences} preferences
  * @returns
  */
-const votoFinale = (allLectures, preferences, finalAverage) => {
+const votoFinale = (allLectures, preferences,averageBonus, finalAverage) => {
   const avg = calculateUnipaAverage(allLectures, preferences);
   const num_lodi = allLectures.reduce(
     (prev, curr) => prev + (curr.lode && curr.grade === 30 ? 1 : 0),
     0
   );
   const votoDiBase = Math.round(((avg * 11) / 3) * 100) / 100;
+  
+  let avBonus = 0;
+  averageBonus.forEach((elem) => {
+    if((avg > elem.from && avg < elem.to) || avg === elem.eq){
+      avBonus = elem.value
+      return
+    }
+  })
+
   return (
     votoDiBase +
     num_lodi * preferences.ptlode +
     parseFloat(preferences.erasmus) * (finalAverage.hasDoneEramus ? 1 : 0) +
-    parseFloat(preferences.incorso) * (finalAverage.isInCorso ? 1 : 0)
+    parseFloat(preferences.incorso) * (finalAverage.isInCorso ? 1 : 0) + avBonus
   );
 };
 
@@ -190,7 +160,7 @@ const defaultFinalAverage = JSON.parse(
  * @param {import('../model/PreferencesType').Preferences} props.preferences
  * @returns {React.FC}
  */
-export default function Average({ allLectures, preferences, ...props }) {
+export default function Average({ allLectures, preferences, averageBonus, ...props }) {
   const [finalAverage, setFinalAverageState] = useState(defaultFinalAverage);
   const setFinalAverage = f => {
     localStorage.setItem('finalAverage', JSON.stringify(f));
@@ -293,7 +263,7 @@ export default function Average({ allLectures, preferences, ...props }) {
         >
           <Text gridArea="Titolo">Voto Finale</Text>
           <Text gridArea="Valore">
-            {votoFinale(allLectures, preferences, finalAverage)}
+            {votoFinale(allLectures, preferences, averageBonus, finalAverage)}
           </Text>
           <Popover gridArea="info">
             <PopoverTrigger>
