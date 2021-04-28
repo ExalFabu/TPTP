@@ -79,14 +79,16 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
           value={lecture.name}
           onChange={e => changeValue(e.target.name, e.target.value)}
           isTruncated={true}
+          onClick={(e) => e.target.select()}
         />
       </GridItem>
       {/* CFU Input */}
       <InputGroup gridArea="cfu" size="sm" w="100%">
-        <InputLeftAddon children={'CFU'} w="55px"/>
+        <InputLeftAddon as="label" for={`cfu${lecture._id}`} children={'CFU'} w="55px"/>
 
         <Input
           variant="outline"
+          id={`cfu${lecture._id}`}
           name="cfu"
           aria-label="CFU"
           step={1}
@@ -99,15 +101,18 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
           value={lecture.cfu}
           w="4em"
           textAlign="center"
+          onClick={(e) => e.target.select()}
+
         />
       </InputGroup>
 
       {/* Grade Input */}
       <InputGroup size="sm" gridArea="grade" w="100%">
-        <InputLeftAddon children={'Voto'} w="55px"/>
+        <InputLeftAddon as="label" for={`grade${lecture._id}`} children={'Voto'} w="55px"/>
         <Input
           type="number"
           variant="outline"
+          id={`grade${lecture._id}`}
           name="grade"
           aria-label="Voto"
           step={1}
@@ -124,6 +129,8 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
           value={lecture.grade}
           w="4em"
           textAlign="center"
+          onClick={(e) => e.target.select()}
+          
         />
       </InputGroup>
 
