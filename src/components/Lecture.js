@@ -153,7 +153,7 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
             isDisabled={lecture.grade !== 30}
             minW="3em"
           >
-            {'L'}
+            L
           </Button>
         </Center>
       </GridItem>
@@ -169,6 +169,8 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
           onClick={e => changeValue(e.target.name, !lecture.caratt)}
           minW="5em"
           w="100%"
+          border="1px"
+
         >
           Caratterizzante
         </Button>
