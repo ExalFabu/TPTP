@@ -3,7 +3,6 @@ import { InfoIcon, WarningIcon } from '@chakra-ui/icons';
 import { Flex, SimpleGrid } from '@chakra-ui/layout';
 import { Text } from '@chakra-ui/layout';
 import {
-  extendTheme,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -89,7 +88,6 @@ const calculateUnipaAverage = (allLectures, preferences) => {
   );
 
   non_caratt_lecture.sort((a, b) => a.grade - b.grade);
-  console.log(non_caratt_lecture);
   let cfu_levati = 0,
     count = 0;
   let upper_bound;
@@ -123,9 +121,7 @@ const calculateUnipaAverage = (allLectures, preferences) => {
     count++;
   }
 
-  console.log(`${avg}`);
   avg = Math.round((sum / weights) * 100) / 100;
-  console.log(`avg ${avg}`);
 
   return isNaN(avg) ? 0 : avg;
 };
@@ -141,7 +137,6 @@ const votoFinale = (allLectures, preferences, finalAverage) => {
     (prev, curr) => prev + (curr.lode && curr.grade === 30 ? 1 : 0),
     0
   );
-  console.log('num lodi ' + num_lodi);
   const votoDiBase = Math.round(((avg * 11) / 3) * 100) / 100;
   return (
     votoDiBase +
@@ -201,8 +196,6 @@ export default function Average({ allLectures, preferences, ...props }) {
     localStorage.setItem('finalAverage', JSON.stringify(f));
     setFinalAverageState(f);
   };
-  const theme = extendTheme();
-  console.log(theme);
   return (
     <SimpleGrid
       {...props}
