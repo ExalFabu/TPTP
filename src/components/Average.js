@@ -127,7 +127,7 @@ const calculateUnipaAverage = (allLectures, preferences) => {
   avg = Math.round((sum / weights) * 100) / 100;
   console.log(`avg ${avg}`);
 
-  return isNaN(avg) ? '' : avg;
+  return isNaN(avg) ? 0 : avg;
 };
 /**
  *
