@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/button';
-import { InfoIcon, WarningIcon } from '@chakra-ui/icons';
+import { InfoIcon } from '@chakra-ui/icons';
 import { Flex, SimpleGrid } from '@chakra-ui/layout';
 import { Text } from '@chakra-ui/layout';
 import {
@@ -92,27 +92,28 @@ const calculateUnipaAverage = (allLectures, preferences) => {
  * @param {import('../model/PreferencesType').Preferences} preferences
  * @returns
  */
-const votoFinale = (allLectures, preferences,averageBonus, finalAverage) => {
+const votoFinale = (allLectures, preferences, averageBonus, finalAverage) => {
   const avg = calculateUnipaAverage(allLectures, preferences);
   const num_lodi = allLectures.reduce(
     (prev, curr) => prev + (curr.lode && curr.grade === 30 ? 1 : 0),
     0
   );
   const votoDiBase = Math.round(((avg * 11) / 3) * 100) / 100;
-  
+
   let avBonus = 0;
-  averageBonus.forEach((elem) => {
-    if((avg > elem.from && avg < elem.to) || avg === elem.eq){
-      avBonus = elem.value
-      return
+  averageBonus.forEach(elem => {
+    if ((avg > elem.from && avg < elem.to) || avg === elem.eq) {
+      avBonus = elem.value;
+      return;
     }
-  })
+  });
 
   return (
     votoDiBase +
     num_lodi * preferences.ptlode +
     parseFloat(preferences.erasmus) * (finalAverage.hasDoneEramus ? 1 : 0) +
-    parseFloat(preferences.incorso) * (finalAverage.isInCorso ? 1 : 0) + avBonus
+    parseFloat(preferences.incorso) * (finalAverage.isInCorso ? 1 : 0) +
+    avBonus
   );
 };
 
@@ -160,7 +161,12 @@ const defaultFinalAverage = JSON.parse(
  * @param {import('../model/PreferencesType').Preferences} props.preferences
  * @returns {React.FC}
  */
-export default function Average({ allLectures, preferences, averageBonus, ...props }) {
+export default function Average({
+  allLectures,
+  preferences,
+  averageBonus,
+  ...props
+}) {
   const [finalAverage, setFinalAverageState] = useState(defaultFinalAverage);
   const setFinalAverage = f => {
     localStorage.setItem('finalAverage', JSON.stringify(f));
@@ -267,16 +273,16 @@ export default function Average({ allLectures, preferences, averageBonus, ...pro
           </Text>
           <Popover gridArea="info">
             <PopoverTrigger>
-              <WarningIcon color="orange.500" />
+              <InfoIcon color="green.500" />
             </PopoverTrigger>
             <PopoverContent>
               <PopoverArrow />
               <PopoverCloseButton />
-              <PopoverHeader textAlign="center">Attenzione</PopoverHeader>
+              <PopoverHeader textAlign="center">Sallo!</PopoverHeader>
               <PopoverBody>
-                Al voto finale dovrai aggiungere il bonus calcolato in base alla
-                media. Per saperlo cerca il regolamento del tuo Corso di Laurea
-                o chiedi ai tuoi rappresentanti
+                Al voto finale è stato aggiunto il Bonus di profitto, controlla nella sezione <i>Modifica Valori </i> 
+                che i valori siano corretti anche per il tuo Corso di Studi
+                prima di festeggiare
               </PopoverBody>
             </PopoverContent>
           </Popover>
