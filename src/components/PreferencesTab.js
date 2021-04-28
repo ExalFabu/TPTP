@@ -82,6 +82,7 @@ const RemoveComponent = ({ preferences, setPreferences, ...props }) => {
             }}
             textAlign="center"
             onClick={e => {
+              e.target.select()
               setPreferences({
                 ...preferences,
                 removeCFU: true,
@@ -132,6 +133,7 @@ const RemoveComponent = ({ preferences, setPreferences, ...props }) => {
             }}
             textAlign="center"
             onClick={e => {
+              e.target.select()
               setPreferences({
                 ...preferences,
                 removeCFU: false,
@@ -204,6 +206,8 @@ const BonusComponent = ({ preferences, setPreferences, ...props }) => {
           textAlign="center"
           value={preferences.ptlode}
           onChange={handleChange}
+          onClick={(e) => e.target.select()}
+
         />
       </InputGroup>
       <InputGroup
@@ -230,6 +234,8 @@ const BonusComponent = ({ preferences, setPreferences, ...props }) => {
           textAlign="center"
           value={preferences.erasmus}
           onChange={handleChange}
+          onClick={(e) => e.target.select()}
+
         />
       </InputGroup>
       <InputGroup
@@ -255,6 +261,8 @@ const BonusComponent = ({ preferences, setPreferences, ...props }) => {
           textAlign="center"
           value={preferences.incorso}
           onChange={handleChange}
+          onClick={(e) => e.target.select()}
+
         />
       </InputGroup>
     </Box>
