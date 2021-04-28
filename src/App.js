@@ -1,49 +1,22 @@
 import React, { useState } from 'react';
 import { ChakraProvider, theme, SimpleGrid } from '@chakra-ui/react';
-import { LectureType } from './components/Lecture';
 import LectureTable from './components/LectureTable';
 import Average from './components/Average';
 import Header from './components/Header';
 import PreferencesTab from './components/PreferencesTab';
 import { exactWidth } from './theme';
-
-const checkUrlParams = urlLocation => {
-  if (
-    urlLocation.search !== '' &&
-    urlLocation.search.startsWith('?lectures=')
-  ) {
-    /** @type {String} */
-    let str = urlLocation.search;
-    const l = decodeURIComponent(str.replace('?lectures=', ''));
-    let lec_arr = [];
-    try {
-      let raw_lec_arr = JSON.parse(l);
-      raw_lec_arr.forEach(({ name, cfu, grade, lode, caratt, isRemoved }) => {
-        lec_arr.push(
-          new LectureType(name, cfu, grade, lode, caratt, isRemoved)
-        );
-      });
-    } catch (e) {
-      console.error('Errore nel parsing della URL', e);
-      return null;
-    }
-    console.log(`Using url lectures`);
-    window.history.replaceState(null, null, '/');
-    return lec_arr;
-  }
-  window.history.replaceState(null, null, '/');
-
-  return null;
-};
+import { urlToLectures } from './components/CopyUrlButton'
 
 // Default lectures are, in order
 // 1. URL Parameters
 // 2. LocalStorage
 // 3. None
 
+
+
 /** @type {import('./model/LectureType').Lecture[]} */
 const defaultLectures =
-  checkUrlParams(window.location) ||
+  urlToLectures(window.location.search) ||
   JSON.parse(localStorage.getItem('lectures')) ||
   [];
 
