@@ -67,7 +67,17 @@ const urlToClipboard = allLectures => {
   const basename = window.location.origin;
   const path = lecturesToUrl(allLectures);
   const url = basename + path;
-  navigator.clipboard.writeText(url);
+  if(navigator.share){
+    navigator.share({
+      title: "TPTP",
+      url: url,
+      text: "Lista delle materie personalizzata"
+    })
+  }
+  else{
+    navigator.clipboard.writeText(url);
+  }
+  
   // window.history.replaceState(null, null, path);
 };
 
