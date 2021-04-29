@@ -1,40 +1,11 @@
 import React, { useState } from 'react';
 import { ChakraProvider, theme, SimpleGrid } from '@chakra-ui/react';
-import { LectureType } from './components/Lecture';
 import LectureTable from './components/LectureTable';
 import Average from './components/Average';
 import Header from './components/Header';
 import PreferencesTab from './components/PreferencesTab';
 import { exactWidth } from './theme';
-
-const checkUrlParams = urlLocation => {
-  if (
-    urlLocation.search !== '' &&
-    urlLocation.search.startsWith('?lectures=')
-  ) {
-    /** @type {String} */
-    let str = urlLocation.search;
-    const l = decodeURIComponent(str.replace('?lectures=', ''));
-    let lec_arr = [];
-    try {
-      let raw_lec_arr = JSON.parse(l);
-      raw_lec_arr.forEach(({ name, cfu, grade, lode, caratt, isRemoved }) => {
-        lec_arr.push(
-          new LectureType(name, cfu, grade, lode, caratt, isRemoved)
-        );
-      });
-    } catch (e) {
-      console.error('Errore nel parsing della URL', e);
-      return null;
-    }
-    console.log(`Using url lectures`);
-    window.history.replaceState(null, null, '/');
-    return lec_arr;
-  }
-  window.history.replaceState(null, null, '/');
-
-  return null;
-};
+import { urlToLectures } from './components/CopyUrlButton';
 
 // Default lectures are, in order
 // 1. URL Parameters
@@ -43,7 +14,7 @@ const checkUrlParams = urlLocation => {
 
 /** @type {import('./model/LectureType').Lecture[]} */
 const defaultLectures =
-  checkUrlParams(window.location) ||
+  urlToLectures(window.location.search) ||
   JSON.parse(localStorage.getItem('lectures')) ||
   [];
 
@@ -60,9 +31,30 @@ const baseOptions = {
 const defaultOptions =
   JSON.parse(localStorage.getItem('options')) || baseOptions;
 
+const defaultAverageBonus = [];
+for (let i = 29; i >= 18; i--) {
+  let val = 0;
+  if (i >= 28) val = 6;
+  else if (i >= 27) val = 5;
+  else if (i >= 26) val = 3;
+  else if (i >= 24) val = 3;
+  else if (i >= 22) val = 2;
+
+  defaultAverageBonus.push({
+    id: `avBonus${i}`,
+    from: i,
+    to: i + 1 === 30 ? 31 : i + 1,
+    eq: i,
+    label: `${i + 1 === 30 ? '' : `${i+1}<`}M<=${i}`,
+    value: val,
+  });
+}
+
 function App() {
   let [lectures, setLecturesState] = useState(defaultLectures);
   let [options, setOptionsState] = useState(defaultOptions);
+  const [averageBonus, setAverageBonusState] = useState(defaultAverageBonus);
+
   // Funzione wrapper a setLecturesState così da salvare anche in LocalStorage ogni volta.
   /**
    * @param {import('./model/LectureType').Lecture[]} l - Lecture list
@@ -130,11 +122,14 @@ function App() {
           gridArea="PreferencesTab"
           preferences={options}
           setPreferences={setOptions}
+          averageBonus={averageBonus}
+          setAverageBonusState={setAverageBonusState}
         />
         <Average
           gridArea="Average"
           allLectures={lectures}
           preferences={options}
+          averageBonus={averageBonus}
           w={exactWidth}
         />
       </SimpleGrid>
