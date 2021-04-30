@@ -4,10 +4,10 @@ import { useBreakpointValue } from '@chakra-ui/media-query';
 import React from 'react';
 import { borderColor } from '../../theme';
 
-function singleInput({ label, id, value, setValue, ...props }) {
+function SingleInput({ label, id, value, setValue, cellWidth, ...props }) {
   return (
     <SimpleGrid
-      w="9em"
+      w={cellWidth}
       {...props}
       templateColumns={'min-content min-content'}
       justifyContent="center"
@@ -40,6 +40,7 @@ function singleInput({ label, id, value, setValue, ...props }) {
         for={'abc' + id}
         mx={2}
         children={label}
+        
       />
     </SimpleGrid>
   );
@@ -51,7 +52,8 @@ for(let i = 0; i<NUM; i++){
 }
 
 function AverageBonusComponent({ averageBonus, setAverageBonusState, ...props }) {
-    
+  const cellWidth = useBreakpointValue({base: "8em", md: "9em"})
+
   const setAverageBonus = (id, value) => {
     const modifiedBonuses = averageBonus.map(elem => {
       if (elem.id === id) {
@@ -81,10 +83,11 @@ function AverageBonusComponent({ averageBonus, setAverageBonusState, ...props })
     >
       <legend align={legendPosition}>Bonus di profitto</legend>
       {emptyArrayToIterate.map((_, i) => {
-        return singleInput({
+        return SingleInput({
           ...averageBonus[i],
           setValue: setAverageBonus,
           key: averageBonus[i].id,
+          cellWidth: cellWidth
         });
       })}
     </Flex>
