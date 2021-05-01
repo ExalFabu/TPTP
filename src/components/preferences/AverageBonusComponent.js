@@ -1,3 +1,4 @@
+import { useColorModeValue } from '@chakra-ui/color-mode';
 import { InfoIcon } from '@chakra-ui/icons';
 import { Input } from '@chakra-ui/input';
 import { Flex, SimpleGrid, Text } from '@chakra-ui/layout';
@@ -85,6 +86,8 @@ function AverageBonusComponent({
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const openPopover = () => setPopoverOpen(true);
   const closePopover = () => setPopoverOpen(false);
+  const greenInfoColor = useColorModeValue("green.600","green.300")
+
   return (
     <Flex
       as="fieldset"
@@ -101,7 +104,7 @@ function AverageBonusComponent({
           <legend align={legendPosition}>
             Bonus di profitto{' '}
             <InfoIcon
-              color="green.500"
+              color={greenInfoColor}
               boxSize="0.8em"
               aria-label="Pulsante per informazioni aggiuntive sul Bonus di Profitto"
               focusable={true}

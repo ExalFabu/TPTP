@@ -52,7 +52,6 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
   return (
     <SimpleGrid
       p={2}
-      borderBottom={props.isLast ? "none" : "1px"}
       borderColor="gray.500"
       borderRadius="md"
       templateColumns={{
@@ -80,6 +79,7 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
           onChange={e => changeValue(e.target.name, e.target.value)}
           isTruncated={true}
           onClick={(e) => e.target.select()}
+          borderRadius="md"
         />
       </GridItem>
       {/* CFU Input */}
@@ -169,6 +169,7 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
           onClick={e => changeValue(e.target.name, !lecture.caratt)}
           minW="5em"
           w="100%"
+          border="1px"
         >
           Caratterizzante
         </Button>
@@ -182,7 +183,7 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
             icon={<DeleteIcon />}
             aria-label="Rimuovi materia"
             onClick={removeLecture}
-            variant="outline"
+            variant="ghost"
             colorScheme="red"
             w="3em"
             tabIndex={-1}

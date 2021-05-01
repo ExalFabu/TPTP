@@ -15,14 +15,13 @@ function LectureTable({ allLectures, setLectures, ...props}) {
         justifyItems="center"
         {...props}
       >
-        {allLectures.map((el, i) => {
+        {allLectures.map((el) => {
           return (
             <Lecture
               key={el._id}
               allLectures={allLectures}
               setLectures={setLectures}
               lecture={el}
-              isLast={i === allLectures.length - 1}
             />
           );
         })}

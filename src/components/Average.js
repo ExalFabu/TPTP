@@ -10,6 +10,7 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { borderColor } from '../theme';
@@ -171,6 +172,8 @@ export default function Average({
     localStorage.setItem('finalAverage', JSON.stringify(f));
     setFinalAverageState(f);
   };
+  const greenInfoColor = useColorModeValue("green.600","green.300")
+
   return (
     <SimpleGrid
       {...props}
@@ -228,8 +231,8 @@ export default function Average({
         wrap="wrap"
       >
         <SimpleGrid
-          borderBottom="1px"
-          borderRadius="full"
+          // borderBottom="1px"
+          // borderRadius="full"
           p={2}
           mx={2}
           templateAreas={`"Titolo info" "Valore Valore"`}
@@ -243,7 +246,7 @@ export default function Average({
           </Text>
           <Popover gridArea="info">
             <PopoverTrigger>
-              <InfoIcon boxSize="0.8em" color="green.500" />
+              <InfoIcon boxSize="0.8em" color={greenInfoColor} />
             </PopoverTrigger>
             <PopoverContent>
               <PopoverArrow />
@@ -254,8 +257,8 @@ export default function Average({
           </Popover>
         </SimpleGrid>
         <SimpleGrid
-          borderBottom="1px"
-          borderRadius="full"
+          // borderBottom="1px"
+          // borderRadius="full"
           p={2}
           templateAreas={`"Titolo info" "Valore Valore"`}
           justifyItems="center"
@@ -268,7 +271,7 @@ export default function Average({
           </Text>
           <Popover gridArea="info">
             <PopoverTrigger>
-              <InfoIcon boxSize="0.8em" color="green.500" />
+              <InfoIcon boxSize="0.8em" color={greenInfoColor} />
             </PopoverTrigger>
             <PopoverContent>
               <PopoverArrow />

@@ -14,6 +14,7 @@ import {
 import React, { useState } from 'react';
 import { InfoIcon } from '@chakra-ui/icons';
 import { PopoverFooter } from '@chakra-ui/popover';
+import { useColorModeValue } from '@chakra-ui/color-mode';
 
 export default function BonusComponent({
   preferences,
@@ -38,6 +39,7 @@ export default function BonusComponent({
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const openPopover = () => setPopoverOpen(true);
   const closePopover = () => setPopoverOpen(false);
+  const greenInfoColor = useColorModeValue("green.600","green.300")
 
   return (
     <Box
@@ -63,7 +65,7 @@ export default function BonusComponent({
             {' '}
             Bonus{' '}
             <InfoIcon
-              color="green.500"
+              color={greenInfoColor}
               boxSize="0.8em"
               aria-label="Pulsante per informazioni aggiuntive sulla sezione Bonus"
               focusable={true}

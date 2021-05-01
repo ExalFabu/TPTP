@@ -16,6 +16,7 @@ import RemoveComponent from './preferences/RemoveComponent';
  * @param {Object} props
  * @param {import('../model/PreferencesType').Preferences} props.options
  * */
+
 export default function PreferencesTab({
   preferences,
   setPreferences,

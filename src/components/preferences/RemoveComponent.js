@@ -1,4 +1,5 @@
 import { Checkbox } from '@chakra-ui/checkbox';
+import { useColorModeValue } from '@chakra-ui/color-mode';
 import { InfoIcon } from '@chakra-ui/icons';
 import { Input, InputGroup, InputRightAddon } from '@chakra-ui/input';
 import { Box, SimpleGrid } from '@chakra-ui/layout';
@@ -28,10 +29,11 @@ export default function RemoveComponent({
     base: 'left',
     md: 'center',
   });
+  const greenInfoColor = useColorModeValue("green.600","green.300")
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const openPopover = () => setPopoverOpen(true);
   const closePopover = () => setPopoverOpen(false);
-
+  
   return (
     <Box
       {...props}
@@ -53,7 +55,7 @@ export default function RemoveComponent({
           <legend align={legendPosition}>
             Rimuovi{' '}
             <InfoIcon
-              color="green.500"
+              color={greenInfoColor}
               boxSize="0.8em"
               aria-label="Pulsante per informazioni aggiuntive sulla sezione Rimuovi"
               focusable={true}
