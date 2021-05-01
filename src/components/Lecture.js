@@ -153,7 +153,7 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
             isDisabled={lecture.grade !== 30}
             minW="3em"
           >
-            {'L'}
+            L
           </Button>
         </Center>
       </GridItem>

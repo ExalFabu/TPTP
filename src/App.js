@@ -39,13 +39,13 @@ for (let i = 29; i >= 18; i--) {
   else if (i >= 26) val = 3;
   else if (i >= 24) val = 3;
   else if (i >= 22) val = 2;
-
+  const GE = '\u2265'
   defaultAverageBonus.push({
     id: `avBonus${i}`,
     from: i,
     to: i + 1 === 30 ? 31 : i + 1,
     eq: i,
-    label: `${i + 1 === 30 ? '' : `${i + 1}<`}M<=${i}`,
+    label: `${i + 1 === 30 ? '' : `${i+1}>`}M${GE}${i}`,
     value: val,
   });
 }
