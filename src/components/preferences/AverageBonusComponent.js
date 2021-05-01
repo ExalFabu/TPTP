@@ -1,7 +1,17 @@
+import { InfoIcon } from '@chakra-ui/icons';
 import { Input } from '@chakra-ui/input';
 import { Flex, SimpleGrid, Text } from '@chakra-ui/layout';
 import { useBreakpointValue } from '@chakra-ui/media-query';
-import React from 'react';
+import {
+  PopoverArrow,
+  PopoverHeader,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverTrigger,
+  Popover,
+} from '@chakra-ui/popover';
+import React, { useState } from 'react';
 import { borderColor } from '../../theme';
 
 function SingleInput({ label, id, value, setValue, cellWidth, ...props }) {
@@ -40,19 +50,22 @@ function SingleInput({ label, id, value, setValue, cellWidth, ...props }) {
         for={'abc' + id}
         mx={2}
         children={label}
-        
       />
     </SimpleGrid>
   );
 }
 const NUM = 12;
 const emptyArrayToIterate = [];
-for(let i = 0; i<NUM; i++){
-    emptyArrayToIterate.push(0);
+for (let i = 0; i < NUM; i++) {
+  emptyArrayToIterate.push(0);
 }
 
-function AverageBonusComponent({ averageBonus, setAverageBonusState, ...props }) {
-  const cellWidth = useBreakpointValue({base: "8em", md: "9em"})
+function AverageBonusComponent({
+  averageBonus,
+  setAverageBonusState,
+  ...props
+}) {
+  const cellWidth = useBreakpointValue({ base: '8em', md: '9em' });
 
   const setAverageBonus = (id, value) => {
     const modifiedBonuses = averageBonus.map(elem => {
@@ -69,7 +82,9 @@ function AverageBonusComponent({ averageBonus, setAverageBonusState, ...props })
     base: 'left',
     md: 'center',
   });
-
+  const [isPopoverOpen, setPopoverOpen] = useState(false);
+  const openPopover = () => setPopoverOpen(true);
+  const closePopover = () => setPopoverOpen(false);
   return (
     <Flex
       as="fieldset"
@@ -81,13 +96,40 @@ function AverageBonusComponent({ averageBonus, setAverageBonusState, ...props })
       wrap="wrap"
       justifyContent="space-evenly"
     >
-      <legend align={legendPosition}>Bonus di profitto</legend>
+      <Popover isOpen={isPopoverOpen} onClose={closePopover} placement="top">
+        <PopoverTrigger>
+          <legend align={legendPosition}>
+            Bonus di profitto{' '}
+            <InfoIcon
+              color="green.500"
+              boxSize="0.8em"
+              aria-label="Pulsante per informazioni aggiuntive sul Bonus di Profitto"
+              focusable={true}
+              onClick={openPopover}
+            />
+          </legend>
+        </PopoverTrigger>
+        <PopoverContent>
+          <PopoverArrow />
+          <PopoverCloseButton />
+          <PopoverHeader textAlign="center">
+            Cosa è il Bonus di Profitto?
+          </PopoverHeader>
+          <PopoverBody fontSize="sm">
+            Il <strong>Bonus di Profitto</strong> è un punteggio aggiunto al
+            voto finale in base alla media <i>M</i>. Per scoprire la tabella
+            relativa al tuo Corso di Studi ti suggerisco di cercarla su Google o
+            di chiedere ai tuoi rappresentanti
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
+
       {emptyArrayToIterate.map((_, i) => {
         return SingleInput({
           ...averageBonus[i],
           setValue: setAverageBonus,
           key: averageBonus[i].id,
-          cellWidth: cellWidth
+          cellWidth: cellWidth,
         });
       })}
     </Flex>
