@@ -86,13 +86,9 @@ function App() {
                   "PreferencesTab"
                   `,
         }}
-        // templateRows={{
-        //   base: 'min-content 60% min-content min-content'
-        // }}
         justifyItems="center"
-        alignItems="center"
+        alignItems="start"
         rowGap={2}
-        // px={5}
         alignSelf="center"
         justifyContent="center"
       >
@@ -118,19 +114,19 @@ function App() {
           }}
           maxH="60vh"
         />
-        <PreferencesTab
-          gridArea="PreferencesTab"
-          preferences={options}
-          setPreferences={setOptions}
-          averageBonus={averageBonus}
-          setAverageBonusState={setAverageBonusState}
-        />
         <Average
           gridArea="Average"
           allLectures={lectures}
           preferences={options}
           averageBonus={averageBonus}
           w={exactWidth}
+        />
+        <PreferencesTab
+          gridArea="PreferencesTab"
+          preferences={options}
+          setPreferences={setOptions}
+          averageBonus={averageBonus}
+          setAverageBonusState={setAverageBonusState}
         />
       </SimpleGrid>
     </ChakraProvider>

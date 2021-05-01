@@ -10,7 +10,7 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
-  Tooltip,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { borderColor } from '../theme';
@@ -110,10 +110,10 @@ const votoFinale = (allLectures, preferences, averageBonus, finalAverage) => {
 
   return (
     votoDiBase +
-    num_lodi * preferences.ptlode +
-    parseFloat(preferences.erasmus) * (finalAverage.hasDoneEramus ? 1 : 0) +
-    parseFloat(preferences.incorso) * (finalAverage.isInCorso ? 1 : 0) +
-    avBonus
+    Math.min(num_lodi, 6) * preferences.ptlode + // Bonus Lodi (massimo 6 lodi)
+    parseFloat(preferences.erasmus) * (finalAverage.hasDoneEramus ? 1 : 0) + // Bonus Erasmus
+    parseFloat(preferences.incorso) * (finalAverage.isInCorso ? 1 : 0) + // Bonus in corso
+    avBonus // Bonus di Profitto
   );
 };
 
@@ -172,6 +172,8 @@ export default function Average({
     localStorage.setItem('finalAverage', JSON.stringify(f));
     setFinalAverageState(f);
   };
+  const greenInfoColor = useColorModeValue("green.600","green.300")
+
   return (
     <SimpleGrid
       {...props}
@@ -228,39 +230,35 @@ export default function Average({
         justifyContent="space-evenly"
         wrap="wrap"
       >
-        <Tooltip>
-          <SimpleGrid
-            borderBottom="1px"
-            borderRadius="full"
-            p={2}
-            mx={2}
-            templateAreas={`"Titolo info" "Valore Valore"`}
-            justifyItems="center"
-            alignItems="center"
-            columnGap={2}
-          >
-            <Text gridArea="Titolo">Media</Text>
-            <Text gridArea="Valore">
-              {calculateUnipaAverage(allLectures, preferences)}
-            </Text>
-            <Popover gridArea="info">
-              <PopoverTrigger>
-                <InfoIcon color="green.500" />
-              </PopoverTrigger>
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverHeader textAlign="center">
-                  Materie ripesate
-                </PopoverHeader>
-                <PopoverBody>{removedLecturesBody(allLectures)}</PopoverBody>
-              </PopoverContent>
-            </Popover>
-          </SimpleGrid>
-        </Tooltip>
         <SimpleGrid
-          borderBottom="1px"
-          borderRadius="full"
+          // borderBottom="1px"
+          // borderRadius="full"
+          p={2}
+          mx={2}
+          templateAreas={`"Titolo info" "Valore Valore"`}
+          justifyItems="center"
+          alignItems="center"
+          columnGap={2}
+        >
+          <Text gridArea="Titolo">Media</Text>
+          <Text gridArea="Valore">
+            {calculateUnipaAverage(allLectures, preferences)}
+          </Text>
+          <Popover gridArea="info">
+            <PopoverTrigger>
+              <InfoIcon boxSize="0.8em" color={greenInfoColor} />
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverHeader textAlign="center">Materie ripesate</PopoverHeader>
+              <PopoverBody fontSize="sm">{removedLecturesBody(allLectures)}</PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </SimpleGrid>
+        <SimpleGrid
+          // borderBottom="1px"
+          // borderRadius="full"
           p={2}
           templateAreas={`"Titolo info" "Valore Valore"`}
           justifyItems="center"
@@ -273,14 +271,15 @@ export default function Average({
           </Text>
           <Popover gridArea="info">
             <PopoverTrigger>
-              <InfoIcon color="green.500" />
+              <InfoIcon boxSize="0.8em" color={greenInfoColor} />
             </PopoverTrigger>
             <PopoverContent>
               <PopoverArrow />
               <PopoverCloseButton />
               <PopoverHeader textAlign="center">Sallo!</PopoverHeader>
-              <PopoverBody>
-                Al voto finale è stato aggiunto il Bonus di profitto, controlla nella sezione <i>Modifica Valori </i> 
+              <PopoverBody fontSize="sm">
+                Al voto finale è stato aggiunto il Bonus di Profitto, controlla
+                nella sezione <i>Modifica Valori </i>
                 che i valori siano corretti anche per il tuo Corso di Studi
                 prima di festeggiare
               </PopoverBody>

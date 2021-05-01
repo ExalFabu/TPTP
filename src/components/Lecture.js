@@ -44,15 +44,14 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
   };
 
   const removeLecture = _ => {
-    console.log(`Removing ${lecture.name}`);
-    const modifiedLectures = allLectures.filter(el => el._id !== lecture._id);
+    let modifiedLectures = allLectures.filter(el => el._id !== lecture._id);
+    modifiedLectures = modifiedLectures.length === 0 ? [new LectureType()] : modifiedLectures
     setLectures(modifiedLectures);
   };
 
   return (
     <SimpleGrid
       p={2}
-      borderBottom={props.isLast ? "none" : "1px"}
       borderColor="gray.500"
       borderRadius="md"
       templateColumns={{
@@ -80,6 +79,7 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
           onChange={e => changeValue(e.target.name, e.target.value)}
           isTruncated={true}
           onClick={(e) => e.target.select()}
+          borderRadius="md"
         />
       </GridItem>
       {/* CFU Input */}
@@ -170,7 +170,6 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
           minW="5em"
           w="100%"
           border="1px"
-
         >
           Caratterizzante
         </Button>
@@ -184,7 +183,7 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
             icon={<DeleteIcon />}
             aria-label="Rimuovi materia"
             onClick={removeLecture}
-            variant="outline"
+            variant="ghost"
             colorScheme="red"
             w="3em"
             tabIndex={-1}
