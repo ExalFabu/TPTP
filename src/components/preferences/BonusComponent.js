@@ -30,7 +30,6 @@ export default function BonusComponent({
     md: 'center',
   });
   const handleChange = e => {
-    console.log(e);
     setPreferences({
       ...preferences,
       [e.target.name]: e.target.valueAsNumber || 0,

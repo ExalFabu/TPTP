@@ -44,8 +44,8 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
   };
 
   const removeLecture = _ => {
-    console.log(`Removing ${lecture.name}`);
-    const modifiedLectures = allLectures.filter(el => el._id !== lecture._id);
+    let modifiedLectures = allLectures.filter(el => el._id !== lecture._id);
+    modifiedLectures = modifiedLectures.length === 0 ? [new LectureType()] : modifiedLectures
     setLectures(modifiedLectures);
   };
 

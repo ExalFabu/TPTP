@@ -40,7 +40,6 @@ export const lecturesToUrl = lectures => {
       return [l.name, l.cfu, l.caratt];
     });
   if (nonEmptyLectures.length === 0) return '';
-  console.log(JSON.stringify(nonEmptyLectures));
   return '' + PREFIX + encodeURIComponent(JSON.stringify(nonEmptyLectures));
 };
 

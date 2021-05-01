@@ -26,10 +26,8 @@ export default function PreferencesTab({
 }) {
   return (
     <Accordion
-      // as="fieldset"
       w={exactWidth}
       allowToggle
-      pt={4}
       colorScheme="telegram"
       {...props}
     >
