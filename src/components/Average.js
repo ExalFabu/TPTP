@@ -10,7 +10,6 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
-  Tooltip,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { borderColor } from '../theme';
