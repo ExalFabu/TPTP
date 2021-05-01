@@ -97,7 +97,7 @@ const votoFinale = (allLectures, preferences, averageBonus, finalAverage) => {
   const num_lodi = allLectures.reduce(
     (prev, curr) => prev + (curr.lode && curr.grade === 30 ? 1 : 0),
     0
-  ) ;
+  );
   const votoDiBase = Math.round(((avg * 11) / 3) * 100) / 100;
 
   let avBonus = 0;
@@ -110,7 +110,7 @@ const votoFinale = (allLectures, preferences, averageBonus, finalAverage) => {
 
   return (
     votoDiBase +
-    (Math.min(num_lodi, 6)) * preferences.ptlode + // Bonus Lodi (massimo 6 lodi)
+    Math.min(num_lodi, 6) * preferences.ptlode + // Bonus Lodi (massimo 6 lodi)
     parseFloat(preferences.erasmus) * (finalAverage.hasDoneEramus ? 1 : 0) + // Bonus Erasmus
     parseFloat(preferences.incorso) * (finalAverage.isInCorso ? 1 : 0) + // Bonus in corso
     avBonus // Bonus di Profitto
@@ -228,36 +228,32 @@ export default function Average({
         justifyContent="space-evenly"
         wrap="wrap"
       >
-        <Tooltip>
-          <SimpleGrid
-            borderBottom="1px"
-            borderRadius="full"
-            p={2}
-            mx={2}
-            templateAreas={`"Titolo info" "Valore Valore"`}
-            justifyItems="center"
-            alignItems="center"
-            columnGap={2}
-          >
-            <Text gridArea="Titolo">Media</Text>
-            <Text gridArea="Valore">
-              {calculateUnipaAverage(allLectures, preferences)}
-            </Text>
-            <Popover gridArea="info">
-              <PopoverTrigger>
-                <InfoIcon color="green.500" />
-              </PopoverTrigger>
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverHeader textAlign="center">
-                  Materie ripesate
-                </PopoverHeader>
-                <PopoverBody>{removedLecturesBody(allLectures)}</PopoverBody>
-              </PopoverContent>
-            </Popover>
-          </SimpleGrid>
-        </Tooltip>
+        <SimpleGrid
+          borderBottom="1px"
+          borderRadius="full"
+          p={2}
+          mx={2}
+          templateAreas={`"Titolo info" "Valore Valore"`}
+          justifyItems="center"
+          alignItems="center"
+          columnGap={2}
+        >
+          <Text gridArea="Titolo">Media</Text>
+          <Text gridArea="Valore">
+            {calculateUnipaAverage(allLectures, preferences)}
+          </Text>
+          <Popover gridArea="info">
+            <PopoverTrigger>
+              <InfoIcon boxSize="0.8em" color="green.500" />
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverHeader textAlign="center">Materie ripesate</PopoverHeader>
+              <PopoverBody fontSize="sm">{removedLecturesBody(allLectures)}</PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </SimpleGrid>
         <SimpleGrid
           borderBottom="1px"
           borderRadius="full"
@@ -273,14 +269,15 @@ export default function Average({
           </Text>
           <Popover gridArea="info">
             <PopoverTrigger>
-              <InfoIcon color="green.500" />
+              <InfoIcon boxSize="0.8em" color="green.500" />
             </PopoverTrigger>
             <PopoverContent>
               <PopoverArrow />
               <PopoverCloseButton />
               <PopoverHeader textAlign="center">Sallo!</PopoverHeader>
-              <PopoverBody>
-                Al voto finale è stato aggiunto il Bonus di profitto, controlla nella sezione <i>Modifica Valori </i> 
+              <PopoverBody fontSize="sm">
+                Al voto finale è stato aggiunto il Bonus di Profitto, controlla
+                nella sezione <i>Modifica Valori </i>
                 che i valori siano corretti anche per il tuo Corso di Studi
                 prima di festeggiare
               </PopoverBody>
