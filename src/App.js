@@ -55,7 +55,6 @@ function App() {
   let [lectures, setLecturesState] = useState(defaultLectures);
   let [options, setOptionsState] = useState(defaultOptions);
   const [averageBonus, setAverageBonusState] = useState(defaultAverageBonus);
-
   // Funzione wrapper a setLecturesState così da salvare anche in LocalStorage ogni volta.
   /**
    * @param {import('./model/LectureType').Lecture[]} l - Lecture list
@@ -77,7 +76,7 @@ function App() {
     <ChakraProvider theme={theme}>
       <SimpleGrid
         templateColumns={{
-          base: '1fr',
+          base: `'${exactWidth}px'`,
         }}
         templateAreas={{
           base: `
@@ -92,6 +91,7 @@ function App() {
         rowGap={2}
         alignSelf="center"
         justifyContent="center"
+        
       >
         <Header
           gridArea="Header"
@@ -105,15 +105,20 @@ function App() {
           allLectures={lectures}
           setLectures={setLectures}
           overflowY="auto"
+          maxH={{base: "50vh", md: "60vh"}}
+          overflowX="clip"
           css={{
             '&::-webkit-scrollbar': {
-              width: '0px',
+              width: '2px',
             },
             '&::-webkit-scrollbar-track': {
               width: '0px',
             },
+            '&::-webkit-scrollbar-thumb': {
+              background: "#888888FF",
+              borderRadius: '20px',
+            },
           }}
-          maxH="60vh"
         />
         <Average
           gridArea="Average"
