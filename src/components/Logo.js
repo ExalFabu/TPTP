@@ -6,5 +6,5 @@ import logo_white from './logos/logofhd-w.png';
 
 export const Logo = props => {
   const logo_v = useColorModeValue(logo_black, logo_white)
-  return <Image src={logo_v} {...props}/>;
+  return <Image alt="TPTP Logo" src={logo_v} {...props}/>;
 };
