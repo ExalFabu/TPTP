@@ -6,6 +6,7 @@ import Header from './components/Header';
 import PreferencesTab from './components/PreferencesTab';
 import { exactWidth } from './theme';
 import { urlToLectures } from './components/CopyUrlButton';
+import { LectureType } from './components/Lecture';
 
 // Default lectures are, in order
 // 1. URL Parameters
@@ -16,7 +17,7 @@ import { urlToLectures } from './components/CopyUrlButton';
 const defaultLectures =
   urlToLectures(window.location.search) ||
   JSON.parse(localStorage.getItem('lectures')) ||
-  [];
+  [new LectureType()];
 
 /** @type {import('./model/PreferencesType').Preferences} */
 const baseOptions = {
