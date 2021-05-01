@@ -97,7 +97,7 @@ const votoFinale = (allLectures, preferences, averageBonus, finalAverage) => {
   const num_lodi = allLectures.reduce(
     (prev, curr) => prev + (curr.lode && curr.grade === 30 ? 1 : 0),
     0
-  );
+  ) ;
   const votoDiBase = Math.round(((avg * 11) / 3) * 100) / 100;
 
   let avBonus = 0;
@@ -110,10 +110,10 @@ const votoFinale = (allLectures, preferences, averageBonus, finalAverage) => {
 
   return (
     votoDiBase +
-    num_lodi * preferences.ptlode +
-    parseFloat(preferences.erasmus) * (finalAverage.hasDoneEramus ? 1 : 0) +
-    parseFloat(preferences.incorso) * (finalAverage.isInCorso ? 1 : 0) +
-    avBonus
+    (Math.min(num_lodi, 6)) * preferences.ptlode + // Bonus Lodi (massimo 6 lodi)
+    parseFloat(preferences.erasmus) * (finalAverage.hasDoneEramus ? 1 : 0) + // Bonus Erasmus
+    parseFloat(preferences.incorso) * (finalAverage.isInCorso ? 1 : 0) + // Bonus in corso
+    avBonus // Bonus di Profitto
   );
 };
 
