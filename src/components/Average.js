@@ -8,6 +8,7 @@ import {
   PopoverBody,
   PopoverCloseButton,
   PopoverContent,
+  PopoverFooter,
   PopoverHeader,
   PopoverTrigger,
   useColorModeValue,
@@ -296,13 +297,14 @@ export default function Average({
             <PopoverContent>
               <PopoverArrow />
               <PopoverCloseButton />
-              <PopoverHeader textAlign="center">Sallo!</PopoverHeader>
+              <PopoverHeader textAlign="center">Voto Finale</PopoverHeader>
               <PopoverBody fontSize="sm">
-                Al voto finale è stato aggiunto il Bonus di Profitto, controlla
-                nella sezione <i>Modifica Valori </i>
-                che i valori siano corretti anche per il tuo Corso di Studi
-                prima di festeggiare
+                Al voto finale sono stati aggiunti gli eventuali bonus.
+                Assicurati di aver inserito i valori corretti per il tuo Corso di Studi prima di festeggiare.
               </PopoverBody>
+              <PopoverFooter fontSize="sm">
+                Il voto finale va arrotondato al valore intero più vicino.
+              </PopoverFooter>
             </PopoverContent>
           </Popover>
         </SimpleGrid>
