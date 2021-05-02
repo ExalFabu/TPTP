@@ -16,8 +16,8 @@ export class LectureType {
   constructor(name, cfu, grade, lode, caratt, isRemoved) {
     this._id = nanoid(22);
     this.name = name || '';
-    this.cfu = cfu || 0;
-    this.grade = grade || 0;
+    this.cfu = cfu || null;
+    this.grade = grade || null;
     this.lode = lode || false;
     this.caratt = caratt || false;
     this.isRemoved = isRemoved || false;
@@ -32,7 +32,12 @@ export class LectureType {
  * @param {import('../model/LectureType').Lecture} props.lecture
  * @returns {React.FC}
  */
-export default function Lecture({ allLectures, setLectures, lecture, ...props }) {
+export default function Lecture({
+  allLectures,
+  setLectures,
+  lecture,
+  ...props
+}) {
   const changeValue = (name, value) => {
     const modifiedLectures = allLectures.map(lec => {
       if (lecture._id === lec._id) {
@@ -45,7 +50,8 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
 
   const removeLecture = _ => {
     let modifiedLectures = allLectures.filter(el => el._id !== lecture._id);
-    modifiedLectures = modifiedLectures.length === 0 ? [new LectureType()] : modifiedLectures
+    modifiedLectures =
+      modifiedLectures.length === 0 ? [new LectureType()] : modifiedLectures;
     setLectures(modifiedLectures);
   };
 
@@ -78,13 +84,18 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
           value={lecture.name}
           onChange={e => changeValue(e.target.name, e.target.value)}
           isTruncated={true}
-          onClick={(e) => e.target.select()}
+          onClick={e => e.target.select()}
           borderRadius="md"
         />
       </GridItem>
       {/* CFU Input */}
       <InputGroup gridArea="cfu" size="sm" w="100%">
-        <InputLeftAddon as="label" for={`cfu${lecture._id}`} children={'CFU'} w="55px"/>
+        <InputLeftAddon
+          as="label"
+          for={`cfu${lecture._id}`}
+          children={'CFU'}
+          w="55px"
+        />
 
         <Input
           variant="outline"
@@ -95,20 +106,25 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
           min={0}
           type="number"
           onChange={e => {
-            changeValue(e.target.name, parseInt(e.target.value) || 0);
+            changeValue(e.target.name, e.target.valueAsNumber);
           }}
-          placeholder="CFU"
+          placeholder="0"
           value={lecture.cfu}
           w="4em"
           textAlign="center"
-          onClick={(e) => e.target.select()}
-
+          onClick={e => e.target.select()}
+          isInvalid={lecture.cfu < 0 && lecture.cfu !== null}
         />
       </InputGroup>
 
       {/* Grade Input */}
       <InputGroup size="sm" gridArea="grade" w="100%">
-        <InputLeftAddon as="label" for={`grade${lecture._id}`} children={'Voto'} w="55px"/>
+        <InputLeftAddon
+          as="label"
+          for={`grade${lecture._id}`}
+          children={'Voto'}
+          w="55px"
+        />
         <Input
           type="number"
           variant="outline"
@@ -119,18 +135,17 @@ export default function Lecture({ allLectures, setLectures, lecture, ...props })
           isInvalid={
             (lecture.grade < 18 || lecture.grade > 30) &&
             lecture.grade !== '' &&
-            lecture.grade !== 0
+            lecture.grade !== 0 &&
+            lecture.grade !== null
           }
           min={18}
           max={30}
-          onChange={e =>
-            changeValue(e.target.name, parseInt(e.target.value) || 0)
-          }
+          onChange={e => changeValue(e.target.name, e.target.valueAsNumber)}
           value={lecture.grade}
           w="4em"
           textAlign="center"
-          onClick={(e) => e.target.select()}
-          
+          onClick={e => e.target.select()}
+          placeholder="0"
         />
       </InputGroup>
 
