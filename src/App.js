@@ -72,7 +72,7 @@ function App() {
     <ChakraProvider theme={theme}>
       <SimpleGrid
         templateColumns={{
-          base: '1fr',
+          base: `'${exactWidth}px'`,
         }}
         templateAreas={{
           base: `
@@ -87,6 +87,7 @@ function App() {
         rowGap={2}
         alignSelf="center"
         justifyContent="center"
+        
       >
         <Header
           gridArea="Header"
