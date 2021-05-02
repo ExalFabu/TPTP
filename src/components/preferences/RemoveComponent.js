@@ -117,13 +117,14 @@ export default function RemoveComponent({
             id="cfu_val"
             variant="flushed"
             type="number"
+            placeholder="0"
             min={0}
             value={preferences.cfu_value}
             onChange={e => {
               setPreferences({
                 ...preferences,
                 removeCFU: true,
-                cfu_value: e.target.valueAsNumber,
+                cfu_value: Math.abs(e.target.valueAsNumber),
               });
             }}
             textAlign="center"
@@ -151,7 +152,7 @@ export default function RemoveComponent({
           <Checkbox
             isChecked={!preferences.removeCFU}
             aria-label="Rimuovi Materie"
-            colorScheme="orange"
+            colorScheme="green"
             onChange={e => {
               if (e.target.checked === false) return;
               setPreferences({
@@ -168,13 +169,14 @@ export default function RemoveComponent({
             aria-label="Materie da rimuovere"
             variant="flushed"
             type="number"
+            placeholder="0"
             min={0}
             value={preferences.mat_value}
             onChange={e => {
               setPreferences({
                 ...preferences,
                 removeCFU: false,
-                mat_value: e.target.valueAsNumber,
+                mat_value: Math.abs(e.target.valueAsNumber),
               });
             }}
             textAlign="center"
