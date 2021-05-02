@@ -76,7 +76,6 @@ function AverageBonusComponent({
       }
       return elem;
     });
-    localStorage.setItem('AvBonus', JSON.stringify(modifiedBonuses));
     setAverageBonusState(modifiedBonuses);
   };
   const legendPosition = useBreakpointValue({

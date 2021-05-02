@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChakraProvider, theme, SimpleGrid } from '@chakra-ui/react';
 import LectureTable from './components/LectureTable';
 import Average from './components/Average';
@@ -6,6 +6,7 @@ import Header from './components/Header';
 import PreferencesTab from './components/PreferencesTab';
 import { exactWidth } from './theme';
 import { urlToLectures } from './components/CopyUrlButton';
+import { LectureType } from './components/Lecture';
 
 // Default lectures are, in order
 // 1. URL Parameters
@@ -13,10 +14,8 @@ import { urlToLectures } from './components/CopyUrlButton';
 // 3. None
 
 /** @type {import('./model/LectureType').Lecture[]} */
-const defaultLectures =
-  urlToLectures(window.location.search) ||
-  JSON.parse(localStorage.getItem('lectures')) ||
-  [];
+const defaultLectures = urlToLectures(window.location.search) ||
+  JSON.parse(localStorage.getItem('lectures')) || [new LectureType()];
 
 /** @type {import('./model/PreferencesType').Preferences} */
 const baseOptions = {
@@ -31,46 +30,43 @@ const baseOptions = {
 const defaultOptions =
   JSON.parse(localStorage.getItem('options')) || baseOptions;
 
-const defaultAverageBonus = [];
-for (let i = 29; i >= 18; i--) {
-  let val = 0;
-  if (i >= 28) val = 6;
-  else if (i >= 27) val = 5;
-  else if (i >= 26) val = 3;
-  else if (i >= 24) val = 3;
-  else if (i >= 22) val = 2;
-  const GE = '\u2265'
-  defaultAverageBonus.push({
-    id: `avBonus${i}`,
-    from: i,
-    to: i + 1 === 30 ? 31 : i + 1,
-    eq: i,
-    label: `${i + 1 === 30 ? '' : `${i+1}>`}M${GE}${i}`,
-    value: val,
-  });
+const defaultAverageBonus = JSON.parse(localStorage.getItem('averageBonus')) || [];
+if (defaultAverageBonus.length === 0) {
+  for (let i = 29; i >= 18; i--) {
+    let val = 0;
+    if (i >= 28) val = 6;
+    else if (i >= 27) val = 5;
+    else if (i >= 26) val = 3;
+    else if (i >= 24) val = 3;
+    else if (i >= 22) val = 2;
+    const GE = '\u2265';
+    defaultAverageBonus.push({
+      id: `avBonus${i}`,
+      from: i,
+      to: i + 1 === 30 ? 31 : i + 1,
+      eq: i,
+      label: `${i + 1 === 30 ? '' : `${i + 1}>`}M${GE}${i}`,
+      value: val,
+    });
+  }
 }
 
 function App() {
-  let [lectures, setLecturesState] = useState(defaultLectures);
-  let [options, setOptionsState] = useState(defaultOptions);
+  const [lectures, setLectures] = useState(defaultLectures);
+  const [options, setOptions] = useState(defaultOptions);
   const [averageBonus, setAverageBonusState] = useState(defaultAverageBonus);
 
-  // Funzione wrapper a setLecturesState così da salvare anche in LocalStorage ogni volta.
-  /**
-   * @param {import('./model/LectureType').Lecture[]} l - Lecture list
-   */
-  const setLectures = l => {
-    setLecturesState(l);
-    localStorage.setItem('lectures', JSON.stringify(l));
-  };
-
-  /**
-   * @param {import('./model/PreferencesType').Preferences} o
-   */
-  const setOptions = o => {
-    setOptionsState(o);
-    localStorage.setItem('options', JSON.stringify(o));
-  };
+  // Per salvare sul LocalStorage le eventuali materie di default
+  // viene eseguito solo quando componentDidMount
+  useEffect(() => {
+    localStorage.setItem('lectures', JSON.stringify(lectures));
+  }, [lectures]);
+  useEffect(() => {
+    localStorage.setItem('options', JSON.stringify(options));
+  }, [options]);
+  useEffect(() => {
+    localStorage.setItem('averageBonus', JSON.stringify(averageBonus));
+  }, [averageBonus]);
 
   return (
     <ChakraProvider theme={theme}>
@@ -104,15 +100,20 @@ function App() {
           allLectures={lectures}
           setLectures={setLectures}
           overflowY="auto"
+          maxH={{ base: '50vh', md: '60vh' }}
+          overflowX="clip"
           css={{
             '&::-webkit-scrollbar': {
-              width: '0px',
+              width: '2px',
             },
             '&::-webkit-scrollbar-track': {
-              width: '0px',
+              width: '2px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: '#888888FF',
+              borderRadius: '20px',
             },
           }}
-          maxH="60vh"
         />
         <Average
           gridArea="Average"
