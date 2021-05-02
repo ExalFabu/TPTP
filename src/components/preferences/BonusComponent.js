@@ -32,7 +32,7 @@ export default function BonusComponent({
   const handleChange = e => {
     setPreferences({
       ...preferences,
-      [e.target.name]: e.target.valueAsNumber || 0,
+      [e.target.name]: Math.abs(e.target.valueAsNumber),
     });
   };
   const [isPopoverOpen, setPopoverOpen] = useState(false);
@@ -123,6 +123,7 @@ export default function BonusComponent({
           w="2em"
           step={0.5}
           min={0}
+          placeholder="0"
           textAlign="center"
           value={preferences.ptlode}
           onChange={handleChange}
@@ -149,6 +150,7 @@ export default function BonusComponent({
           type="number"
           w="2em"
           step={0.5}
+          placeholder="0"
           min={0}
           textAlign="center"
           value={preferences.erasmus}
@@ -175,6 +177,7 @@ export default function BonusComponent({
           type="number"
           w="2em"
           step={0.5}
+          placeholder="0"
           min={0}
           textAlign="center"
           value={preferences.incorso}

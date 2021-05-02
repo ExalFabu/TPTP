@@ -21,6 +21,7 @@ export class LectureType {
     this.lode = lode || false;
     this.caratt = caratt || false;
     this.isRemoved = isRemoved || false;
+    this.new_cfu = this.cfu;
   }
 }
 
@@ -106,7 +107,7 @@ export default function Lecture({
           min={0}
           type="number"
           onChange={e => {
-            changeValue(e.target.name, e.target.valueAsNumber);
+            changeValue(e.target.name, Math.abs(e.target.valueAsNumber));
           }}
           placeholder="0"
           value={lecture.cfu}
@@ -140,7 +141,7 @@ export default function Lecture({
           }
           min={18}
           max={30}
-          onChange={e => changeValue(e.target.name, e.target.valueAsNumber)}
+          onChange={e => changeValue(e.target.name, Math.abs(e.target.valueAsNumber))}
           value={lecture.grade}
           w="4em"
           textAlign="center"

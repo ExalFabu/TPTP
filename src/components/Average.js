@@ -23,16 +23,21 @@ import { borderColor } from '../theme';
  */
 const calculateUnipaAverage = (allLectures, preferences) => {
   // Calcolo la media ponderata, salvandomi somme pesate e pesi.
+  const validLecture = lecture =>
+    lecture.grade !== 0 &&
+    lecture.grade !== null &&
+    lecture.grade !== undefined &&
+    lecture.grade >= 18 &&
+    lecture.grade <= 30 &&
+    lecture.cfu !== 0 &&
+    lecture.cfu !== null &&
+    lecture.cfu !== undefined &&
+    lecture.cfu > 0;
+
   let weights = 0;
   let sum = 0;
   allLectures.forEach(element => {
-    if (
-      element.grade &&
-      element.cfu &&
-      element.grade >= 18 &&
-      element.grade <= 30 &&
-      element.cfu !== 0
-    ) {
+    if (validLecture(element)) {
       weights += parseInt(element.cfu);
       sum += parseInt(element.grade) * parseInt(element.cfu);
       element.new_cfu = element.cfu;
@@ -45,7 +50,7 @@ const calculateUnipaAverage = (allLectures, preferences) => {
   /** @type {Array} */
   let non_caratt_lecture = allLectures.filter(
     el =>
-      el.caratt === false && el.grade < avg && el.grade >= 18 && el.grade <= 30
+      el.caratt === false && el.grade < avg && validLecture(el)
   );
 
   non_caratt_lecture.sort((a, b) => a.grade - b.grade);
@@ -93,6 +98,12 @@ const calculateUnipaAverage = (allLectures, preferences) => {
  * @returns
  */
 const votoFinale = (allLectures, preferences, averageBonus, finalAverage) => {
+  const validateValue = value => {
+    return isNaN(parseFloat(value)) || parseFloat(value) <= 0 // Se non è un valore numerico o è negativo è inammissibile, quindi 0
+      ? 0
+      : parseFloat(value);
+  };
+
   const avg = calculateUnipaAverage(allLectures, preferences);
   const num_lodi = allLectures.reduce(
     (prev, curr) => prev + (curr.lode && curr.grade === 30 ? 1 : 0),
@@ -110,10 +121,10 @@ const votoFinale = (allLectures, preferences, averageBonus, finalAverage) => {
 
   return (
     votoDiBase +
-    Math.min(num_lodi, 6) * preferences.ptlode + // Bonus Lodi (massimo 6 lodi)
-    parseFloat(preferences.erasmus) * (finalAverage.hasDoneEramus ? 1 : 0) + // Bonus Erasmus
-    parseFloat(preferences.incorso) * (finalAverage.isInCorso ? 1 : 0) + // Bonus in corso
-    avBonus // Bonus di Profitto
+    Math.min(num_lodi, 6) * (preferences.ptlode || 0) + // Bonus Lodi (massimo 6 lodi)
+    validateValue(preferences.erasmus) * (finalAverage.hasDoneEramus ? 1 : 0) + // Bonus Erasmus
+    validateValue(preferences.incorso) * (finalAverage.isInCorso ? 1 : 0) + // Bonus in corso
+    validateValue(avBonus) // Bonus di Profitto
   );
 };
 
@@ -123,7 +134,14 @@ const votoFinale = (allLectures, preferences, averageBonus, finalAverage) => {
  */
 const removedLecturesBody = lectures => {
   const removed = lectures.filter(
-    l => l.new_cfu !== l.cfu && l.cfu !== 0 && l.grade !== 0
+    l =>
+      l.new_cfu !== l.cfu &&
+      l.cfu !== 0 &&
+      l.grade !== 0 &&
+      l.cfu !== null &&
+      l.grade !== null &&
+      l.cfu !== undefined &&
+      l.grade !== undefined
   );
   if (removed.length === 0) {
     return (
@@ -172,7 +190,7 @@ export default function Average({
     localStorage.setItem('finalAverage', JSON.stringify(f));
     setFinalAverageState(f);
   };
-  const greenInfoColor = useColorModeValue("green.600","green.300")
+  const greenInfoColor = useColorModeValue('green.600', 'green.300');
 
   return (
     <SimpleGrid
@@ -252,7 +270,9 @@ export default function Average({
               <PopoverArrow />
               <PopoverCloseButton />
               <PopoverHeader textAlign="center">Materie ripesate</PopoverHeader>
-              <PopoverBody fontSize="sm">{removedLecturesBody(allLectures)}</PopoverBody>
+              <PopoverBody fontSize="sm">
+                {removedLecturesBody(allLectures)}
+              </PopoverBody>
             </PopoverContent>
           </Popover>
         </SimpleGrid>

@@ -40,7 +40,8 @@ function SingleInput({ label, id, value, setValue, cellWidth, ...props }) {
         min={0}
         fontSize="md"
         variant="flushed"
-        onChange={e => setValue(e.target.name, e.target.valueAsNumber || 0)}
+        placeholder="0"
+        onChange={e => setValue(e.target.name, Math.abs(e.target.valueAsNumber))}
         onClick={e => e.target.select()}
         w="2em"
         textAlign="center"
