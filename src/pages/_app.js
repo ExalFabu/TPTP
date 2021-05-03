@@ -57,7 +57,7 @@ function MyApp({ Component, pageProps }) {
               "name": "TPTP",
               "url": "https://tptp.vercel.app",
               "description": "Calcola la tua media universitaria",
-              "image": "%PUBLIC_URL%/logo512.png",
+              "image": "/logo512.png",
               "alternateName": "TPTP - Calcola la tua media universitaria",
               "keywords": "università, media, unipa, calcolo media",
               "applicationCategory": "Utility",
