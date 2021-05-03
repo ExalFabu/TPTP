@@ -166,13 +166,13 @@ const removedLecturesBody = lectures => {
 /**
  * @type {import('../model/FinalAverage').FinalAverage}
  */
-const defaultFinalAverage = JSON.parse(
-  localStorage.getItem('finalAverage')
-) || {
-  isInCorso: false,
-  hasDoneEramus: false,
-  averageBonus: 0,
-};
+// const defaultFinalAverage = JSON.parse(
+//   localStorage.getItem('finalAverage')
+// ) || {
+//   isInCorso: false,
+//   hasDoneEramus: false,
+//   averageBonus: 0,
+// };
 
 /**
  * @param {Object} props
@@ -186,7 +186,11 @@ export default function Average({
   averageBonus,
   ...props
 }) {
-  const [finalAverage, setFinalAverageState] = useState(defaultFinalAverage);
+  const [finalAverage, setFinalAverageState] = useState({
+    isInCorso: false,
+    hasDoneEramus: false,
+    averageBonus: 0,
+  });
   const setFinalAverage = f => {
     localStorage.setItem('finalAverage', JSON.stringify(f));
     setFinalAverageState(f);
