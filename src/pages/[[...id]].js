@@ -5,9 +5,8 @@ import Average from '../components/Average';
 import Header from '../components/Header';
 import PreferencesTab from '../components/PreferencesTab';
 import { exactWidth } from '../theme';
-import { urlToLectures } from '../components/CopyUrlButton';
 import { LectureType } from '../components/Lecture';
-const baseOptions = () => {
+export const baseOptions = () => {
   return {
     removeCFU: true,
     cfu_value: 18,
@@ -18,7 +17,7 @@ const baseOptions = () => {
   };
 };
 
-const baseAverageBonus = averageBonus => {
+export const baseAverageBonus = averageBonus => {
   for (let i = 29; i >= 18; i--) {
     let val = 0;
     if (i >= 28) val = 6;
@@ -46,12 +45,14 @@ function App(props) {
 
   // Setting up default states (gathering from localstorage if needed)
   useEffect(() => {
-    const defaultLectures =
-      urlToLectures(window.location.search) ||
-      JSON.parse(localStorage.getItem('lectures')) ||
-      null;
-    if (defaultLectures) {
-      setLectures(defaultLectures);
+    if (props.lectures) {
+      setLectures(props.lectures);
+    } else {
+      const defaultLectures =
+        JSON.parse(localStorage.getItem('lectures')) || null;
+      if (defaultLectures) {
+        setLectures(defaultLectures);
+      }
     }
     const defaultOptions = JSON.parse(localStorage.getItem('options')) || null;
     if (defaultOptions) setOptions(defaultOptions);
@@ -141,6 +142,37 @@ function App(props) {
       </ChakraProvider>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const protocol = context.req.headers['x-forwarded-proto'] || 'http';
+  const baseUrl = context.req
+    ? `${protocol}://${context.req.headers.host}`
+    : '';
+
+  const { id } = context.query;
+  if (id === undefined) return { props: {} };
+  console.log('ssring');
+  const response = await fetch(baseUrl + '/api/fetchUrl', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      body: {
+        id: id,
+      },
+    },
+  });
+  if (response.status === 200) {
+    const { lecture, name, options, averageBonus } = await response.json();
+    console.log(lecture);
+    return {
+      props: {
+        lectures: lecture,
+        name: name,
+      },
+    };
+  }
+  return { props: {} };
 }
 
 export default App;
