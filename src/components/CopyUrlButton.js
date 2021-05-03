@@ -32,19 +32,25 @@ const lectureArray = {
   ],
 };
 
-export const lecturesToUrl = lectures => {
+export const lecturesToUrl = (lectures) => {
   const isEmpty = lecture => lecture.cfu === 0 && lecture.name === '';
   const nonEmptyLectures = lectures
     .filter(l => !isEmpty(l))
     .map(l => {
       return [l.name, l.cfu, l.caratt];
     });
+  fetch("/api/createUrl").then(v => {
+    console.log(v)
+  })
+
   if (nonEmptyLectures.length === 0) return '';
   return '' + PREFIX + encodeURIComponent(JSON.stringify(nonEmptyLectures));
 };
 
 export function urlToLectures(url) {
-  window.history.replaceState(null, null, '/');
+  if (typeof window !== undefined) {
+    window.history.replaceState(null, '', '/');
+  }
   if (!url.startsWith(PREFIX)) return null;
   url = url.replace(PREFIX, '');
   let parsed = {};
