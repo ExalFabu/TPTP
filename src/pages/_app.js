@@ -62,7 +62,7 @@ function MyApp({ Component, pageProps }) {
               "keywords": "università, media, unipa, calcolo media",
               "applicationCategory": "Utility",
               "operatingSystem": "Windows, Linux, MacOS, iOS, Android",
-              "softwareVersion": "1.0"
+              "softwareVersion": "1.1"
             }
             `,
           }}
