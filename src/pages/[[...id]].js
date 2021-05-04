@@ -6,6 +6,8 @@ import Header from '../components/Header';
 import PreferencesTab from '../components/PreferencesTab';
 import { exactWidth } from '../theme';
 import { LectureType } from '../components/Lecture';
+import Head from 'next/head';
+
 export const baseOptions = () => {
   return {
     removeCFU: true,
@@ -42,23 +44,22 @@ function App(props) {
   const [lectures, setLectures] = useState([new LectureType()]);
   const [options, setOptions] = useState(baseOptions());
   const [averageBonus, setAverageBonusState] = useState(baseAverageBonus([]));
-
   // Setting up default states (gathering from localstorage if needed)
   useEffect(() => {
-    if (props.lectures) {
-      setLectures(props.lectures);
-    } else {
-      const defaultLectures =
-        JSON.parse(localStorage.getItem('lectures')) || null;
-      if (defaultLectures) {
-        setLectures(defaultLectures);
-      }
+    const defaultLectures =
+      props.lectures || JSON.parse(localStorage.getItem('lectures')) || null;
+    if (defaultLectures) {
+      setLectures(defaultLectures);
     }
-    const defaultOptions = JSON.parse(localStorage.getItem('options')) || null;
+
+    const defaultOptions =
+      props.options || JSON.parse(localStorage.getItem('options')) || null;
     if (defaultOptions) setOptions(defaultOptions);
 
     const defaultAverageBonus =
-      JSON.parse(localStorage.getItem('averageBonus')) || null;
+      props.averageBonus ||
+      JSON.parse(localStorage.getItem('averageBonus')) ||
+      null;
     if (defaultAverageBonus) {
       setAverageBonusState(defaultAverageBonus);
     }
@@ -78,6 +79,41 @@ function App(props) {
 
   return (
     <>
+      <Head>
+        <title>
+          {props.name !== undefined ? `TPTP - ${props.name}` : 'TPTP'}
+        </title>
+        <meta
+          property="og:title"
+          content={props.name !== undefined ? `TPTP - ${props.name}` : 'TPTP'}
+          key="og:title"
+        />
+        <meta
+          property="og:description"
+          content={
+            props.name !== undefined
+              ? `Calcola la tua media universitaria con le materie di '${props.name}'`
+              : 'Calcola la tua media universitaria'
+          }
+          key="og:description"
+        />
+
+        <meta
+          property="twitter:title"
+          content={props.name !== undefined ? `TPTP - ${props.name}` : 'TPTP'}
+          key="twitter:title"
+        />
+        <meta
+          property="twitter:description"
+          content={
+            props.name !== undefined
+              ? `Calcola la tua media universitaria con le materie di '${props.name}'`
+              : 'Calcola la tua media universitaria'
+          }
+          key="twitter:description"
+        />
+        <meta />
+      </Head>
       <ChakraProvider theme={theme}>
         <SimpleGrid
           templateColumns={{
@@ -100,6 +136,8 @@ function App(props) {
           <Header
             gridArea="Header"
             allLectures={lectures}
+            options={options}
+            averageBonus={averageBonus}
             setLectures={setLectures}
             w={exactWidth}
           />
@@ -157,21 +195,34 @@ export async function getServerSideProps(context) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      body: {
-        id: id,
-      },
     },
+    body: JSON.stringify({
+      id: id,
+    }),
   });
   if (response.status === 200) {
-    const { lecture, name, options, averageBonus } = await response.json();
-    console.log(lecture);
+    console.log('request succesfull');
+    const j = await response.json();
+    // console.log(j.)
+    const { lectures, name, options, averageBonus } = j;
+    // console.log(lectures);
     return {
       props: {
-        lectures: lecture,
+        lectures: lectures.map(elem => {
+          console.log(elem);
+          return JSON.parse(
+            JSON.stringify(
+              new LectureType(elem[0], elem[1], null, null, elem[2])
+            )
+          );
+        }),
         name: name,
+        options: options,
+        averageBonus: averageBonus,
       },
     };
   }
+  console.log(response);
   return { props: {} };
 }
 
