@@ -7,7 +7,7 @@ const fetchUrl = async (req, res) => {
   const { id } = req.body;
   if (!id) res.status(400).json({error: "Missing arguments"});
   try {
-    let lectures = await ShortUrl.findById(id).exec();
+    let lectures = await ShortUrl.findByIdAndUpdate(id, {updatedAt: Date.now()}).exec();
     if(!lectures) return res.status(400).json({error: "id not found"})
     return res.status(200).json( lectures );
   } catch (error) {
