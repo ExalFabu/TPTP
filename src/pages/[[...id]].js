@@ -46,6 +46,9 @@ function App(props) {
   const [averageBonus, setAverageBonusState] = useState(baseAverageBonus([]));
   // Setting up default states (gathering from localstorage if needed)
   useEffect(() => {
+    if(props.name) {
+      window.history.replaceState({}, null, "/")
+    }
     const defaultLectures =
       props.lectures || JSON.parse(localStorage.getItem('lectures')) || null;
     if (defaultLectures) {
