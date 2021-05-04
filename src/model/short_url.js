@@ -31,7 +31,7 @@ const ShortUrlSchema = new mongoose.Schema({
             elem.length === 3 &&
             typeof elem[0] === 'string' &&
             typeof elem[1] === 'number' &&
-            typeof elem[2] === 'number'
+            typeof elem[2] === 'boolean'
           );
         });
       },
