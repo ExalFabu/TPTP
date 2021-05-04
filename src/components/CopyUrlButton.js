@@ -68,14 +68,12 @@ export function urlToLectures(url) {
   }
 }
 
-const shareLectures = ({ allLectures, toast, setLoading }) => {
+const shareLectures = async ({ allLectures, options, averageBonus, toast, setLoading }) => {
   const isEmpty = lecture => lecture.cfu === 0 && lecture.name === '';
 
   const basename = window.location.origin;
-  // const path = lecturesToUrl(allLectures);
-  // const url = basename + path;
   setLoading(true);
-  fetch('api/createUrl', {
+  const response = await fetch('api/createUrl', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -87,39 +85,39 @@ const shareLectures = ({ allLectures, toast, setLoading }) => {
         .map(l => {
           return [l.name, l.cfu, l.caratt];
         }),
+      options: options,
+      averageBonus: averageBonus,
     }),
-  }).then(response => {
-    if (response.status !== 200) {
-      navigator.clipboard.writeText(basename + lecturesToUrl(allLectures));
-      toast({
-        title: 'URL Copiato',
-        status: 'success',
-        isClosable: true,
-      });
-    }
-    response.json().then((value) => {
-      setLoading(false);
-      const url = basename + '/' + value.url;
-      if (navigator.canShare) {
-        navigator.share({
-          title: 'TPTP',
-          url: url,
-          text:
-            'TPTP - Calcola la tua media universitaria con le materie impostate da me!',
-        });
-      } else {
-        navigator.clipboard.writeText(url);
-        toast({
-          title: 'URL Copiato',
-          status: 'success',
-          isClosable: true,
-        });
-      }
-    });
   });
+  setLoading(false);
+  if (response.status !== 200) {
+    toast({
+      title: 'Qualcosa è andato storto',
+      status: 'error',
+      isClosable: true,
+    });
+    return;
+  }
+  const value = await response.json();
+  const url = basename + '/' + value.url;
+  if (navigator.canShare) {
+    navigator.share({
+      title: 'TPTP',
+      url: url,
+      text:
+        'TPTP - Calcola la tua media universitaria con le materie impostate da me!',
+    });
+  } else {
+    navigator.clipboard.writeText(url);
+    toast({
+      title: 'URL Copiato',
+      status: 'success',
+      isClosable: true,
+    });
+  }
 };
 
-export default function CopyUrlButton({ allLectures }) {
+export default function CopyUrlButton({ allLectures, options, averageBonus }) {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   return (
@@ -129,7 +127,9 @@ export default function CopyUrlButton({ allLectures }) {
       size="sm"
       leftIcon={<LinkIcon />}
       isLoading={loading}
-      onClick={() => shareLectures({ allLectures, toast, setLoading })}
+      onClick={() =>
+        shareLectures({ allLectures, options, averageBonus, toast, setLoading })
+      }
     >
       Condividi Materie
     </Button>
