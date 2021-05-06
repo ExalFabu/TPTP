@@ -1,8 +1,8 @@
 import { Button } from '@chakra-ui/button';
-import React, { useState } from 'react';
-import { Validator } from 'jsonschema';
+import React, { useEffect, useState } from 'react';
+// import { Validator } from 'jsonschema';
 import { CopyIcon, LinkIcon } from '@chakra-ui/icons';
-import { LectureType } from './Lecture';
+// import { LectureType } from './Lecture';
 import { useToast } from '@chakra-ui/toast';
 import {
   Modal,
@@ -14,76 +14,12 @@ import {
   ModalOverlay,
 } from '@chakra-ui/modal';
 import { useDisclosure } from '@chakra-ui/hooks';
-import { Input, InputGroup } from '@chakra-ui/input';
-import { Text } from '@chakra-ui/layout';
-import { FaShareAlt, FaWindows } from 'react-icons/fa';
-
-const PREFIX = '?l=';
-
-const v = new Validator();
-
-const lectureArray = {
-  id: '/LectureArray',
-  type: 'array',
-  items: [
-    {
-      type: 'array',
-      items: [
-        {
-          type: 'string',
-        },
-        {
-          type: 'integer',
-          minimum: 0,
-        },
-        {
-          type: 'boolean',
-        },
-      ],
-      additionalItems: false,
-    },
-  ],
-};
-
-export const lecturesToUrl = lectures => {
-  const isEmpty = lecture => lecture.cfu === 0 && lecture.name === '';
-  const nonEmptyLectures = lectures
-    .filter(l => !isEmpty(l))
-    .map(l => {
-      return [l.name, l.cfu, l.caratt];
-    });
-  fetch('/api/createUrl').then(v => {
-    console.log(v);
-  });
-
-  if (nonEmptyLectures.length === 0) return '';
-  return '' + PREFIX + encodeURIComponent(JSON.stringify(nonEmptyLectures));
-};
-
-export function urlToLectures(url) {
-  if (typeof window !== undefined) {
-    window.history.replaceState(null, '', '/');
-  }
-  if (!url.startsWith(PREFIX)) return null;
-  url = url.replace(PREFIX, '');
-  let parsed = {};
-  try {
-    parsed = JSON.parse(decodeURIComponent(url));
-  } catch {
-    return null;
-  }
-  if (v.validate(parsed, lectureArray).valid) {
-    return parsed.map(p => {
-      return new LectureType(p[0], p[1], null, null, p[2], null);
-    });
-  } else {
-    return null;
-  }
-}
+import { Input } from '@chakra-ui/input';
+import { Box, Text } from '@chakra-ui/layout';
+import { FaShareAlt } from 'react-icons/fa';
 
 const createUrl = async ({ lectures, options, averageBonus, name }) => {
   const isEmpty = lecture => lecture.cfu === 0 && lecture.name === '';
-  const basename = window.location.origin;
   const response = await fetch('api/createUrl', {
     method: 'POST',
     headers: {
@@ -105,10 +41,9 @@ const createUrl = async ({ lectures, options, averageBonus, name }) => {
   }
   try {
     const value = await response.json();
-    const url = basename + '/' + value.url;
-    return { url: url, id: value.url };
+    // const url = basename + '/' + value.url;
+    return value.url;
   } catch (e) {
-    console.log(response.status);
     return null;
   }
 };
@@ -118,19 +53,20 @@ const shareUrl = async ({
   averageBonus,
   toast,
   name,
-  shareButton,
-  setShareButton,
+  sb: { shareButton, setShareButton },
+  ui: { urlId, setUrlId },
 }) => {
   setShareButton({ ...shareButton, loading: true });
-  const { url, id } = await createUrl({
-    lectures,
-    options,
-    averageBonus,
-    name,
-  });
-  console.log(`${url} ${id}`);
-  if (url === null || url === undefined) {
-    setShareButton({ ...shareButton, loading: false });
+  const id =
+    urlId ||
+    (await createUrl({
+      lectures,
+      options,
+      averageBonus,
+      name,
+    }));
+  setShareButton({ ...shareButton, loading: false });
+  if (id === null || id === undefined) {
     toast({
       title: 'Qualcosa è andato storto',
       status: 'error',
@@ -139,11 +75,12 @@ const shareUrl = async ({
     });
     return;
   }
-  window.history.replaceState({ name: name }, `TPTP - ${name}`, `/${id}`);
-  setShareButton({ disabled: true, text: 'Copiato', loading: false });
+  setUrlId(id);
+  window.history.replaceState({}, '', `/${id}`);
+  document.title = `TPTP - ${name}`;
   navigator.share({
     title: `TPTP - ${name}`,
-    url: url,
+    url: window.location.origin + '/' + id,
     text: `TPTP - Calcola la tua media universitaria con le materie di ${name}!`,
   });
 };
@@ -154,18 +91,20 @@ const urlToClipboard = async ({
   averageBonus,
   toast,
   name,
-  copyButton,
-  setCopyButton,
+  cb: { copyButton, setCopyButton },
+  ui: { urlId, setUrlId },
 }) => {
   setCopyButton({ ...copyButton, loading: true });
-  const { url } = await createUrl({
-    lectures,
-    options,
-    averageBonus,
-    name,
-  });
-  if (url === null || url === undefined) {
-    setCopyButton({ ...copyButton, loading: false });
+  const id =
+    urlId ||
+    (await createUrl({
+      lectures,
+      options,
+      averageBonus,
+      name,
+    }));
+  setCopyButton({ ...copyButton, loading: false });
+  if (id === null || id === undefined) {
     toast({
       title: 'Qualcosa è andato storto',
       status: 'error',
@@ -174,8 +113,10 @@ const urlToClipboard = async ({
     });
     return;
   }
-  navigator.clipboard.writeText(url);
-  setCopyButton({ disabled: true, text: 'Copiato', loading: false });
+  setUrlId(id);
+  window.history.replaceState({}, '', `/${id}`);
+  document.title = `TPTP - ${name}`;
+  navigator.clipboard.writeText(window.location.origin + '/' + id);
   toast({
     title: 'URL Copiato',
     status: 'success',
@@ -185,6 +126,7 @@ const urlToClipboard = async ({
 };
 
 export default function CopyUrlButton({ allLectures, options, averageBonus }) {
+  const [urlId, setUrlId] = useState('');
   const [shareButton, setShareButton] = useState({
     loading: false,
     disabled: false,
@@ -198,6 +140,12 @@ export default function CopyUrlButton({ allLectures, options, averageBonus }) {
   const [name, setName] = useState('');
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // Se cambiano le lezioni / opzioni / averageBonus / nome allora sono costretto a rigenerare l'id
+  useEffect(() => {
+    setUrlId('');
+    console.log(`refreshed url ${urlId}`);
+  }, [allLectures, options, averageBonus, name]);
 
   return (
     <>
@@ -225,7 +173,12 @@ export default function CopyUrlButton({ allLectures, options, averageBonus }) {
               id="urlName"
               value={name}
               onChange={e => setName(e.target.value)}
+              mb={2}
             />
+            <Text textColor="gray" fontSize="sm">
+              Il link che genererai scadrà dopo 14 giorni di inutilizzo.
+              Tranquillo, tutto resterà comunque salvato nel tuo dispositivo
+            </Text>
           </ModalBody>
 
           <ModalFooter>
@@ -244,8 +197,8 @@ export default function CopyUrlButton({ allLectures, options, averageBonus }) {
                   averageBonus,
                   toast,
                   name,
-                  shareButton,
-                  setShareButton,
+                  sb: { shareButton, setShareButton },
+                  ui: { urlId, setUrlId },
                 })
               }
             >
@@ -265,8 +218,8 @@ export default function CopyUrlButton({ allLectures, options, averageBonus }) {
                   averageBonus,
                   toast,
                   name,
-                  copyButton,
-                  setCopyButton,
+                  cb: { copyButton, setCopyButton },
+                  ui: { urlId, setUrlId },
                 });
               }}
             >
