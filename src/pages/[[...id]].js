@@ -193,7 +193,6 @@ export async function getServerSideProps(context) {
 
   const { id } = context.query;
   if (id === undefined) return { props: {} };
-  console.log('ssring');
   const response = await fetch(baseUrl + '/api/fetchUrl', {
     method: 'POST',
     headers: {
@@ -204,15 +203,11 @@ export async function getServerSideProps(context) {
     }),
   });
   if (response.status === 200) {
-    console.log('request succesfull');
     const j = await response.json();
-    // console.log(j.)
     const { lectures, name, options, averageBonus } = j;
-    // console.log(lectures);
     return {
       props: {
         lectures: lectures.map(elem => {
-          console.log(elem);
           return JSON.parse(
             JSON.stringify(
               new LectureType(elem[0], elem[1], null, null, elem[2])
@@ -225,7 +220,6 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  console.log(response);
   return { props: {} };
 }
 
