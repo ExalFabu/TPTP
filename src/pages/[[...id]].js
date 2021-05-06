@@ -7,6 +7,7 @@ import PreferencesTab from '../components/PreferencesTab';
 import { exactWidth } from '../theme';
 import { LectureType } from '../components/Lecture';
 import Head from 'next/head';
+import Footer from '../components/Footer';
 
 export const baseOptions = () => {
   return {
@@ -180,6 +181,7 @@ function App(props) {
             setAverageBonusState={setAverageBonusState}
           />
         </SimpleGrid>
+            <Footer />
       </ChakraProvider>
     </>
   );
