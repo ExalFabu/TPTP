@@ -51,6 +51,7 @@ const ShortUrlSchema = new mongoose.Schema({
   },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+  views: {type: Number, default: () => 0}
 });
 
 export default mongoose.models.short_url ||
