@@ -6,15 +6,15 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>TPTP</title>
         <meta name="description" content="Calcola la tua media universitaria" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tptp.vercel.app/" />
-        <meta property="og:title" content="TPTP" />
+        <meta property="og:title" content="TPTP" key="og:title" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta
           property="og:description"
           content="Calcola la tua media universitaria"
+          key="og:description"
         />
         <meta property="og:image" content="/logo1262.png" />
         <meta property="og:site_name" content="TPTP" />
@@ -23,10 +23,11 @@ function MyApp({ Component, pageProps }) {
         {/* <!-- Twitter --> */}
         <meta property="twitter:card" content="summary" />
         <meta property="twitter:url" content="https://tptp.vercel.app/" />
-        <meta property="twitter:title" content="TPTP" />
+        <meta property="twitter:title" content="TPTP" key="twitter:title"/>
         <meta
           property="twitter:description"
           content="Calcola la tua media universitaria"
+          key="twitter:description"
         />
         <meta property="twitter:image" content="/logo1262.png" />
         {/* <!-- 1200×628 --> */}
@@ -57,7 +58,7 @@ function MyApp({ Component, pageProps }) {
               "name": "TPTP",
               "url": "https://tptp.vercel.app",
               "description": "Calcola la tua media universitaria",
-              "image": "%PUBLIC_URL%/logo512.png",
+              "image": "/logo512.png",
               "alternateName": "TPTP - Calcola la tua media universitaria",
               "keywords": "università, media, unipa, calcolo media",
               "applicationCategory": "Utility",

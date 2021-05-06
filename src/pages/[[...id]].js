@@ -5,9 +5,10 @@ import Average from '../components/Average';
 import Header from '../components/Header';
 import PreferencesTab from '../components/PreferencesTab';
 import { exactWidth } from '../theme';
-import { urlToLectures } from '../components/CopyUrlButton';
 import { LectureType } from '../components/Lecture';
-const baseOptions = () => {
+import Head from 'next/head';
+
+export const baseOptions = () => {
   return {
     removeCFU: true,
     cfu_value: 18,
@@ -18,7 +19,7 @@ const baseOptions = () => {
   };
 };
 
-const baseAverageBonus = averageBonus => {
+export const baseAverageBonus = averageBonus => {
   for (let i = 29; i >= 18; i--) {
     let val = 0;
     if (i >= 28) val = 6;
@@ -43,21 +44,25 @@ function App(props) {
   const [lectures, setLectures] = useState([new LectureType()]);
   const [options, setOptions] = useState(baseOptions());
   const [averageBonus, setAverageBonusState] = useState(baseAverageBonus([]));
-
   // Setting up default states (gathering from localstorage if needed)
   useEffect(() => {
+    if(props.name) {
+      window.history.replaceState({}, null, "/")
+    }
     const defaultLectures =
-      urlToLectures(window.location.search) ||
-      JSON.parse(localStorage.getItem('lectures')) ||
-      null;
+      props.lectures || JSON.parse(localStorage.getItem('lectures')) || null;
     if (defaultLectures) {
       setLectures(defaultLectures);
     }
-    const defaultOptions = JSON.parse(localStorage.getItem('options')) || null;
+
+    const defaultOptions =
+      props.options || JSON.parse(localStorage.getItem('options')) || null;
     if (defaultOptions) setOptions(defaultOptions);
 
     const defaultAverageBonus =
-      JSON.parse(localStorage.getItem('averageBonus')) || null;
+      props.averageBonus ||
+      JSON.parse(localStorage.getItem('averageBonus')) ||
+      null;
     if (defaultAverageBonus) {
       setAverageBonusState(defaultAverageBonus);
     }
@@ -77,6 +82,41 @@ function App(props) {
 
   return (
     <>
+      <Head>
+        <title>
+          {props.name !== undefined ? `TPTP - ${props.name}` : 'TPTP'}
+        </title>
+        <meta
+          property="og:title"
+          content={props.name !== undefined ? `TPTP - ${props.name}` : 'TPTP'}
+          key="og:title"
+        />
+        <meta
+          property="og:description"
+          content={
+            props.name !== undefined
+              ? `Calcola la tua media universitaria con le materie di '${props.name}'`
+              : 'Calcola la tua media universitaria'
+          }
+          key="og:description"
+        />
+
+        <meta
+          property="twitter:title"
+          content={props.name !== undefined ? `TPTP - ${props.name}` : 'TPTP'}
+          key="twitter:title"
+        />
+        <meta
+          property="twitter:description"
+          content={
+            props.name !== undefined
+              ? `Calcola la tua media universitaria con le materie di '${props.name}'`
+              : 'Calcola la tua media universitaria'
+          }
+          key="twitter:description"
+        />
+        <meta />
+      </Head>
       <ChakraProvider theme={theme}>
         <SimpleGrid
           templateColumns={{
@@ -99,6 +139,8 @@ function App(props) {
           <Header
             gridArea="Header"
             allLectures={lectures}
+            options={options}
+            averageBonus={averageBonus}
             setLectures={setLectures}
             w={exactWidth}
           />
@@ -141,6 +183,44 @@ function App(props) {
       </ChakraProvider>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const protocol = context.req.headers['x-forwarded-proto'] || 'http';
+  const baseUrl = context.req
+    ? `${protocol}://${context.req.headers.host}`
+    : '';
+
+  const { id } = context.query;
+  if (id === undefined) return { props: {} };
+  const response = await fetch(baseUrl + '/api/fetchUrl', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: id,
+    }),
+  });
+  if (response.status === 200) {
+    const j = await response.json();
+    const { lectures, name, options, averageBonus } = j;
+    return {
+      props: {
+        lectures: lectures.map(elem => {
+          return JSON.parse(
+            JSON.stringify(
+              new LectureType(elem[0], elem[1], null, null, elem[2])
+            )
+          );
+        }),
+        name: name,
+        options: options,
+        averageBonus: averageBonus,
+      },
+    };
+  }
+  return { props: {} };
 }
 
 export default App;
