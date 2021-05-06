@@ -12,7 +12,7 @@ const fetchUrl = async (req, res) => {
       updatedAt: Date.now(),
       $inc: { views: 1 },
     }).exec();
-    if (output === undefined)
+    if (output === null)
       return res.status(400).json({ error: 'id not found' });
     return res.status(200).json(output);
   } catch (error) {
