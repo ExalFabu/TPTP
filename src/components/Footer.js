@@ -1,8 +1,7 @@
 import { Button } from '@chakra-ui/button';
-import { Box, Flex, Text } from '@chakra-ui/layout';
+import { Box, Text } from '@chakra-ui/layout';
 import React from 'react';
-import { FaGithub, FaRegCopyright } from 'react-icons/fa';
-import { exactWidth } from '../theme';
+import { FaGithub } from 'react-icons/fa';
 
 function Footer({ ...props }) {
   return (
@@ -27,4 +26,4 @@ function Footer({ ...props }) {
   );
 }
 
-export default Footer;
+export default React.memo(Footer);
