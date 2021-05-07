@@ -2,7 +2,7 @@ import React from 'react';
 import { useColorMode, useColorModeValue, Button } from '@chakra-ui/react';
 import { FaMoon, FaSun } from 'react-icons/fa';
 
-export const ColorModeSwitcher = props => {
+const ColorModeSwitcher = props => {
   const { toggleColorMode } = useColorMode();
   const text = useColorModeValue('Modalità Scura', 'Modalità Chiara');
   const SwitchIcon = useColorModeValue(FaMoon, FaSun);
@@ -21,3 +21,5 @@ export const ColorModeSwitcher = props => {
     </Button>
   );
 };
+
+export default React.memo(ColorModeSwitcher)

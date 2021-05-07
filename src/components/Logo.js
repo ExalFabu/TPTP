@@ -33,7 +33,7 @@ const BlackLogo = ({ colorMode, ...props }) => {
   );
 };
 
-export const Logo = props => {
+const Logo = props => {
   const colorMode = useColorModeValue('white', 'black');
   return (
     <>
@@ -43,3 +43,4 @@ export const Logo = props => {
     </>
   );
 };
+export default React.memo(Logo)
