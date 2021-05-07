@@ -11,9 +11,9 @@ export default function Header({ allLectures, options, averageBonus, setLectures
       <Logo maxH="5em" />
       <SimpleGrid columns={1} gap={2}>
         <ColorModeSwitcher />
-        <CopyUrlButton allLectures={allLectures} />
-        <AddLectureButton allLectures={allLectures} options={options}
-            averageBonus={averageBonus} setLectures={setLectures} />
+        <CopyUrlButton allLectures={allLectures} options={options} averageBonus={averageBonus}/>
+        <AddLectureButton 
+             setLectures={setLectures} />
       </SimpleGrid>
     </Flex>
   );

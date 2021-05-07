@@ -3,10 +3,9 @@ import { AddIcon } from '@chakra-ui/icons';
 import React from 'react';
 import { LectureType } from './Lecture';
 
-export default function AddLectureButton({ allLectures, setLectures }) {
+const AddLectureButton = ({ setLectures }) => {
   const addEmptyLecture = () => {
-    const newLectures = [...allLectures, new LectureType()];
-    setLectures(newLectures);
+    setLectures((currentLectures ) => [...currentLectures, new LectureType()]);
   };
   return (
     <Button
@@ -20,3 +19,5 @@ export default function AddLectureButton({ allLectures, setLectures }) {
     </Button>
   );
 }
+
+export default React.memo(AddLectureButton)
