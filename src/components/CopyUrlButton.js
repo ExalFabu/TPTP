@@ -19,7 +19,15 @@ import { Box, Text } from '@chakra-ui/layout';
 import { FaShareAlt } from 'react-icons/fa';
 
 const createUrl = async ({ lectures, options, averageBonus, name }) => {
-  const isEmpty = lecture => lecture.cfu === 0 && lecture.name === '';
+  const isEmpty = lecture => lecture.cfu === null && lecture.name === '';
+  const filteredLectures = lectures
+    .filter(l => !isEmpty(l))
+    .map(l => {
+      return [l.name, l.cfu, l.caratt];
+    });
+  if (filteredLectures.length === 0) {
+    return 400;
+  }
   const response = await fetch('api/createUrl', {
     method: 'POST',
     headers: {
@@ -27,11 +35,7 @@ const createUrl = async ({ lectures, options, averageBonus, name }) => {
     },
     body: JSON.stringify({
       name: name,
-      lectures: lectures
-        .filter(l => !isEmpty(l))
-        .map(l => {
-          return [l.name, l.cfu, l.caratt];
-        }),
+      lectures: filteredLectures,
       options: options,
       averageBonus: averageBonus,
     }),
@@ -66,6 +70,15 @@ const shareUrl = async ({
       name,
     }));
   setShareButton({ ...shareButton, loading: false });
+  if (id === 400) {
+    toast({
+      title: 'Inserisci qualche materia prima',
+      status: 'info',
+      isClosable: true,
+      position: 'top',
+    });
+    return;
+  }
   if (id === null || id === undefined) {
     toast({
       title: 'Qualcosa è andato storto',
@@ -104,6 +117,15 @@ const urlToClipboard = async ({
       name,
     }));
   setCopyButton({ ...copyButton, loading: false });
+  if (id === 400) {
+    toast({
+      title: 'Inserisci qualche materia prima',
+      status: 'info',
+      isClosable: true,
+      position: 'top',
+    });
+    return;
+  }
   if (id === null || id === undefined) {
     toast({
       title: 'Qualcosa è andato storto',

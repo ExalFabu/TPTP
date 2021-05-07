@@ -30,7 +30,7 @@ const ShortUrlSchema = new mongoose.Schema({
           return (
             elem.length === 3 &&
             typeof elem[0] === 'string' &&
-            typeof elem[1] === 'number' &&
+            (typeof elem[1] === 'number' || elem[1] === null) &&
             typeof elem[2] === 'boolean'
           );
         });
