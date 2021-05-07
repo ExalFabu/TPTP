@@ -50,8 +50,7 @@ const calculateUnipaAverage = (allLectures, preferences) => {
   // Successivamente la ordino in ordine di voto, così da rimuovere quelle con voto minore prima.
   /** @type {Array} */
   let non_caratt_lecture = allLectures.filter(
-    el =>
-      el.caratt === false && el.grade < avg && validLecture(el)
+    el => el.caratt === false && el.grade < avg && validLecture(el)
   );
 
   non_caratt_lecture.sort((a, b) => a.grade - b.grade);
@@ -163,16 +162,31 @@ const removedLecturesBody = lectures => {
   );
 };
 
-/**
- * @type {import('../model/FinalAverage').FinalAverage}
- */
-// const defaultFinalAverage = JSON.parse(
-//   localStorage.getItem('finalAverage')
-// ) || {
-//   isInCorso: false,
-//   hasDoneEramus: false,
-//   averageBonus: 0,
-// };
+
+const InfoFinalVotePopover = React.memo(() => {
+  const greenInfoColor = useColorModeValue('green.600', 'green.300');
+
+  return (
+    <Popover gridArea="info">
+      <PopoverTrigger>
+        <InfoIcon boxSize="0.8em" color={greenInfoColor} />
+      </PopoverTrigger>
+      <PopoverContent>
+        <PopoverArrow />
+        <PopoverCloseButton />
+        <PopoverHeader textAlign="center">Voto Finale</PopoverHeader>
+        <PopoverBody fontSize="sm">
+          Al voto finale sono stati aggiunti gli eventuali bonus. Assicurati di
+          aver inserito i valori corretti per il tuo Corso di Studi prima di
+          festeggiare.
+        </PopoverBody>
+        <PopoverFooter fontSize="sm">
+          Il voto finale va arrotondato al valore intero più vicino.
+        </PopoverFooter>
+      </PopoverContent>
+    </Popover>
+  );
+});
 
 /**
  * @param {Object} props
@@ -294,23 +308,7 @@ export default function Average({
           <Text gridArea="Valore">
             {votoFinale(allLectures, preferences, averageBonus, finalAverage)}
           </Text>
-          <Popover gridArea="info">
-            <PopoverTrigger>
-              <InfoIcon boxSize="0.8em" color={greenInfoColor} />
-            </PopoverTrigger>
-            <PopoverContent>
-              <PopoverArrow />
-              <PopoverCloseButton />
-              <PopoverHeader textAlign="center">Voto Finale</PopoverHeader>
-              <PopoverBody fontSize="sm">
-                Al voto finale sono stati aggiunti gli eventuali bonus.
-                Assicurati di aver inserito i valori corretti per il tuo Corso di Studi prima di festeggiare.
-              </PopoverBody>
-              <PopoverFooter fontSize="sm">
-                Il voto finale va arrotondato al valore intero più vicino.
-              </PopoverFooter>
-            </PopoverContent>
-          </Popover>
+          <InfoFinalVotePopover />
         </SimpleGrid>
       </Flex>
     </SimpleGrid>
