@@ -161,10 +161,16 @@ const removedLecturesBody = removedLectures => {
     <>
       {removedLectures.map(e => {
         return (
-          <Flex justifyContent="space-around" alignItems="center">
-            <Text maxW="50%">{e.name}</Text>
-            <Text>{e.new_cfu === 0 ? '❌' : `CFU: ${e.new_cfu}`}</Text>
-          </Flex>
+          <SimpleGrid
+            columns={2}
+            rowGap={2}
+            templateColumns="1fr 30%"
+            alignItems="center"
+            justifyItems="center"
+          >
+            <Text>{e.name}</Text>
+            <Text>{e.new_cfu === 0 ? '❌' : `${e.new_cfu} CFU`}</Text>
+          </SimpleGrid>
         );
       })}
     </>
@@ -303,7 +309,9 @@ export default function Average({
             <PopoverContent>
               <PopoverArrow />
               <PopoverCloseButton />
-              <PopoverHeader textAlign="center">Materie ripesate</PopoverHeader>
+              <PopoverHeader textAlign="center">
+                Materie rimosse e/o ripesate
+              </PopoverHeader>
               <PopoverBody fontSize="sm">
                 {removedLecturesBody(removedLectures)}
               </PopoverBody>
