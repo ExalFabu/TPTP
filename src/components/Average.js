@@ -13,7 +13,7 @@ import {
   PopoverTrigger,
   useColorModeValue,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { borderColor } from '../theme';
 
 /**
@@ -22,7 +22,11 @@ import { borderColor } from '../theme';
  * @param {import('../model/PreferencesType').Preferences} preferences
  * @returns
  */
-const calculateUnipaAverage = (allLectures, preferences) => {
+const calculateUnipaAverage = ({
+  allLectures,
+  preferences,
+  setRemovedLectures,
+}) => {
   // Calcolo la media ponderata, salvandomi somme pesate e pesi.
   const validLecture = lecture =>
     lecture.grade !== 0 &&
@@ -41,7 +45,7 @@ const calculateUnipaAverage = (allLectures, preferences) => {
     if (validLecture(element)) {
       weights += parseInt(element.cfu);
       sum += parseInt(element.grade) * parseInt(element.cfu);
-      element.new_cfu = element.cfu;
+      // element.new_cfu = element.cfu;
     }
   });
   let avg = Math.round((sum / weights) * 100) / 100;
@@ -50,8 +54,7 @@ const calculateUnipaAverage = (allLectures, preferences) => {
   // Successivamente la ordino in ordine di voto, così da rimuovere quelle con voto minore prima.
   /** @type {Array} */
   let non_caratt_lecture = allLectures.filter(
-    el =>
-      el.caratt === false && el.grade < avg && validLecture(el)
+    el => el.caratt === false && el.grade < avg && validLecture(el)
   );
 
   non_caratt_lecture.sort((a, b) => a.grade - b.grade);
@@ -65,7 +68,7 @@ const calculateUnipaAverage = (allLectures, preferences) => {
     upper_bound = () =>
       count < non_caratt_lecture.length && count < preferences.mat_value;
   }
-
+  const removed = [];
   while (upper_bound()) {
     // Rimuovo la materia con il voto più basso
     sum -= non_caratt_lecture[count].grade * non_caratt_lecture[count].cfu;
@@ -73,7 +76,10 @@ const calculateUnipaAverage = (allLectures, preferences) => {
 
     let new_weight = 0;
 
-    // Se sforo i ${CFU_DA_LEVARE} la ricalcolo con il peso giusto
+    // Se devo rimuovere in base ai cfu
+    //    controllo che non sforo i CFU da levare (preferences.removeCFU),
+    //    in caso la ricalcolo con il peso giusto
+    // Se devo rimuovere in base al numero di materie non devo ripesare nulla
     if (
       preferences.removeCFU &&
       non_caratt_lecture[count].cfu + cfu_levati > preferences.cfu_value
@@ -84,10 +90,16 @@ const calculateUnipaAverage = (allLectures, preferences) => {
       weights += new_weight;
     }
     cfu_levati += non_caratt_lecture[count].cfu;
-    non_caratt_lecture[count].new_cfu = new_weight;
+    // non_caratt_lecture[count].new_cfu = new_weight;
+    removed.push({
+      name: non_caratt_lecture[count].name,
+      cfu: non_caratt_lecture[count],
+      new_cfu: new_weight,
+      grade: non_caratt_lecture[count].grade,
+    });
     count++;
   }
-
+  setRemovedLectures(removed);
   avg = Math.round((sum / weights) * 100) / 100;
 
   return isNaN(avg) ? 0 : avg;
@@ -98,14 +110,20 @@ const calculateUnipaAverage = (allLectures, preferences) => {
  * @param {import('../model/PreferencesType').Preferences} preferences
  * @returns
  */
-const votoFinale = (allLectures, preferences, averageBonus, finalAverage) => {
+const votoFinale = ({
+  allLectures,
+  preferences,
+  averageBonus,
+  finalAverage,
+  mediaCalcolata,
+}) => {
   const validateValue = value => {
     return isNaN(parseFloat(value)) || parseFloat(value) <= 0 // Se non è un valore numerico o è negativo è inammissibile, quindi 0
       ? 0
       : parseFloat(value);
   };
 
-  const avg = calculateUnipaAverage(allLectures, preferences);
+  const avg = mediaCalcolata;
   const num_lodi = allLectures.reduce(
     (prev, curr) => prev + (curr.lode && curr.grade === 30 ? 1 : 0),
     0
@@ -133,46 +151,56 @@ const votoFinale = (allLectures, preferences, averageBonus, finalAverage) => {
  *
  * @param {import('../model/LectureType').Lecture[]} lectures
  */
-const removedLecturesBody = lectures => {
-  const removed = lectures.filter(
-    l =>
-      l.new_cfu !== l.cfu &&
-      l.cfu !== 0 &&
-      l.grade !== 0 &&
-      l.cfu !== null &&
-      l.grade !== null &&
-      l.cfu !== undefined &&
-      l.grade !== undefined
-  );
-  if (removed.length === 0) {
+const removedLecturesBody = removedLectures => {
+  if (removedLectures.length === 0) {
     return (
       <Text>Non è stata rimossa nessuna materia dal conteggio della media</Text>
     );
   }
   return (
     <>
-      {removed.map(e => {
+      {removedLectures.map(e => {
         return (
-          <Flex justifyContent="space-around" alignItems="center">
-            <Text maxW="50%">{e.name}</Text>
-            <Text>{e.new_cfu === 0 ? '❌' : `CFU: ${e.new_cfu}`}</Text>
-          </Flex>
+          <SimpleGrid
+            columns={2}
+            rowGap={2}
+            templateColumns="1fr 30%"
+            alignItems="center"
+            justifyItems="center"
+          >
+            <Text>{e.name}</Text>
+            <Text>{e.new_cfu === 0 ? '❌' : `${e.new_cfu} CFU`}</Text>
+          </SimpleGrid>
         );
       })}
     </>
   );
 };
 
-/**
- * @type {import('../model/FinalAverage').FinalAverage}
- */
-// const defaultFinalAverage = JSON.parse(
-//   localStorage.getItem('finalAverage')
-// ) || {
-//   isInCorso: false,
-//   hasDoneEramus: false,
-//   averageBonus: 0,
-// };
+const InfoFinalVotePopover = React.memo(() => {
+  const greenInfoColor = useColorModeValue('green.600', 'green.300');
+
+  return (
+    <Popover gridArea="info">
+      <PopoverTrigger>
+        <InfoIcon boxSize="0.8em" color={greenInfoColor} />
+      </PopoverTrigger>
+      <PopoverContent>
+        <PopoverArrow />
+        <PopoverCloseButton />
+        <PopoverHeader textAlign="center">Voto Finale</PopoverHeader>
+        <PopoverBody fontSize="sm">
+          Al voto finale sono stati aggiunti gli eventuali bonus. Assicurati di
+          aver inserito i valori corretti per il tuo Corso di Studi prima di
+          festeggiare.
+        </PopoverBody>
+        <PopoverFooter fontSize="sm">
+          Il voto finale va arrotondato al valore intero più vicino.
+        </PopoverFooter>
+      </PopoverContent>
+    </Popover>
+  );
+});
 
 /**
  * @param {Object} props
@@ -186,16 +214,27 @@ export default function Average({
   averageBonus,
   ...props
 }) {
-  const [finalAverage, setFinalAverageState] = useState({
+  const [finalAverage, setFinalAverage] = useState({
     isInCorso: false,
     hasDoneEramus: false,
     averageBonus: 0,
   });
-  const setFinalAverage = f => {
-    localStorage.setItem('finalAverage', JSON.stringify(f));
-    setFinalAverageState(f);
-  };
+  const [removedLectures, setRemovedLectures] = useState([]);
+
+  useEffect(() => {
+    localStorage.setItem('finalAverage', JSON.stringify(finalAverage));
+  }, [finalAverage]);
+
   const greenInfoColor = useColorModeValue('green.600', 'green.300');
+  const calcolaMedia = useMemo(
+    () =>
+      calculateUnipaAverage({
+        allLectures,
+        preferences,
+        setRemovedLectures,
+      }),
+    [allLectures, preferences]
+  );
 
   return (
     <SimpleGrid
@@ -254,8 +293,6 @@ export default function Average({
         wrap="wrap"
       >
         <SimpleGrid
-          // borderBottom="1px"
-          // borderRadius="full"
           p={2}
           mx={2}
           templateAreas={`"Titolo info" "Valore Valore"`}
@@ -264,9 +301,7 @@ export default function Average({
           columnGap={2}
         >
           <Text gridArea="Titolo">Media</Text>
-          <Text gridArea="Valore">
-            {calculateUnipaAverage(allLectures, preferences)}
-          </Text>
+          <Text gridArea="Valore">{calcolaMedia}</Text>
           <Popover gridArea="info">
             <PopoverTrigger>
               <InfoIcon boxSize="0.8em" color={greenInfoColor} />
@@ -274,16 +309,16 @@ export default function Average({
             <PopoverContent>
               <PopoverArrow />
               <PopoverCloseButton />
-              <PopoverHeader textAlign="center">Materie ripesate</PopoverHeader>
+              <PopoverHeader textAlign="center">
+                Materie rimosse e/o ripesate
+              </PopoverHeader>
               <PopoverBody fontSize="sm">
-                {removedLecturesBody(allLectures)}
+                {removedLecturesBody(removedLectures)}
               </PopoverBody>
             </PopoverContent>
           </Popover>
         </SimpleGrid>
         <SimpleGrid
-          // borderBottom="1px"
-          // borderRadius="full"
           p={2}
           templateAreas={`"Titolo info" "Valore Valore"`}
           justifyItems="center"
@@ -292,25 +327,15 @@ export default function Average({
         >
           <Text gridArea="Titolo">Voto Finale</Text>
           <Text gridArea="Valore">
-            {votoFinale(allLectures, preferences, averageBonus, finalAverage)}
+            {votoFinale({
+              mediaCalcolata: calcolaMedia,
+              allLectures,
+              preferences,
+              averageBonus,
+              finalAverage,
+            })}
           </Text>
-          <Popover gridArea="info">
-            <PopoverTrigger>
-              <InfoIcon boxSize="0.8em" color={greenInfoColor} />
-            </PopoverTrigger>
-            <PopoverContent>
-              <PopoverArrow />
-              <PopoverCloseButton />
-              <PopoverHeader textAlign="center">Voto Finale</PopoverHeader>
-              <PopoverBody fontSize="sm">
-                Al voto finale sono stati aggiunti gli eventuali bonus.
-                Assicurati di aver inserito i valori corretti per il tuo Corso di Studi prima di festeggiare.
-              </PopoverBody>
-              <PopoverFooter fontSize="sm">
-                Il voto finale va arrotondato al valore intero più vicino.
-              </PopoverFooter>
-            </PopoverContent>
-          </Popover>
+          <InfoFinalVotePopover />
         </SimpleGrid>
       </Flex>
     </SimpleGrid>

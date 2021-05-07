@@ -1,9 +1,9 @@
 import { Flex, SimpleGrid } from '@chakra-ui/layout';
 import React from 'react';
 import AddLectureButton from './AddLectureButton';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
+import ColorModeSwitcher from './ColorModeSwitcher';
 import CopyUrlButton from './CopyUrlButton';
-import { Logo } from './Logo';
+import Logo from './Logo';
 
 export default function Header({ allLectures, options, averageBonus, setLectures, ...props }) {
   return (
@@ -11,9 +11,9 @@ export default function Header({ allLectures, options, averageBonus, setLectures
       <Logo maxH="5em" />
       <SimpleGrid columns={1} gap={2}>
         <ColorModeSwitcher />
-        <CopyUrlButton allLectures={allLectures} />
-        <AddLectureButton allLectures={allLectures} options={options}
-            averageBonus={averageBonus} setLectures={setLectures} />
+        <CopyUrlButton allLectures={allLectures} options={options} averageBonus={averageBonus}/>
+        <AddLectureButton 
+             setLectures={setLectures} />
       </SimpleGrid>
     </Flex>
   );

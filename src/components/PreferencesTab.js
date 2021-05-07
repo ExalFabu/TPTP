@@ -17,13 +17,13 @@ import RemoveComponent from './preferences/RemoveComponent';
  * @param {import('../model/PreferencesType').Preferences} props.options
  * */
 
-export default function PreferencesTab({
+const PreferencesTab = ({
   preferences,
   setPreferences,
   averageBonus,
   setAverageBonusState,
   ...props
-}) {
+}) => {
   return (
     <Accordion
       w={exactWidth}
@@ -91,3 +91,5 @@ export default function PreferencesTab({
     </Accordion>
   );
 }
+
+export default React.memo(PreferencesTab)

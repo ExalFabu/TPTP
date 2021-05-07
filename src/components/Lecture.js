@@ -33,27 +33,27 @@ export class LectureType {
  * @param {import('../model/LectureType').Lecture} props.lecture
  * @returns {React.FC}
  */
-export default function Lecture({
-  allLectures,
+const Lecture = ({
   setLectures,
   lecture,
   ...props
-}) {
+}) => {
   const changeValue = (name, value) => {
-    const modifiedLectures = allLectures.map(lec => {
-      if (lecture._id === lec._id) {
-        lec[name] = value;
-      }
-      return lec;
+    setLectures((currentAllLectures) => {
+      return currentAllLectures.map(elem => {
+        if (elem._id === lecture._id) return {...elem, [name]: value}
+        return elem
+      })
     });
-    setLectures(modifiedLectures);
   };
 
   const removeLecture = _ => {
-    let modifiedLectures = allLectures.filter(el => el._id !== lecture._id);
-    modifiedLectures =
-      modifiedLectures.length === 0 ? [new LectureType()] : modifiedLectures;
-    setLectures(modifiedLectures);
+    // let modifiedLectures = allLectures.filter(el => el._id !== lecture._id);
+    // modifiedLectures =
+    //   modifiedLectures.length === 0 ? [new LectureType()] : modifiedLectures;
+    setLectures((currentAllLectures) => {
+      return currentAllLectures.filter(el => el._id !== lecture._id) || [new LectureType()];
+    });
   };
 
   return (
@@ -209,3 +209,5 @@ export default function Lecture({
     </SimpleGrid>
   );
 }
+
+export default React.memo(Lecture)

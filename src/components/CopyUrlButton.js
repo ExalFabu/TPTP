@@ -183,7 +183,7 @@ export default function CopyUrlButton({ allLectures, options, averageBonus }) {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Condividi le Materie</ModalHeader>
+          <ModalHeader textAlign="center">Condividi le Materie</ModalHeader>
           <ModalCloseButton />
           <ModalBody fontSize="sm">
             <Text fontSize="lg" as="label" for="urlName">
@@ -196,10 +196,13 @@ export default function CopyUrlButton({ allLectures, options, averageBonus }) {
               value={name}
               onChange={e => setName(e.target.value)}
               mb={2}
+              mt={1}
+              variant="filled"
             />
             <Text textColor="gray" fontSize="sm">
-              Il link che genererai scadrà dopo 14 giorni di inutilizzo.
-              Tranquillo, tutto resterà comunque salvato nel tuo dispositivo
+              Il link che genererai ti permetterà di condividere le materie e le
+              opzioni da te scelte con i tuoi colleghi.<br/> Tranquillo, i tuoi voti
+              resteranno <i>sempre e solamente</i> nel tuo dispositivo.
             </Text>
           </ModalBody>
 

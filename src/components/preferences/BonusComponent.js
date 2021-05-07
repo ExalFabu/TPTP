@@ -16,44 +16,19 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { PopoverFooter } from '@chakra-ui/popover';
 import { useColorModeValue } from '@chakra-ui/color-mode';
 
-export default function BonusComponent({
-  preferences,
-  setPreferences,
-  ...props
-}) {
-  const borderStyle = useBreakpointValue({
-    base: { border: '1px' },
-    md: { border: '1px' },
-  });
+const InfoBonusPopover = React.memo(() => {
   const legendPosition = useBreakpointValue({
     base: 'left',
     md: 'center',
   });
-  const handleChange = e => {
-    setPreferences({
-      ...preferences,
-      [e.target.name]: Math.abs(e.target.valueAsNumber),
-    });
-  };
+
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const openPopover = () => setPopoverOpen(true);
   const closePopover = () => setPopoverOpen(false);
   const greenInfoColor = useColorModeValue("green.600","green.300")
 
   return (
-    <Box
-      as="fieldset"
-      {...borderStyle}
-      borderColor={borderColor}
-      borderRadius="xl"
-      display="flex"
-      justifyContent="space-between"
-      justifyItems="center"
-      alignItems="center"
-      p={2}
-      {...props}
-    >
-      <Popover
+    <Popover
         isOpen={isPopoverOpen}
         onClose={closePopover}
         placement="top-start"
@@ -103,6 +78,39 @@ export default function BonusComponent({
           </PopoverFooter>
         </PopoverContent>
       </Popover>
+  )
+})
+
+export default function BonusComponent({
+  preferences,
+  setPreferences,
+  ...props
+}) {
+  const borderStyle = useBreakpointValue({
+    base: { border: '1px' },
+    md: { border: '1px' },
+  });
+  const handleChange = e => {
+    setPreferences({
+      ...preferences,
+      [e.target.name]: Math.abs(e.target.valueAsNumber),
+    });
+  };
+
+  return (
+    <Box
+      as="fieldset"
+      {...borderStyle}
+      borderColor={borderColor}
+      borderRadius="xl"
+      display="flex"
+      justifyContent="space-between"
+      justifyItems="center"
+      alignItems="center"
+      p={2}
+      {...props}
+    >
+      <InfoBonusPopover />
       <InputGroup
         size="sm"
         display="flex"

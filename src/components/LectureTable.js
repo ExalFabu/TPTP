@@ -15,13 +15,12 @@ function LectureTable({ allLectures, setLectures, ...props}) {
         justifyItems="center"
         {...props}
       >
-        {allLectures.map((el) => {
+        {allLectures.map((lecture) => {
           return (
             <Lecture
-              key={el._id}
-              allLectures={allLectures}
+              key={lecture._id}
               setLectures={setLectures}
-              lecture={el}
+              lecture={lecture}
             />
           );
         })}
@@ -29,4 +28,4 @@ function LectureTable({ allLectures, setLectures, ...props}) {
   );
 }
 
-export default LectureTable;
+export default React.memo(LectureTable);

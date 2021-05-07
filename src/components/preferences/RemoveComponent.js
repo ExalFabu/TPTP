@@ -15,6 +15,60 @@ import {
 } from '@chakra-ui/popover';
 import { useState } from 'react';
 import { borderColor } from '../../theme';
+import React from 'react';
+
+const InfoRemovePopover = React.memo(() => {
+  const legendPosition = useBreakpointValue({
+    base: 'left',
+    md: 'center',
+  });
+  const greenInfoColor = useColorModeValue('green.600', 'green.300');
+  const [isPopoverOpen, setPopoverOpen] = useState(false);
+  const openPopover = () => setPopoverOpen(true);
+  const closePopover = () => setPopoverOpen(false);
+
+  return (
+    <Popover
+      isOpen={isPopoverOpen}
+      onClose={closePopover}
+      placement="top-start"
+      colorScheme="whatsapp"
+    >
+      <PopoverTrigger>
+        <legend align={legendPosition}>
+          Rimuovi{' '}
+          <InfoIcon
+            color={greenInfoColor}
+            boxSize="0.8em"
+            aria-label="Pulsante per informazioni aggiuntive sulla sezione Rimuovi"
+            focusable={true}
+            onClick={openPopover}
+          />
+        </legend>
+      </PopoverTrigger>
+      <PopoverContent>
+        <PopoverArrow />
+        <PopoverCloseButton />
+        <PopoverHeader textAlign="center">Rimuovi cosa?</PopoverHeader>
+        <PopoverBody fontSize="sm">
+          <div>
+            A seconda dal Corso di Studi, è prevista la rimozione di alcune
+            materie dalla valutazione secondo diversi criteri.
+            <ul style={{ listStyleType: 'none' }}>
+              <li>
+                - Rimuovi <code>x</code> CFU di materie <i>non</i>{' '}
+                caratterizzanti
+              </li>
+              <li>
+                - Rimuovi <code>y</code> Materie <i>non</i> caratterizzanti
+              </li>
+            </ul>
+          </div>
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
+  );
+});
 
 export default function RemoveComponent({
   preferences,
@@ -25,15 +79,7 @@ export default function RemoveComponent({
     base: { border: '1px' },
     md: { border: '1px' },
   });
-  const legendPosition = useBreakpointValue({
-    base: 'left',
-    md: 'center',
-  });
-  const greenInfoColor = useColorModeValue("green.600","green.300")
-  const [isPopoverOpen, setPopoverOpen] = useState(false);
-  const openPopover = () => setPopoverOpen(true);
-  const closePopover = () => setPopoverOpen(false);
-  
+
   return (
     <Box
       {...props}
@@ -45,45 +91,7 @@ export default function RemoveComponent({
       mx={2}
       h="min-content"
     >
-      <Popover
-        isOpen={isPopoverOpen}
-        onClose={closePopover}
-        placement="top-start"
-        colorScheme="whatsapp"
-      >
-        <PopoverTrigger>
-          <legend align={legendPosition}>
-            Rimuovi{' '}
-            <InfoIcon
-              color={greenInfoColor}
-              boxSize="0.8em"
-              aria-label="Pulsante per informazioni aggiuntive sulla sezione Rimuovi"
-              focusable={true}
-              onClick={openPopover}
-            />
-          </legend>
-        </PopoverTrigger>
-        <PopoverContent>
-          <PopoverArrow />
-          <PopoverCloseButton />
-          <PopoverHeader textAlign="center">Rimuovi cosa?</PopoverHeader>
-          <PopoverBody fontSize="sm">
-            <div>
-              A seconda dal Corso di Studi, è prevista la rimozione di alcune
-              materie dalla valutazione secondo diversi criteri.
-              <ul style={{ listStyleType: 'none' }}>
-                <li>
-                  - Rimuovi <code>x</code> CFU di materie <i>non</i>{' '}
-                  caratterizzanti
-                </li>
-                <li>
-                  - Rimuovi <code>y</code> Materie <i>non</i> caratterizzanti
-                </li>
-              </ul>
-            </div>
-          </PopoverBody>
-        </PopoverContent>
-      </Popover>
+      <InfoRemovePopover />
       <SimpleGrid
         templateColumns="1fr 1fr"
         templateAreas={`"cfus mats"`}

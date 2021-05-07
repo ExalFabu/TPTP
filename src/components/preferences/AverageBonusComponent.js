@@ -15,6 +15,47 @@ import {
 import React, { useState } from 'react';
 import { borderColor } from '../../theme';
 
+const InfoAverageBonusPopover = React.memo(() => {
+  const legendPosition = useBreakpointValue({
+    base: 'left',
+    md: 'center',
+  });
+  const [isPopoverOpen, setPopoverOpen] = useState(false);
+  const openPopover = () => setPopoverOpen(true);
+  const closePopover = () => setPopoverOpen(false);
+  const greenInfoColor = useColorModeValue('green.600', 'green.300');
+
+  return (
+    <Popover isOpen={isPopoverOpen} onClose={closePopover} placement="top">
+      <PopoverTrigger>
+        <legend align={legendPosition}>
+          Bonus di profitto{' '}
+          <InfoIcon
+            color={greenInfoColor}
+            boxSize="0.8em"
+            aria-label="Pulsante per informazioni aggiuntive sul Bonus di Profitto"
+            focusable={true}
+            onClick={openPopover}
+          />
+        </legend>
+      </PopoverTrigger>
+      <PopoverContent>
+        <PopoverArrow />
+        <PopoverCloseButton />
+        <PopoverHeader textAlign="center">
+          Cosa è il Bonus di Profitto?
+        </PopoverHeader>
+        <PopoverBody fontSize="sm">
+          Il <strong>Bonus di Profitto</strong> è un punteggio aggiunto al voto
+          finale in base alla media <i>M</i>. Per scoprire la tabella relativa
+          al tuo Corso di Studi ti suggerisco di cercarla su Google o di
+          chiedere ai tuoi rappresentanti
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
+  );
+});
+
 function SingleInput({ label, id, value, setValue, cellWidth, ...props }) {
   return (
     <SimpleGrid
@@ -41,7 +82,9 @@ function SingleInput({ label, id, value, setValue, cellWidth, ...props }) {
         fontSize="md"
         variant="flushed"
         placeholder="0"
-        onChange={e => setValue(e.target.name, Math.abs(e.target.valueAsNumber))}
+        onChange={e =>
+          setValue(e.target.name, Math.abs(e.target.valueAsNumber))
+        }
         onClick={e => e.target.select()}
         w="2em"
         textAlign="center"
@@ -79,14 +122,6 @@ function AverageBonusComponent({
     });
     setAverageBonusState(modifiedBonuses);
   };
-  const legendPosition = useBreakpointValue({
-    base: 'left',
-    md: 'center',
-  });
-  const [isPopoverOpen, setPopoverOpen] = useState(false);
-  const openPopover = () => setPopoverOpen(true);
-  const closePopover = () => setPopoverOpen(false);
-  const greenInfoColor = useColorModeValue("green.600","green.300")
 
   return (
     <Flex
@@ -99,34 +134,7 @@ function AverageBonusComponent({
       wrap="wrap"
       justifyContent="space-evenly"
     >
-      <Popover isOpen={isPopoverOpen} onClose={closePopover} placement="top">
-        <PopoverTrigger>
-          <legend align={legendPosition}>
-            Bonus di profitto{' '}
-            <InfoIcon
-              color={greenInfoColor}
-              boxSize="0.8em"
-              aria-label="Pulsante per informazioni aggiuntive sul Bonus di Profitto"
-              focusable={true}
-              onClick={openPopover}
-            />
-          </legend>
-        </PopoverTrigger>
-        <PopoverContent>
-          <PopoverArrow />
-          <PopoverCloseButton />
-          <PopoverHeader textAlign="center">
-            Cosa è il Bonus di Profitto?
-          </PopoverHeader>
-          <PopoverBody fontSize="sm">
-            Il <strong>Bonus di Profitto</strong> è un punteggio aggiunto al
-            voto finale in base alla media <i>M</i>. Per scoprire la tabella
-            relativa al tuo Corso di Studi ti suggerisco di cercarla su Google o
-            di chiedere ai tuoi rappresentanti
-          </PopoverBody>
-        </PopoverContent>
-      </Popover>
-
+      <InfoAverageBonusPopover />
       {emptyArrayToIterate.map((_, i) => {
         return SingleInput({
           ...averageBonus[i],
