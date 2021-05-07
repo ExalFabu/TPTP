@@ -33,12 +33,12 @@ export class LectureType {
  * @param {import('../model/LectureType').Lecture} props.lecture
  * @returns {React.FC}
  */
-export default function Lecture({
+const Lecture = ({
   allLectures,
   setLectures,
   lecture,
   ...props
-}) {
+}) => {
   const changeValue = (name, value) => {
     const modifiedLectures = allLectures.map(lec => {
       if (lecture._id === lec._id) {
@@ -209,3 +209,5 @@ export default function Lecture({
     </SimpleGrid>
   );
 }
+
+export default React.memo(Lecture)

@@ -29,4 +29,4 @@ function LectureTable({ allLectures, setLectures, ...props}) {
   );
 }
 
-export default LectureTable;
+export default React.memo(LectureTable);
