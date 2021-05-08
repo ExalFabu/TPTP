@@ -138,7 +138,7 @@ function App(props) {
           }}
           justifyItems="center"
           alignItems="start"
-          templateRows={{xl: '152px 120px 1fr'}}
+          templateRows={{xl: '120px 120px 1fr'}}
           rowGap={2}
           columnGap={2}
           justifyContent="center"
