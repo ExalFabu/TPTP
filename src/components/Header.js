@@ -7,8 +7,8 @@ import Logo from './Logo';
 
 export default function Header({ allLectures, options, averageBonus, setLectures, ...props }) {
   return (
-    <Flex {...props} my={5} justifyContent="space-between" alignItems="center">
-      <Logo maxH="5em" />
+    <Flex {...props} my={2} w="100%" justifyContent="space-between" px={{md: 20}} alignItems="center">
+      <Logo maxH="5em"/>
       <SimpleGrid columns={1} gap={2}>
         <ColorModeSwitcher />
         <CopyUrlButton allLectures={allLectures} options={options} averageBonus={averageBonus}/>

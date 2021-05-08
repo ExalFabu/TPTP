@@ -14,7 +14,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import React, { useEffect, useMemo, useState } from 'react';
-import { borderColor } from '../theme';
+import { borderColor, exactWidth } from '../theme';
 
 /**
  *
@@ -239,6 +239,7 @@ export default function Average({
   return (
     <SimpleGrid
       {...props}
+      w={{...exactWidth, xl: exactWidth.base}}
       justifyContent="space-evenly"
       alignContent="space-evenly"
       border="1px"

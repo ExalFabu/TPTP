@@ -26,7 +26,7 @@ const PreferencesTab = ({
 }) => {
   return (
     <Accordion
-      w={exactWidth}
+      w={{ ...exactWidth, xl: exactWidth.base }}
       allowToggle
       colorScheme="telegram"
       {...props}
@@ -60,10 +60,13 @@ const PreferencesTab = ({
             templateColumns={{
               base: '1fr',
               md: '1fr 2fr',
+              xl: '1fr'
             }}
             templateAreas={{
               base: `"Rimuovi" "Bonus" "AverageBonus"`,
               md: `"Rimuovi Bonus" "AverageBonus AverageBonus"`,
+              xl: `"Rimuovi" "Bonus" "AverageBonus"`,
+
             }}
             gap={2}
             width={exactWidth}
@@ -90,6 +93,6 @@ const PreferencesTab = ({
       </AccordionItem>
     </Accordion>
   );
-}
+};
 
-export default React.memo(PreferencesTab)
+export default React.memo(PreferencesTab);
