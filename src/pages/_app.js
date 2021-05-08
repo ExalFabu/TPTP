@@ -6,6 +6,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
+        <title>TPTP</title>
         <meta name="description" content="Calcola la tua media universitaria" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tptp.vercel.app/" />
