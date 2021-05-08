@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ChakraProvider, theme, SimpleGrid } from '@chakra-ui/react';
+import { SimpleGrid, useToast } from '@chakra-ui/react';
 import LectureTable from '../components/LectureTable';
 import Average from '../components/Average';
 import Header from '../components/Header';
@@ -45,10 +45,28 @@ function App(props) {
   const [lectures, setLectures] = useState([new LectureType()]);
   const [options, setOptions] = useState(baseOptions());
   const [averageBonus, setAverageBonusState] = useState(baseAverageBonus([]));
+  const toast = useToast();
   // Setting up default states (gathering from localstorage if needed)
   useEffect(() => {
-    if(props.name) {
-      window.history.replaceState({}, null, "/")
+    window.history.replaceState({}, null, '/');
+    if (props.name) {
+      toast({
+        title: `${props.name}`,
+        description: 'Materie caricate con successo',
+        status: 'success',
+        position: 'top',
+        isClosable: true,
+      });
+    }
+    if (props.error) {
+      toast({
+        title: 'Link errato',
+        status: 'warning',
+        description:
+          'Il link che hai utilizzato potrebbe non essere mai esistito oppure è scaduto',
+        position: 'top',
+        isClosable: true,
+      });
     }
     const defaultLectures =
       props.lectures || JSON.parse(localStorage.getItem('lectures')) || null;
@@ -118,76 +136,76 @@ function App(props) {
         />
         <meta />
       </Head>
-      <ChakraProvider theme={theme}>
-        <SimpleGrid
-          // templateColumns={{
-          //   base: `'${exactWidth}px'`,
-          // }}
-          templateAreas={{
-            base: `
+      {/* <ChakraProvider theme={theme}> */}
+      <SimpleGrid
+        // templateColumns={{
+        //   base: `'${exactWidth}px'`,
+        // }}
+        templateAreas={{
+          base: `
                   "Header"
                   "LectureTable"
                   "Average"
                   "PreferencesTab"
                   `,
-            xl: `
+          xl: `
                 "Header Header"
                 "LectureTable Average"
                 "LectureTable PreferencesTab"
-                `
+                `,
+        }}
+        justifyItems="center"
+        alignItems="start"
+        templateRows={{ xl: '120px 120px 1fr' }}
+        rowGap={2}
+        columnGap={2}
+        justifyContent="center"
+      >
+        <Header
+          gridArea="Header"
+          allLectures={lectures}
+          options={options}
+          averageBonus={averageBonus}
+          setLectures={setLectures}
+          w={exactWidth}
+        />
+        <LectureTable
+          gridArea="LectureTable"
+          w={exactWidth}
+          allLectures={lectures}
+          setLectures={setLectures}
+          overflowY="auto"
+          maxH={{ base: '50vh', md: '60vh', xl: '75vh' }}
+          overflowX="clip"
+          css={{
+            '&::-webkit-scrollbar': {
+              width: '2px',
+            },
+            '&::-webkit-scrollbar-track': {
+              width: '2px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: '#888888FF',
+              borderRadius: '20px',
+            },
           }}
-          justifyItems="center"
-          alignItems="start"
-          templateRows={{xl: '120px 120px 1fr'}}
-          rowGap={2}
-          columnGap={2}
-          justifyContent="center"
-        >
-          <Header
-            gridArea="Header"
-            allLectures={lectures}
-            options={options}
-            averageBonus={averageBonus}
-            setLectures={setLectures}
-            w={exactWidth}
-          />
-          <LectureTable
-            gridArea="LectureTable"
-            w={exactWidth}
-            allLectures={lectures}
-            setLectures={setLectures}
-            overflowY="auto"
-            maxH={{ base: '50vh', md: '60vh', xl:'75vh' }}
-            overflowX="clip"
-            css={{
-              '&::-webkit-scrollbar': {
-                width: '2px',
-              },
-              '&::-webkit-scrollbar-track': {
-                width: '2px',
-              },
-              '&::-webkit-scrollbar-thumb': {
-                background: '#888888FF',
-                borderRadius: '20px',
-              },
-            }}
-          />
-          <Average
-            gridArea="Average"
-            allLectures={lectures}
-            preferences={options}
-            averageBonus={averageBonus}
-          />
-          <PreferencesTab
-            gridArea="PreferencesTab"
-            preferences={options}
-            setPreferences={setOptions}
-            averageBonus={averageBonus}
-            setAverageBonusState={setAverageBonusState}
-          />
-        </SimpleGrid>
-            <Footer />
-      </ChakraProvider>
+        />
+        <Average
+          gridArea="Average"
+          allLectures={lectures}
+          preferences={options}
+          averageBonus={averageBonus}
+        />
+        <PreferencesTab
+          gridArea="PreferencesTab"
+          preferences={options}
+          setPreferences={setOptions}
+          averageBonus={averageBonus}
+          setAverageBonusState={setAverageBonusState}
+        />
+      </SimpleGrid>
+      <Footer />
+      {/* </ChakraProvider> */}
     </>
   );
 }
@@ -227,7 +245,7 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  return { props: {} };
+  return { props: { error: true } };
 }
 
 export default App;

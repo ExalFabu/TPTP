@@ -1,4 +1,4 @@
-import { ColorModeScript } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript, theme } from '@chakra-ui/react';
 import Head from 'next/head';
 import React from 'react';
 
@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }) {
         {/* <!-- Twitter --> */}
         <meta property="twitter:card" content="summary" />
         <meta property="twitter:url" content="https://tptp.vercel.app/" />
-        <meta property="twitter:title" content="TPTP" key="twitter:title"/>
+        <meta property="twitter:title" content="TPTP" key="twitter:title" />
         <meta
           property="twitter:description"
           content="Calcola la tua media universitaria"
@@ -63,14 +63,16 @@ function MyApp({ Component, pageProps }) {
               "keywords": "università, media, unipa, calcolo media",
               "applicationCategory": "Utility",
               "operatingSystem": "Windows, Linux, MacOS, iOS, Android",
-              "softwareVersion": "1.1"
+              "softwareVersion": "2.0"
             }
             `,
           }}
         />
       </Head>
       <ColorModeScript initialColorMode="system" />
-      <Component {...pageProps} />
+      <ChakraProvider theme={theme}>
+        <Component {...pageProps} />
+      </ChakraProvider>
     </>
   );
 }
