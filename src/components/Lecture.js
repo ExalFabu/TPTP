@@ -52,7 +52,8 @@ const Lecture = ({
     // modifiedLectures =
     //   modifiedLectures.length === 0 ? [new LectureType()] : modifiedLectures;
     setLectures((currentAllLectures) => {
-      return currentAllLectures.filter(el => el._id !== lecture._id) || [new LectureType()];
+      const modifiedLectures = currentAllLectures.filter(el => el._id !== lecture._id)
+      return modifiedLectures.length === 0 ? [new LectureType()] : modifiedLectures;
     });
   };
 
