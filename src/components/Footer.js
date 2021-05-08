@@ -7,8 +7,7 @@ function Footer({ ...props }) {
   return (
     <Box
       as="footer"
-      pt={10}
-      pb={2}
+      py={2}
       role="contentinfo"
       {...props}
       display="flex"

@@ -120,9 +120,9 @@ function App(props) {
       </Head>
       <ChakraProvider theme={theme}>
         <SimpleGrid
-          templateColumns={{
-            base: `'${exactWidth}px'`,
-          }}
+          // templateColumns={{
+          //   base: `'${exactWidth}px'`,
+          // }}
           templateAreas={{
             base: `
                   "Header"
@@ -130,11 +130,17 @@ function App(props) {
                   "Average"
                   "PreferencesTab"
                   `,
+            xl: `
+                "Header Header"
+                "LectureTable Average"
+                "LectureTable PreferencesTab"
+                `
           }}
           justifyItems="center"
           alignItems="start"
+          templateRows={{xl: '120px 120px 1fr'}}
           rowGap={2}
-          alignSelf="center"
+          columnGap={2}
           justifyContent="center"
         >
           <Header
@@ -151,7 +157,7 @@ function App(props) {
             allLectures={lectures}
             setLectures={setLectures}
             overflowY="auto"
-            maxH={{ base: '50vh', md: '60vh' }}
+            maxH={{ base: '50vh', md: '60vh', xl:'75vh' }}
             overflowX="clip"
             css={{
               '&::-webkit-scrollbar': {
@@ -171,7 +177,6 @@ function App(props) {
             allLectures={lectures}
             preferences={options}
             averageBonus={averageBonus}
-            w={exactWidth}
           />
           <PreferencesTab
             gridArea="PreferencesTab"
