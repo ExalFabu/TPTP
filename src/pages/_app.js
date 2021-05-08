@@ -7,33 +7,33 @@ function MyApp({ Component, pageProps }) {
     <>
       <Head>
         <title>TPTP</title>
-        <meta name="description" content="Calcola la tua media universitaria" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://tptp.vercel.app/" />
-        <meta property="og:title" content="TPTP" key="og:title" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="description" content="Calcola la tua media universitaria" />
+        <meta property="og:url" content="https://tptp.vercel.app/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/logo1262.png" />
+        <meta property="og:site_name" content="TPTP" />
+        <meta property="og:locale" content="it_IT" />
+        <meta property="twitter:card" content="summary" />
+        <meta property="twitter:url" content="https://tptp.vercel.app/" />
+        <meta property="twitter:image" content="/logo1262.png" />
+        <link rel="apple-touch-icon" href="/logo192.png" />
+
+        {/* <!-- 1200×628 --> */}
+        {/* <!-- Twitter --> */}
+        
+        <meta property="og:title" content="TPTP" key="og:title" />
         <meta
           property="og:description"
           content="Calcola la tua media universitaria"
           key="og:description"
         />
-        <meta property="og:image" content="/logo1262.png" />
-        <meta property="og:site_name" content="TPTP" />
-        <meta property="og:locale" content="it_IT" />
-
-        {/* <!-- Twitter --> */}
-        <meta property="twitter:card" content="summary" />
-        <meta property="twitter:url" content="https://tptp.vercel.app/" />
         <meta property="twitter:title" content="TPTP" key="twitter:title" />
         <meta
           property="twitter:description"
           content="Calcola la tua media universitaria"
           key="twitter:description"
         />
-        <meta property="twitter:image" content="/logo1262.png" />
-        {/* <!-- 1200×628 --> */}
-
-        <link rel="apple-touch-icon" href="/logo192.png" />
 
         <script
           async
@@ -71,9 +71,9 @@ function MyApp({ Component, pageProps }) {
         />
       </Head>
       <ColorModeScript initialColorMode="system" />
-      <ChakraProvider theme={theme}>
+      {/* <ChakraProvider theme={theme}> */}
         <Component {...pageProps} />
-      </ChakraProvider>
+      {/* </ChakraProvider> */}
     </>
   );
 }
