@@ -166,7 +166,6 @@ export default function CopyUrlButton({ allLectures, options, averageBonus }) {
   // Se cambiano le lezioni / opzioni / averageBonus / nome allora sono costretto a rigenerare l'id
   useEffect(() => {
     setUrlId('');
-    console.log(`refreshed url ${urlId}`);
   }, [allLectures, options, averageBonus, name]);
 
   return (
