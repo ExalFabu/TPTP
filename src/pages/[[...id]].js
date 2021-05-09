@@ -1,5 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { ChakraProvider, SimpleGrid, theme, useToast } from '@chakra-ui/react';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  ChakraProvider,
+  SimpleGrid,
+  theme,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  Button,
+} from '@chakra-ui/react';
 import LectureTable from '../components/LectureTable';
 import Average from '../components/Average';
 import Header from '../components/Header';
@@ -41,33 +52,55 @@ export const baseAverageBonus = averageBonus => {
   return averageBonus;
 };
 
+const AlertDialogWarning = React.memo(
+  ({ isOpen, name, onConfirm, ...props }) => {
+    const [isAlertOpen, setIsOpen] = useState(isOpen);
+    const onClose = () => setIsOpen(false);
+    const cancelRef = useRef();
+    return (
+      <AlertDialog
+        {...props}
+        onClose={onClose}
+        isOpen={isAlertOpen}
+        leastDestructiveRef={cancelRef}
+        isCentered={true}
+      >
+        <AlertDialogOverlay />
+        <AlertDialogContent borderRadius="xl">
+          <AlertDialogHeader textAlign="center"> {name} </AlertDialogHeader>
+          <AlertDialogBody>
+            Vuoi veramente sovrascrivere le materie già presenti sul tuo
+            dispositive con quelle di <b>{name}</b>?<br /> Gli eventuali voti
+            verranno persi
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button
+              colorScheme="green"
+              m={2}
+              onClick={() => {
+                onConfirm();
+                onClose();
+              }}
+            >
+              Si
+            </Button>
+            <Button colorScheme="red" m={2} ref={cancelRef} onClick={onClose}>
+              Annulla
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    );
+  }
+);
+
 function App(props) {
   const [lectures, setLectures] = useState([new LectureType()]);
   const [options, setOptions] = useState(baseOptions());
   const [averageBonus, setAverageBonusState] = useState(baseAverageBonus([]));
-  // const toast = useToast();
-  // Setting up default states (gathering from localstorage if needed)
-  useEffect(() => {
-    window.history.replaceState({}, null, '/');
-    // if (props.name) {
-    //   toast({
-    //     title: `${props.name}`,
-    //     description: 'Materie caricate con successo',
-    //     status: 'success',
-    //     position: 'top',
-    //     isClosable: true,
-    //   });
-    // }
-    // if (props.error) {
-    //   toast({
-    //     title: 'Link errato',
-    //     status: 'warning',
-    //     description:
-    //       'Il link che hai utilizzato potrebbe non essere mai esistito oppure è scaduto',
-    //     position: 'top',
-    //     isClosable: true,
-    //   });
-    // }
+
+  const loadFromRemote = () => {
+    if(!!props.name) document.title = `TPTP - ${props.name}`
     const defaultLectures =
       props.lectures || JSON.parse(localStorage.getItem('lectures')) || null;
     if (defaultLectures) {
@@ -85,10 +118,32 @@ function App(props) {
     if (defaultAverageBonus) {
       setAverageBonusState(defaultAverageBonus);
     }
+  };
+
+  const loadFromLocal = () => {
+    document.title = "TPTP"
+    const defaultLectures =
+      JSON.parse(localStorage.getItem('lectures')) || null;
+    if (defaultLectures) {
+      setLectures(defaultLectures);
+    }
+
+    const defaultOptions = JSON.parse(localStorage.getItem('options')) || null;
+    if (defaultOptions) setOptions(defaultOptions);
+
+    const defaultAverageBonus =
+      JSON.parse(localStorage.getItem('averageBonus')) || null;
+    if (defaultAverageBonus) {
+      setAverageBonusState(defaultAverageBonus);
+    }
+  };
+
+  useEffect(() => {
+    window.history.replaceState({}, null, '/');
+    loadFromLocal();
   }, []);
 
   // Per salvare sul LocalStorage le eventuali materie di default
-  // viene eseguito solo quando componentDidMount
   useEffect(() => {
     localStorage.setItem('lectures', JSON.stringify(lectures));
   }, [lectures]);
@@ -102,21 +157,17 @@ function App(props) {
   return (
     <>
       <Head>
-        <title>
-          {props.name !== undefined ? `TPTP - ${props.name}` : 'TPTP'}
-        </title>
+        <title>{!!props.name ? `TPTP - ${props.name}` : 'TPTP'}</title>
         <meta
           property="og:title"
-          content={
-            props.name !== undefined ? `TPTP - ${props.name}` : 'TPTP'
-          }
+          content={!!props.name ? `TPTP - ${props.name}` : 'TPTP'}
           key="og:title"
         />
         <meta
           property="og:description"
           content={
-            props.name !== undefined
-              ? `Calcola la tua media universitaria con le materie di '${props.name}'`
+            !!props.name
+              ? `Calcola la tua media universitaria con le materie di ${props.name}`
               : 'Calcola la tua media universitaria'
           }
           key="og:description"
@@ -124,15 +175,13 @@ function App(props) {
 
         <meta
           property="twitter:title"
-          content={
-            props.name !== undefined ? `TPTP - ${props.name}` : 'TPTP'
-          }
+          content={!!props.name ? `TPTP - ${props.name}` : 'TPTP'}
           key="twitter:title"
         />
         <meta
           property="twitter:description"
           content={
-            props.name !== undefined
+            !!props.name
               ? `Calcola la tua media universitaria con le materie di ${props.name}`
               : 'Calcola la tua media universitaria'
           }
@@ -140,10 +189,14 @@ function App(props) {
         />
       </Head>
       <ChakraProvider theme={theme}>
+        <AlertDialogWarning
+          isOpen={!!props.name}
+          name={props.name}
+          onConfirm={() => {
+            loadFromRemote();
+          }}
+        />
         <SimpleGrid
-          // templateColumns={{
-          //   base: `'${exactWidth}px'`,
-          // }}
           templateAreas={{
             base: `
                   "Header"
