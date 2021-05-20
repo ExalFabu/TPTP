@@ -36,7 +36,7 @@ export const baseAverageBonus = averageBonus => {
     let val = 0;
     if (i >= 28) val = 6;
     else if (i >= 27) val = 5;
-    else if (i >= 26) val = 3;
+    else if (i >= 26) val = 4;
     else if (i >= 24) val = 3;
     else if (i >= 22) val = 2;
     const GE = '\u2265';
