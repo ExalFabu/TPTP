@@ -49,12 +49,11 @@ const calculateUnipaAverage = ({
     }
   });
   let avg = Math.round((sum / weights) * 100) / 100;
-  // Mi prendo le materie non caratterizzanti con voti minori della media calcolata
-  // (Così che, la rimozione, non può che migliorare la media)
+  
   // Successivamente la ordino in ordine di voto, così da rimuovere quelle con voto minore prima.
   /** @type {Array} */
   let non_caratt_lecture = allLectures.filter(
-    el => el.caratt === false && el.grade < avg && validLecture(el)
+    el => el.caratt === false && validLecture(el)
   );
 
   non_caratt_lecture.sort((a, b) => a.grade - b.grade);
@@ -70,6 +69,12 @@ const calculateUnipaAverage = ({
   }
   const removed = [];
   while (upper_bound()) {
+    // Mi prendo le materie non caratterizzanti con voti minori della media calcolata
+    // (Così che, la rimozione, non può che migliorare la media)
+    avg = Math.round((sum / weights) * 100) / 100;
+    if (non_caratt_lecture[count].grade >= avg || isNaN(avg)){
+      break;
+    }
     // Rimuovo la materia con il voto più basso
     sum -= non_caratt_lecture[count].grade * non_caratt_lecture[count].cfu;
     weights -= non_caratt_lecture[count].cfu;
@@ -84,8 +89,7 @@ const calculateUnipaAverage = ({
       preferences.removeCFU &&
       non_caratt_lecture[count].cfu + cfu_levati > preferences.cfu_value
     ) {
-      new_weight =
-        non_caratt_lecture[count].cfu + cfu_levati - preferences.cfu_value;
+      new_weight = non_caratt_lecture[count].cfu + cfu_levati - preferences.cfu_value;
       sum += non_caratt_lecture[count].grade * new_weight;
       weights += new_weight;
     }
@@ -100,8 +104,8 @@ const calculateUnipaAverage = ({
     count++;
   }
   setRemovedLectures(removed);
+  
   avg = Math.round((sum / weights) * 100) / 100;
-
   return isNaN(avg) ? 0 : avg;
 };
 /**
