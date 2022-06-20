@@ -1,5 +1,6 @@
 # TPTP
 
+
 [:link:TPTP](https://tptp.vercel.app) è un sito che ti permette di calcolare la tua media ed il tuo voto di laurea
 
 Il calcolo del voto di laurea di default cerca di seguire gli standard di UniPa. Tuttavia la quasi totalità dei valori è personalizzabile cercando di corprire il più vasto bacino di utenti possibile.
@@ -19,3 +20,7 @@ Prima di cominciare però controlla lo stato del progetto con l'apposita tab e s
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Stats
+
+![website stats](https://i.imgur.com/TKq19V5.png)
