@@ -56,3 +56,7 @@
 
 // export default mongoose.models.short_url ||
 //   mongoose.model('short_url', ShortUrlSchema);
+/**
+ * @deprecated To Delete
+ */
+export const TO_DELETE = "TO DELETE"

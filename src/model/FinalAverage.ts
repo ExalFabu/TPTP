@@ -6,3 +6,7 @@
 //  */
 
 // export default FinalAverage
+/**
+ * @deprecated To Delete
+ */
+export const TO_DELETE = "TO DELETE"
