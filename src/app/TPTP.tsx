@@ -1,12 +1,6 @@
-import {
-  ChakraProvider, ColorModeScript, SimpleGrid,
-  theme
-} from '@chakra-ui/react';
+import { SimpleGrid } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import { batch, Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { useAppDispatch } from '../app/hooks';
-import { store, persistor } from '../app/store';
+import { batch } from 'react-redux';
 import Footer from '../common/Footer';
 import Header from '../common/Header';
 import Average from '../features/average/Average';
@@ -16,18 +10,19 @@ import LectureTable from '../features/lectures/LectureTable';
 import { dangerouslySetAllPreferences, IAverageBonus, IPreferences } from '../features/preferences/preferencesDuck';
 import PreferencesTab from '../features/preferences/PreferencesTab';
 import { exactWidth } from '../theme';
+import { useAppDispatch } from './hooks';
 
 
 
-function TPTP() {
+const TPTP : React.FC = () => {
   const dispatch = useAppDispatch()
-  useEffect(()=>{
+  useEffect(() => {
     // Migrate from previous localStoage data
     const lectures = localStorage.getItem("lectures")
     const avBonus = localStorage.getItem("averageBonus")
     const pref = localStorage.getItem("options")
     const finalAverage = localStorage.getItem("finalAverage")
-    if(lectures !== null && avBonus !== null && pref !== null && finalAverage !== null){
+    if (lectures !== null && avBonus !== null && pref !== null && finalAverage !== null) {
       localStorage.removeItem("lectures")
       localStorage.removeItem("averageBonus")
       localStorage.removeItem("options")
@@ -44,59 +39,56 @@ function TPTP() {
         dispatch(dangerouslySetAllPreferences(previousStoredPreferences))
       })
     }
-    
+
   }, [])
   return (
-      <PersistGate persistor={persistor} loading={<span>Aspetta...</span>}>
-        <ColorModeScript initialColorMode="system" />
-        <ChakraProvider theme={theme}>
-          <SimpleGrid
-            templateAreas={{
-              base: `
+    <>
+      <SimpleGrid
+        templateAreas={{
+          base: `
                   "Header"
                   "LectureTable"
                   "Average"
                   "PreferencesTab"
                   `,
-              xl: `
+          xl: `
                 "Header Header"
                 "LectureTable Average"
                 "LectureTable PreferencesTab"
                 `,
-            }}
-            justifyItems="center"
-            alignItems="start"
-            templateRows={{ xl: '120px 120px 1fr' }}
-            rowGap={2}
-            columnGap={2}
-            justifyContent="center"
-          >
-            <Header gridArea="Header" w={exactWidth} />
-            <LectureTable
-              gridArea="LectureTable"
-              w={exactWidth}
-              overflowY="auto"
-              maxH={{ base: '50vh', md: '60vh', xl: '75vh' }}
-              overflowX="clip"
-              css={{
-                '&::-webkit-scrollbar': {
-                  width: '2px',
-                },
-                '&::-webkit-scrollbar-track': {
-                  width: '2px',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  background: '#888888FF',
-                  borderRadius: '20px',
-                },
-              }}
-            />
-            <Average gridArea="Average" />
-            <PreferencesTab gridArea="PreferencesTab" />
-          </SimpleGrid>
-          <Footer />
-        </ChakraProvider>
-      </PersistGate>
+        }}
+        justifyItems="center"
+        alignItems="start"
+        templateRows={{ xl: '120px 120px 1fr' }}
+        rowGap={2}
+        columnGap={2}
+        justifyContent="center"
+      >
+        <Header gridArea="Header" w={exactWidth} />
+        <LectureTable
+          gridArea="LectureTable"
+          w={exactWidth}
+          overflowY="auto"
+          maxHeight={{ base: '50vh', md: '60vh', xl: '75vh' }}
+          overflowX="clip"
+          css={{
+            '&::-webkit-scrollbar': {
+              width: '2px',
+            },
+            '&::-webkit-scrollbar-track': {
+              width: '2px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: '#888888FF',
+              borderRadius: '20px',
+            },
+          }}
+        />
+        <Average gridArea="Average" />
+        <PreferencesTab gridArea="PreferencesTab" />
+      </SimpleGrid>
+      <Footer />
+    </>
   );
 }
 

@@ -1,21 +1,16 @@
+import { useColorModeValue } from '@chakra-ui/color-mode';
+import { InfoIcon } from '@chakra-ui/icons';
 import { Input, InputGroup, InputLeftAddon } from '@chakra-ui/input';
 import { Box } from '@chakra-ui/layout';
 import { useBreakpointValue } from '@chakra-ui/media-query';
-import { borderColor } from '../../../theme';
 import {
-  PopoverArrow,
-  PopoverHeader,
-  PopoverBody,
+  Popover, PopoverArrow, PopoverBody,
   PopoverCloseButton,
-  PopoverContent,
-  PopoverTrigger,
-  Popover,
+  PopoverContent, PopoverFooter, PopoverHeader, PopoverTrigger
 } from '@chakra-ui/popover';
 import React, { useState } from 'react';
-import { InfoIcon } from '@chakra-ui/icons';
-import { PopoverFooter } from '@chakra-ui/popover';
-import { useColorModeValue } from '@chakra-ui/color-mode';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { borderColor } from '../../../theme';
 import { editPreference, IPreferences, selectPreferences } from '../preferencesDuck';
 
 const InfoBonusPopover = React.memo(() => {

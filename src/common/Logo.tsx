@@ -1,8 +1,8 @@
-import React from 'react';
 import { Box, useColorModeValue } from '@chakra-ui/react';
+import React from 'react';
 // import logo_black from './logos/logofhd-b.png';
 // import logo_white from './logos/logofhd-w.png';
-import Image, { ImageProps } from 'next/image';
+import Image from 'next/image';
 
 const WhiteLogo = ({ display, ...props } : {display: string}) => {
   return (

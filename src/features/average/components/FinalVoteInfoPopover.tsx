@@ -1,5 +1,5 @@
 import { InfoIcon } from "@chakra-ui/icons";
-import { useColorModeValue, Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverHeader, PopoverBody, PopoverFooter, Box } from "@chakra-ui/react";
+import { Box, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverFooter, PopoverHeader, PopoverTrigger, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
 
 const InfoFinalVotePopover = ({gridArea = "info"} : {gridArea: string}) => {

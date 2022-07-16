@@ -1,5 +1,5 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IAppState, store } from '../../app/store';
+import { IAppState } from '../../app/store';
 import { ILecture, selectLectures } from '../lectures/lectureDuck';
 import { selectPreferences } from '../preferences/preferencesDuck';
 

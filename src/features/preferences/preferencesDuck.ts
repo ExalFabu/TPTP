@@ -1,4 +1,4 @@
-import { CaseReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IAppState } from '../../app/store';
 
 export interface IAverageBonus {
