@@ -7,10 +7,10 @@ import {
 } from '@chakra-ui/accordion';
 import { SimpleGrid } from '@chakra-ui/layout';
 import React from 'react';
-import { borderColor, exactWidth } from '../theme';
-import AverageBonusComponent from './preferences/AverageBonusComponent';
-import BonusComponent from './preferences/BonusComponent';
-import RemoveComponent from './preferences/RemoveComponent';
+import { borderColor, exactWidth } from '../../theme';
+import AverageBonusComponent from './components/AverageBonusComponent';
+import BonusComponent from './components/BonusComponent';
+import RemoveComponent from './components/RemoveComponent';
 
 /**
  * @param {Object} props
@@ -18,10 +18,6 @@ import RemoveComponent from './preferences/RemoveComponent';
  * */
 
 const PreferencesTab = ({
-  preferences,
-  setPreferences,
-  averageBonus,
-  setAverageBonusState,
   ...props
 }) => {
   return (
@@ -74,19 +70,13 @@ const PreferencesTab = ({
             py={2}
           >
             <RemoveComponent
-              preferences={preferences}
-              setPreferences={setPreferences}
               gridArea="Rimuovi"
             />
             <BonusComponent
               gridArea="Bonus"
-              preferences={preferences}
-              setPreferences={setPreferences}
             />
             <AverageBonusComponent
               gridArea="AverageBonus"
-              averageBonus={averageBonus}
-              setAverageBonusState={setAverageBonusState}
             />
           </SimpleGrid>
         </AccordionPanel>

@@ -1,19 +1,19 @@
 import { Button } from '@chakra-ui/button';
 import { AddIcon } from '@chakra-ui/icons';
-import React from 'react';
-import { LectureType } from './Lecture';
+import React, {Dispatch, SetStateAction} from 'react';
+import { useAppDispatch } from '../../app/hooks';
+import { addLecture } from './lectureSlice';
 
-const AddLectureButton = ({ setLectures }) => {
-  const addEmptyLecture = () => {
-    setLectures((currentLectures ) => [...currentLectures, new LectureType()]);
-  };
+const AddLectureButton = () => {
+  const dispatch = useAppDispatch();
+  
   return (
     <Button
       variant="outline"
       size="sm"
       fontSize="md"
       leftIcon={<AddIcon />}
-      onClick={addEmptyLecture}
+      onClick={() => dispatch(addLecture())}
     >
       Aggiungi Materia
     </Button>

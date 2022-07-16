@@ -2,11 +2,11 @@ import React from 'react';
 import { Box, useColorModeValue } from '@chakra-ui/react';
 // import logo_black from './logos/logofhd-b.png';
 // import logo_white from './logos/logofhd-w.png';
-import Image from 'next/image';
+import Image, { ImageProps } from 'next/image';
 
-const WhiteLogo = ({ colorMode, ...props }) => {
+const WhiteLogo = ({ display, ...props } : {display: string}) => {
   return (
-    <Box display={colorMode === 'black' ? 'inherit' : 'none'}>
+    <Box display={display}>
       <Image
         width="142px"
         height="79px"
@@ -19,9 +19,9 @@ const WhiteLogo = ({ colorMode, ...props }) => {
   );
 };
 
-const BlackLogo = ({ colorMode, ...props }) => {
+const BlackLogo = ({ display, ...props }: {display: string}) => {
   return (
-    <Box display={colorMode === 'white' ? 'inherit' : 'none'}>
+    <Box display={display}>
       <Image
         width="142px"
         height="79px"
@@ -33,13 +33,13 @@ const BlackLogo = ({ colorMode, ...props }) => {
   );
 };
 
-const Logo = props => {
+const Logo = ({...props}) => {
   const colorMode = useColorModeValue('white', 'black');
   return (
     <>
-      <BlackLogo colorMode={colorMode} {...props} />
+      <BlackLogo display={colorMode === 'white' ? 'inherit' : 'none'} {...props} />
 
-      <WhiteLogo colorMode={colorMode} {...props} />
+      <WhiteLogo display={colorMode === 'black' ? 'inherit' : 'none'} {...props} />
     </>
   );
 };

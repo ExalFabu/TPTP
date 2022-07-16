@@ -3,7 +3,7 @@ import { Box, Text } from '@chakra-ui/layout';
 import React from 'react';
 import { FaGithub } from 'react-icons/fa';
 
-function Footer({ ...props }) {
+function Footer({...props}) {
   return (
     <Box
       as="footer"
@@ -20,6 +20,8 @@ function Footer({ ...props }) {
         leftIcon={<FaGithub />}
         children="Github"
         variant="link"
+        rel="nofollow"
+        target='_blank'
       />
     </Box>
   );

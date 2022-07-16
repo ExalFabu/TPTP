@@ -10,52 +10,21 @@ import {
   SimpleGrid,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
-import { nanoid } from 'nanoid';
+import { ILecture, editLecture, removeLecture } from './lectureSlice';
+import { useAppDispatch } from '../../app/hooks';
 
-export class LectureType {
-  constructor(name, cfu, grade, lode, caratt, isRemoved) {
-    this._id = nanoid(22);
-    this.name = name || '';
-    this.cfu = cfu || null;
-    this.grade = grade || null;
-    this.lode = lode || false;
-    this.caratt = caratt || false;
-    this.isRemoved = isRemoved || false;
-    this.new_cfu = this.cfu;
-  }
-}
 
-/**
- *
- * @param {Object} props
- * @param {import('../model/LectureType').Lecture[]} props.allLectures
- * @param {CallableFunction} props.setLectures
- * @param {import('../model/LectureType').Lecture} props.lecture
- * @returns {React.FC}
- */
-const Lecture = ({
-  setLectures,
-  lecture,
-  ...props
-}) => {
-  const changeValue = (name, value) => {
-    setLectures((currentAllLectures) => {
-      return currentAllLectures.map(elem => {
-        if (elem._id === lecture._id) return {...elem, [name]: value}
-        return elem
-      })
-    });
+function Lecture({lecture} : { lecture: ILecture }) {
+  const dispatch = useAppDispatch()
+
+  const changeValue = <T extends keyof ILecture>(name: T, value: ILecture[T]) => {
+    dispatch(editLecture({
+      id: lecture._id,
+      key: name,
+      value: value
+    }))
   };
 
-  const removeLecture = _ => {
-    // let modifiedLectures = allLectures.filter(el => el._id !== lecture._id);
-    // modifiedLectures =
-    //   modifiedLectures.length === 0 ? [new LectureType()] : modifiedLectures;
-    setLectures((currentAllLectures) => {
-      const modifiedLectures = currentAllLectures.filter(el => el._id !== lecture._id)
-      return modifiedLectures.length === 0 ? [new LectureType()] : modifiedLectures;
-    });
-  };
 
   return (
     <SimpleGrid
@@ -73,20 +42,19 @@ const Lecture = ({
       }}
       alignItems="center"
       justifyItems="center"
-      {...props}
     >
       {/* Name input */}
       <GridItem gridArea="name" w="100%" rowSpan={{ base: 2, md: 1 }}>
         <Input
           size="sm"
-          name="name"
+          name={"name" as keyof ILecture}
           aria-label="Nome Materia"
           variant="outline"
           placeholder="Nome della materia"
           value={lecture.name}
-          onChange={e => changeValue(e.target.name, e.target.value)}
+          onChange={e => changeValue("name", e.target.value)}
           isTruncated={true}
-          onClick={e => e.target.select()}
+          onClick={e => (e.target as HTMLInputElement).select()}
           borderRadius="md"
         />
       </GridItem>
@@ -94,7 +62,7 @@ const Lecture = ({
       <InputGroup gridArea="cfu" size="sm" w="100%">
         <InputLeftAddon
           as="label"
-          for={`cfu${lecture._id}`}
+          htmlFor={`cfu${lecture._id}`}
           children={'CFU'}
           w="55px"
         />
@@ -102,20 +70,20 @@ const Lecture = ({
         <Input
           variant="outline"
           id={`cfu${lecture._id}`}
-          name="cfu"
+          name={"cfu" as keyof ILecture}
           aria-label="CFU"
           step={1}
           min={0}
           type="number"
           onChange={e => {
-            changeValue(e.target.name, Math.abs(e.target.valueAsNumber));
+            changeValue("cfu", Math.abs(e.target.valueAsNumber));
           }}
           placeholder="0"
-          value={lecture.cfu}
+          value={lecture.cfu ?? ""}
           w="4em"
           textAlign="center"
-          onClick={e => e.target.select()}
-          isInvalid={lecture.cfu < 0 && lecture.cfu !== null}
+          onClick={e => (e.target as HTMLInputElement).select()}
+          isInvalid={lecture.cfu !== null && lecture.cfu < 0}
         />
       </InputGroup>
 
@@ -123,7 +91,7 @@ const Lecture = ({
       <InputGroup size="sm" gridArea="grade" w="100%">
         <InputLeftAddon
           as="label"
-          for={`grade${lecture._id}`}
+          htmlFor={`grade${lecture._id}`}
           children={'Voto'}
           w="55px"
         />
@@ -131,22 +99,21 @@ const Lecture = ({
           type="number"
           variant="outline"
           id={`grade${lecture._id}`}
-          name="grade"
+          name={"grade" as keyof ILecture}
           aria-label="Voto"
           step={1}
           isInvalid={
+            lecture.grade !== null &&
             (lecture.grade < 18 || lecture.grade > 30) &&
-            lecture.grade !== '' &&
-            lecture.grade !== 0 &&
-            lecture.grade !== null
+            lecture.grade !== 0 
           }
           min={18}
           max={30}
-          onChange={e => changeValue(e.target.name, Math.abs(e.target.valueAsNumber))}
-          value={lecture.grade}
+          onChange={e => changeValue("grade", Math.abs(e.target.valueAsNumber))}
+          value={lecture.grade || ""}
           w="4em"
           textAlign="center"
-          onClick={e => e.target.select()}
+          onClick={e => (e.target as HTMLInputElement).select()}
           placeholder="0"
         />
       </InputGroup>
@@ -156,17 +123,17 @@ const Lecture = ({
         <Center>
           <Button
             size="sm"
-            name="lode"
+            name={"lode" as keyof ILecture}
             variant={
               lecture.grade !== 30
                 ? 'ghost'
                 : lecture.lode
-                ? 'solid'
-                : 'outline'
+                  ? 'solid'
+                  : 'outline'
             }
             colorScheme="yellow"
             aria-label="Lode"
-            onClick={e => changeValue(e.target.name, !lecture.lode)}
+            onClick={e => changeValue("lode", !lecture.lode)}
             isDisabled={lecture.grade !== 30}
             minW="3em"
           >
@@ -179,11 +146,11 @@ const Lecture = ({
       <GridItem gridArea="caratt" w="100%">
         <Button
           size="sm"
-          name="caratt"
+          name={"caratt" as keyof ILecture} 
           aria-label="Caratterizzante"
           variant={lecture.caratt ? 'solid' : 'outline'}
           colorScheme="green"
-          onClick={e => changeValue(e.target.name, !lecture.caratt)}
+          onClick={e => changeValue("caratt", !lecture.caratt)}
           minW="5em"
           w="100%"
           border="1px"
@@ -199,7 +166,7 @@ const Lecture = ({
             size="sm"
             icon={<DeleteIcon />}
             aria-label="Rimuovi materia"
-            onClick={removeLecture}
+            onClick={() => dispatch(removeLecture(lecture._id))}
             variant="ghost"
             colorScheme="red"
             w="3em"
