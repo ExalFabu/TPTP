@@ -1,48 +1,44 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { createLogger } from 'redux-logger';
+import { PersistConfig, persistReducer, persistStore } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import averageReducer, {
   createInitialAverage,
-  IAverage,
+  IOptions
 } from '../features/average/averageDuck';
 import lecturesReducer, {
   createEmptyLecture,
-  ILecture,
+  ILecture
 } from '../features/lectures/lectureDuck';
 import preferencesReducer, {
-  createInitialPreferences,
-  IPreferences,
+  createInitialPreferences, IPreferences
 } from '../features/preferences/preferencesDuck';
-import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
-import { persistStore, persistReducer } from "redux-persist";
 
 export interface IAppState {
   lectures: ILecture[];
   preferences: IPreferences;
-  options: IAverage;
+  options: IOptions;
 }
 
-const persistConfig = {
+const persistConfig: PersistConfig<IAppState> = {
   key: 'TPTP',
   storage,
-}
+  version: 0,
+};
 const rootReducer = combineReducers({
   lectures: lecturesReducer,
   preferences: preferencesReducer,
   options: averageReducer,
 });
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-
-// TODO: Use redux-persist
-const initialStorageState = {
+const initialStorageState: IAppState = {
   lectures: [createEmptyLecture()],
   preferences: createInitialPreferences(),
   options: createInitialAverage(),
-} as IAppState;
+};
 
 const logger = createLogger({});
-
-
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -55,4 +51,4 @@ export const store = configureStore({
 
 export type AppDispatch = typeof store.dispatch;
 
-export const persistor = persistStore(store)
+export const persistor = persistStore(store);

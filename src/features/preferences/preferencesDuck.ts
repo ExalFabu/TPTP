@@ -11,7 +11,6 @@ export interface IAverageBonus {
 }
 
 export interface IPreferences {
-  mat_or_cfu: boolean;
   removeCFU: boolean;
   cfu_value: number;
   mat_value: number;
@@ -51,7 +50,6 @@ export const createInitialPreferences = (): IPreferences => {
     incorso: 2,
     erasmus: 1,
     averageBonus: createInitialAverageBonus(),
-    mat_or_cfu: true,
   };
 };
 
@@ -93,12 +91,15 @@ const preferencesSlice = createSlice({
           item[action.payload.key] = action.payload.value;
       });
     },
+    dangerouslySetAllPreferences: (current, action: PayloadAction<IPreferences>) => {
+      return action.payload
+    }
   },
 });
 
 export default preferencesSlice.reducer;
 
-export const { editPreference, editAverageBonus } = preferencesSlice.actions;
+export const { editPreference, editAverageBonus, dangerouslySetAllPreferences } = preferencesSlice.actions;
 
 export const selectPreferences = (state: IAppState) => state.preferences;
 

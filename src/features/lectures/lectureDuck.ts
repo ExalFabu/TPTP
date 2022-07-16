@@ -52,10 +52,13 @@ const lectureSlice = createSlice({
       const filtered = state.filter(lec => lec._id !== action.payload);
       return filtered.length === 0 ? [createEmptyLecture()] : filtered;
     },
+    dangerouslySetAllLectures: (current, action: PayloadAction<ILecture[]>) => {
+      return action.payload
+    }
   },
 });
 
-export const { addLecture, editLecture, removeLecture } = lectureSlice.actions;
+export const { addLecture, editLecture, removeLecture, dangerouslySetAllLectures } = lectureSlice.actions;
 
 export default lectureSlice.reducer;
 

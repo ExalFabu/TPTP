@@ -3,13 +3,13 @@ import { IAppState, store } from '../../app/store';
 import { ILecture, selectLectures } from '../lectures/lectureDuck';
 import { selectPreferences } from '../preferences/preferencesDuck';
 
-export interface IAverage {
+export interface IOptions {
   isInCorso: boolean;
   hasDoneErasmus: boolean;
 }
 
 export const createInitialAverage = () =>
-  ({ isInCorso: false, hasDoneErasmus: false } as IAverage);
+  ({ isInCorso: false, hasDoneErasmus: false } as IOptions);
 
 const averageSlice = createSlice({
   name: 'options',
@@ -21,12 +21,15 @@ const averageSlice = createSlice({
     toggleErasmus: average => {
       average.hasDoneErasmus = !average.hasDoneErasmus;
     },
+    dangerouslySetAllOptions: (current, action: PayloadAction<IOptions>) => {
+      return action.payload
+    }
   },
 });
 
 export default averageSlice.reducer;
 
-export const { toggleErasmus, toggleInCorso } = averageSlice.actions;
+export const { toggleErasmus, toggleInCorso, dangerouslySetAllOptions } = averageSlice.actions;
 
 interface IValidLecture extends ILecture {
   cfu: number;

@@ -2,22 +2,51 @@ import {
   ChakraProvider, ColorModeScript, SimpleGrid,
   theme
 } from '@chakra-ui/react';
-import { Provider } from 'react-redux';
+import { useEffect } from 'react';
+import { batch, Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { useAppDispatch } from '../app/hooks';
 import { store, persistor } from '../app/store';
 import Footer from '../common/Footer';
 import Header from '../common/Header';
 import Average from '../features/average/Average';
+import { dangerouslySetAllOptions, IOptions } from '../features/average/averageDuck';
+import { dangerouslySetAllLectures, ILecture } from '../features/lectures/lectureDuck';
 import LectureTable from '../features/lectures/LectureTable';
+import { dangerouslySetAllPreferences, IAverageBonus, IPreferences } from '../features/preferences/preferencesDuck';
 import PreferencesTab from '../features/preferences/PreferencesTab';
 import { exactWidth } from '../theme';
 
 
 
-function App({ ...props }) {
-
+function TPTP() {
+  const dispatch = useAppDispatch()
+  useEffect(()=>{
+    // Migrate from previous localStoage data
+    const lectures = localStorage.getItem("lectures")
+    const avBonus = localStorage.getItem("averageBonus")
+    const pref = localStorage.getItem("options")
+    const finalAverage = localStorage.getItem("finalAverage")
+    if(lectures !== null && avBonus !== null && pref !== null && finalAverage !== null){
+      localStorage.removeItem("lectures")
+      localStorage.removeItem("averageBonus")
+      localStorage.removeItem("options")
+      localStorage.removeItem("finalAverage")
+      const previousStoredLectures = (JSON.parse(lectures)) as ILecture[]
+      const previousStoredAverageBonus = JSON.parse(avBonus) as IAverageBonus[]
+      const previousStoredPreferences = JSON.parse(pref) as IPreferences
+      previousStoredPreferences.averageBonus = previousStoredAverageBonus
+      const previousStoredOptions = JSON.parse(finalAverage) as IOptions
+      console.log("Migrating from previous version... this should happen only once")
+      batch(() => {
+        dispatch(dangerouslySetAllLectures(previousStoredLectures));
+        dispatch(dangerouslySetAllOptions(previousStoredOptions));
+        dispatch(dangerouslySetAllPreferences(previousStoredPreferences))
+      })
+    }
+    
+  }, [])
   return (
-    <Provider store={store}>
       <PersistGate persistor={persistor} loading={<span>Aspetta...</span>}>
         <ColorModeScript initialColorMode="system" />
         <ChakraProvider theme={theme}>
@@ -68,8 +97,7 @@ function App({ ...props }) {
           <Footer />
         </ChakraProvider>
       </PersistGate>
-    </Provider>
   );
 }
 
-export default App;
+export default TPTP;
