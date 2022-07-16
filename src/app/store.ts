@@ -3,15 +3,15 @@ import { createLogger } from 'redux-logger';
 import averageReducer, {
   createInitialAverage,
   IAverage,
-} from '../features/average/averageSlice';
+} from '../features/average/averageDuck';
 import lecturesReducer, {
   createEmptyLecture,
   ILecture,
-} from '../features/lectures/lectureSlice';
+} from '../features/lectures/lectureDuck';
 import preferencesReducer, {
   createInitialPreferences,
   IPreferences,
-} from '../features/preferences/preferencesSlice';
+} from '../features/preferences/preferencesDuck';
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 import { persistStore, persistReducer } from "redux-persist";
 

@@ -10,7 +10,7 @@ import {
   SimpleGrid,
 } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
-import { ILecture, editLecture, removeLecture } from './lectureSlice';
+import { ILecture, editLecture, removeLecture } from './lectureDuck';
 import { useAppDispatch } from '../../app/hooks';
 
 

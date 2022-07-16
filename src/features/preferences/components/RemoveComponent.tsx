@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { borderColor } from '../../../theme';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { editPreference, selectPreferences } from '../preferencesSlice';
+import { editPreference, selectPreferences } from '../preferencesDuck';
 
 const InfoRemovePopover = React.memo(() => {
   const legendPosition = useBreakpointValue({

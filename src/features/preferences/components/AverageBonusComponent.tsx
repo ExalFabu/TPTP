@@ -15,7 +15,7 @@ import {
 import React, { ClassAttributes, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { borderColor } from '../../../theme';
-import { editAverageBonus, IAverageBonus, selectAverageBonus } from '../preferencesSlice';
+import { editAverageBonus, IAverageBonus, selectAverageBonus } from '../preferencesDuck';
 
 const InfoAverageBonusPopover = React.memo(() => {
   const legendPosition = useBreakpointValue({

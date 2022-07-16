@@ -3,7 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { borderColor } from '../../theme';
 import Lecture from './Lecture';
-import { selectLectures } from './lectureSlice';
+import { selectLectures } from './lectureDuck';
 
 function LectureTable(props: SimpleGridProps) {
 

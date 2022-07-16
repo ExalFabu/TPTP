@@ -1,7 +1,7 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IAppState, store } from '../../app/store';
-import { ILecture, selectLectures } from '../lectures/lectureSlice';
-import { selectPreferences } from '../preferences/preferencesSlice';
+import { ILecture, selectLectures } from '../lectures/lectureDuck';
+import { selectPreferences } from '../preferences/preferencesDuck';
 
 export interface IAverage {
   isInCorso: boolean;

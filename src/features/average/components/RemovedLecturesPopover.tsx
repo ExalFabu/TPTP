@@ -1,7 +1,7 @@
 import { InfoIcon } from "@chakra-ui/icons";
 import { Box, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, SimpleGrid, Text, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
-import { ILecture } from "../../lectures/lectureSlice";
+import { ILecture } from "../../lectures/lectureDuck";
 
 const RemovedLecturePopover = (
     {removedLectures = []}: {removedLectures: ILecture[]}

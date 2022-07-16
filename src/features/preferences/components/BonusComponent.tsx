@@ -16,7 +16,7 @@ import { InfoIcon } from '@chakra-ui/icons';
 import { PopoverFooter } from '@chakra-ui/popover';
 import { useColorModeValue } from '@chakra-ui/color-mode';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { editPreference, IPreferences, selectPreferences } from '../preferencesSlice';
+import { editPreference, IPreferences, selectPreferences } from '../preferencesDuck';
 
 const InfoBonusPopover = React.memo(() => {
   const legendPosition = useBreakpointValue({

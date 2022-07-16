@@ -2,8 +2,8 @@ import { Button } from '@chakra-ui/button';
 import { Flex, SimpleGrid, Text } from '@chakra-ui/layout';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { borderColor, exactWidth } from '../../theme';
-import { ILecture } from '../lectures/lectureSlice';
-import { selectAverage, selectFinalGrade, selectOptions, selectRemovedLectures, toggleErasmus, toggleInCorso } from './averageSlice';
+import { ILecture } from '../lectures/lectureDuck';
+import { selectAverage, selectFinalGrade, selectOptions, selectRemovedLectures, toggleErasmus, toggleInCorso } from './averageDuck';
 import FinalVoteInfoPopover from './components/FinalVoteInfoPopover';
 import RemovedLecturesPopover from './components/RemovedLecturesPopover';
 
