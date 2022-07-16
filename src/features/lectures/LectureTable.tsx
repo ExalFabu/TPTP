@@ -1,13 +1,30 @@
 import { SimpleGrid, SimpleGridProps } from '@chakra-ui/layout';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { DragDropContext, DragStart, Droppable, DropResult, ResponderProvided } from 'react-beautiful-dnd';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { borderColor } from '../../theme';
 import Lecture from './Lecture';
-import { selectLectures } from './lectureDuck';
+import { reorderLectures, selectLectures } from './lectureDuck';
 
 function LectureTable(props: SimpleGridProps) {
 
-  const lectures = useSelector(selectLectures)
+  const lectures = useAppSelector(selectLectures)
+  const dispatch = useAppDispatch()
+
+  const onDragStart = (initial: DragStart, provided: ResponderProvided) => {
+    if (window.navigator.vibrate) {
+      window.navigator.vibrate(100);
+    }
+  }
+  const onDragEnd = (result: DropResult, provided: ResponderProvided) => {
+    if (!result.destination) {
+      return
+    }
+    if (result.source.index === result.destination.index) {
+      return
+    }
+    dispatch(reorderLectures({ start: result.source.index, end: result.destination.index }))
+  }
 
   return (
     <SimpleGrid
@@ -20,16 +37,27 @@ function LectureTable(props: SimpleGridProps) {
       justifyItems="center"
       {...props}
     >
-      {lectures.map(lecture => {
-        return (
-          <Lecture
-            key={lecture._id}
-            lecture={lecture}
-          />
-        );
-      })}
+
+      <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+        <Droppable droppableId='lectureTable'>
+          {(droppableProvided, droppableSnapshot) =>
+            <div ref={droppableProvided.innerRef} {...droppableProvided.droppableProps}>
+              {lectures.map((lecture, index) => (
+
+                <Lecture
+                  key={lecture._id}
+                  lectureId={lecture._id}
+                  index={index}
+                />
+              )
+              )}
+              {droppableProvided.placeholder}
+            </div>
+          }
+        </Droppable>
+      </DragDropContext>
     </SimpleGrid>
   );
 }
 
-export default LectureTable;
+export default React.memo(LectureTable);

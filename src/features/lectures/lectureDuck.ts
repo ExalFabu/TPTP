@@ -1,6 +1,6 @@
+import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
-import type { PayloadAction } from '@reduxjs/toolkit';
 import { IAppState } from '../../app/store';
 
 export interface ILecture {
@@ -53,12 +53,26 @@ const lectureSlice = createSlice({
       return filtered.length === 0 ? [createEmptyLecture()] : filtered;
     },
     dangerouslySetAllLectures: (current, action: PayloadAction<ILecture[]>) => {
-      return action.payload
-    }
+      return action.payload;
+    },
+    reorderLectures: (
+      lectures,
+      action: PayloadAction<{ start: number; end: number }>
+    ) => {
+      if (action.payload.start === action.payload.end) return;
+      const [removed] = lectures.splice(action.payload.start, 1);
+      lectures = lectures.splice(action.payload.end, 0, removed);
+    },
   },
 });
 
-export const { addLecture, editLecture, removeLecture, dangerouslySetAllLectures } = lectureSlice.actions;
+export const {
+  addLecture,
+  editLecture,
+  removeLecture,
+  dangerouslySetAllLectures,
+  reorderLectures,
+} = lectureSlice.actions;
 
 export default lectureSlice.reducer;
 
