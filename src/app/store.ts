@@ -43,7 +43,7 @@ const logger = createLogger({});
 export const store = configureStore({
   reducer: persistedReducer,
   preloadedState: initialStorageState,
-  devTools: true,
+  devTools: process.env.NODE_ENV !== "production",
   middleware: getDefaultMiddleware => {
     return getDefaultMiddleware().concat(logger);
   },
