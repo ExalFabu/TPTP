@@ -87,7 +87,7 @@ const Lecture: React.FC<{ lectureId: string, index: number }> = ({ lectureId, in
               onChange={e => {
                 changeValue("cfu", Math.abs(e.target.valueAsNumber));
               }}
-              placeholder="CFU"
+              placeholder="0"
               value={lecture.cfu ?? ""}
               w="100%"
               textAlign="center"
@@ -128,7 +128,7 @@ const Lecture: React.FC<{ lectureId: string, index: number }> = ({ lectureId, in
               w="100%"
               textAlign="center"
               onClick={e => (e.target as HTMLInputElement).select()}
-              placeholder="Voto"
+              placeholder="0"
               pl={"3em"}
             />
           </InputGroup>
