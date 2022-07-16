@@ -5,18 +5,13 @@ import { Input, InputGroup, InputRightAddon } from '@chakra-ui/input';
 import { Box, SimpleGrid } from '@chakra-ui/layout';
 import { useBreakpointValue } from '@chakra-ui/media-query';
 import {
-  PopoverArrow,
-  PopoverHeader,
-  PopoverBody,
+  Popover, PopoverArrow, PopoverBody,
   PopoverCloseButton,
-  PopoverContent,
-  PopoverTrigger,
-  Popover,
+  PopoverContent, PopoverHeader, PopoverTrigger
 } from '@chakra-ui/popover';
-import { useState } from 'react';
-import { borderColor } from '../../../theme';
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { borderColor } from '../../../theme';
 import { editPreference, selectPreferences } from '../preferencesDuck';
 
 const InfoRemovePopover = React.memo(() => {

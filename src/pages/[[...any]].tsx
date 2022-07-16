@@ -1,6 +1,6 @@
 import {
   Center,
-  ChakraProvider, CircularProgress, CircularProgressLabel, ColorModeScript, Container, Progress, Spinner, Text, theme
+  ChakraProvider, ColorModeScript, Container, Progress, theme
 } from '@chakra-ui/react';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor } from '../app/store';

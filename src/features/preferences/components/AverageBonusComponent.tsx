@@ -4,15 +4,11 @@ import { Input } from '@chakra-ui/input';
 import { Flex, SimpleGrid, Text } from '@chakra-ui/layout';
 import { useBreakpointValue } from '@chakra-ui/media-query';
 import {
-  PopoverArrow,
-  PopoverHeader,
-  PopoverBody,
+  Popover, PopoverArrow, PopoverBody,
   PopoverCloseButton,
-  PopoverContent,
-  PopoverTrigger,
-  Popover,
+  PopoverContent, PopoverHeader, PopoverTrigger
 } from '@chakra-ui/popover';
-import React, { ClassAttributes, useState } from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { borderColor } from '../../../theme';
 import { editAverageBonus, IAverageBonus, selectAverageBonus } from '../preferencesDuck';

@@ -1,9 +1,7 @@
 import {
-  Accordion,
-  AccordionIcon,
+  Accordion, AccordionButton, AccordionIcon,
   AccordionItem,
-  AccordionPanel,
-  AccordionButton,
+  AccordionPanel
 } from '@chakra-ui/accordion';
 import { SimpleGrid } from '@chakra-ui/layout';
 import React from 'react';

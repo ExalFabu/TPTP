@@ -1,5 +1,4 @@
-import { Flex, SimpleGrid, FlexProps } from '@chakra-ui/layout';
-import React from 'react';
+import { Flex, FlexProps, SimpleGrid } from '@chakra-ui/layout';
 import AddLectureButton from '../features/lectures/AddLectureButton';
 import ColorModeSwitcher from './ColorModeSwitcher';
 // import CopyUrlButton from './CopyUrlButton';
