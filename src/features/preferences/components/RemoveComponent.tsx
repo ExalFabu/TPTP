@@ -14,8 +14,10 @@ import {
   Popover,
 } from '@chakra-ui/popover';
 import { useState } from 'react';
-import { borderColor } from '../../theme';
+import { borderColor } from '../../../theme';
 import React from 'react';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { editPreference, selectPreferences } from '../preferencesDuck';
 
 const InfoRemovePopover = React.memo(() => {
   const legendPosition = useBreakpointValue({
@@ -35,7 +37,10 @@ const InfoRemovePopover = React.memo(() => {
       colorScheme="whatsapp"
     >
       <PopoverTrigger>
-        <legend align={legendPosition}>
+        <legend
+          /*
+          // @ts-ignore  Needed workaround */
+          align={legendPosition}>
           Rimuovi{' '}
           <InfoIcon
             color={greenInfoColor}
@@ -71,10 +76,12 @@ const InfoRemovePopover = React.memo(() => {
 });
 
 export default function RemoveComponent({
-  preferences,
-  setPreferences,
   ...props
 }) {
+
+  const preferences = useAppSelector(selectPreferences)
+  const dispatch = useAppDispatch()
+
   const borderStyle = useBreakpointValue({
     base: { border: '1px' },
     md: { border: '1px' },
@@ -111,10 +118,12 @@ export default function RemoveComponent({
             colorScheme="green"
             onChange={e => {
               if (e.target.checked === false) return;
-              setPreferences({
-                ...preferences,
-                removeCFU: e.target.checked,
-              });
+              dispatch(
+                editPreference({
+                  key: "removeCFU",
+                  value: true
+                })
+              )
             }}
             size="md"
             mr={2}
@@ -129,24 +138,38 @@ export default function RemoveComponent({
             min={0}
             value={preferences.cfu_value}
             onChange={e => {
-              setPreferences({
-                ...preferences,
-                removeCFU: true,
-                cfu_value: Math.abs(e.target.valueAsNumber),
-              });
+              dispatch(
+                editPreference(
+                  [
+                    { key: "cfu_value", value: Math.abs(e.target.valueAsNumber) },
+                    { key: "removeCFU", value: true }
+                  ]
+                )
+              )
+              // setPreferences({
+              //   ...preferences,
+              //   removeCFU: true,
+              //   cfu_value: Math.abs(e.target.valueAsNumber),
+              // });
             }}
             textAlign="center"
-            onClick={e => {
-              e.target.select();
-              setPreferences({
-                ...preferences,
-                removeCFU: true,
-              });
+            onClick={(e) => {
+              (e.target as HTMLInputElement).select();
+              dispatch(
+                editPreference({
+                  key: "removeCFU",
+                  value: true
+                })
+              )
+              // setPreferences({
+              //   ...preferences,
+              //   removeCFU: true,
+              // });
             }}
           />
           <InputRightAddon
             as="label"
-            for="cfu_val"
+            htmlFor="cfu_val"
             children="CFU"
             borderRadius="md"
           />
@@ -163,10 +186,16 @@ export default function RemoveComponent({
             colorScheme="green"
             onChange={e => {
               if (e.target.checked === false) return;
-              setPreferences({
-                ...preferences,
-                removeCFU: false,
-              });
+              dispatch(
+                editPreference({
+                  key: "removeCFU",
+                  value: false
+                })
+              )
+              // setPreferences({
+              //   ...preferences,
+              //   removeCFU: false,
+              // });
             }}
             size="md"
             mr={2}
@@ -181,24 +210,34 @@ export default function RemoveComponent({
             min={0}
             value={preferences.mat_value}
             onChange={e => {
-              setPreferences({
-                ...preferences,
-                removeCFU: false,
-                mat_value: Math.abs(e.target.valueAsNumber),
-              });
+              dispatch(
+                editPreference(
+                  [
+                    { key: "mat_value", value: Math.abs(e.target.valueAsNumber) },
+                    { key: "removeCFU", value: false }
+                  ]
+                )
+              )
+              // setPreferences({
+              //   ...preferences,
+              //   removeCFU: false,
+              //   mat_value: Math.abs(e.target.valueAsNumber),
+              // });
             }}
             textAlign="center"
             onClick={e => {
-              e.target.select();
-              setPreferences({
-                ...preferences,
-                removeCFU: false,
-              });
+              (e.target as HTMLInputElement).select();
+              dispatch(
+                editPreference({
+                  key: "removeCFU",
+                  value: false
+                })
+              )
             }}
           />
           <InputRightAddon
             as="label"
-            for="mat_val"
+            htmlFor="mat_val"
             borderRadius="md"
             children="Materie"
           />

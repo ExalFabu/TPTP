@@ -12,8 +12,10 @@ import {
   PopoverTrigger,
   Popover,
 } from '@chakra-ui/popover';
-import React, { useState } from 'react';
-import { borderColor } from '../../theme';
+import React, { ClassAttributes, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { borderColor } from '../../../theme';
+import { editAverageBonus, IAverageBonus, selectAverageBonus } from '../preferencesDuck';
 
 const InfoAverageBonusPopover = React.memo(() => {
   const legendPosition = useBreakpointValue({
@@ -28,7 +30,10 @@ const InfoAverageBonusPopover = React.memo(() => {
   return (
     <Popover isOpen={isPopoverOpen} onClose={closePopover} placement="top">
       <PopoverTrigger>
-        <legend align={legendPosition}>
+        <legend
+          /*
+          //@ts-ignore */
+          align={legendPosition}>
           Bonus di profitto{' '}
           <InfoIcon
             color={greenInfoColor}
@@ -56,7 +61,17 @@ const InfoAverageBonusPopover = React.memo(() => {
   );
 });
 
-function SingleInput({ label, id, value, setValue, cellWidth, ...props }) {
+const SingleInput: React.FC<IAverageBonus> = ({ label, id, value, ...props }) => {
+  const cellWidth = useBreakpointValue({ base: '8em', md: '9em' });
+  const dispatch = useAppDispatch()
+
+  const setValue = (id: string, value: number) => {
+    dispatch(editAverageBonus({
+      id,
+      key: "value",
+      value,
+    }))
+  };
   return (
     <SimpleGrid
       w={cellWidth}
@@ -85,43 +100,25 @@ function SingleInput({ label, id, value, setValue, cellWidth, ...props }) {
         onChange={e =>
           setValue(e.target.name, Math.abs(e.target.valueAsNumber))
         }
-        onClick={e => e.target.select()}
+        onClick={e => (e.target as HTMLInputElement).select()}
         w="2em"
         textAlign="center"
       />
       <Text
         as="label"
         colorScheme="whatsapp"
-        for={'abc' + id}
+        htmlFor={'abc' + id}
         mx={2}
         children={label}
       />
     </SimpleGrid>
   );
 }
-const NUM = 12;
-const emptyArrayToIterate = [];
-for (let i = 0; i < NUM; i++) {
-  emptyArrayToIterate.push(0);
-}
 
 function AverageBonusComponent({
-  averageBonus,
-  setAverageBonusState,
   ...props
 }) {
-  const cellWidth = useBreakpointValue({ base: '8em', md: '9em' });
-
-  const setAverageBonus = (id, value) => {
-    const modifiedBonuses = averageBonus.map(elem => {
-      if (elem.id === id) {
-        elem.value = value;
-        return elem;
-      }
-      return elem;
-    });
-    setAverageBonusState(modifiedBonuses);
-  };
+  const averageBonus = useAppSelector(selectAverageBonus)
 
   return (
     <Flex
@@ -135,14 +132,7 @@ function AverageBonusComponent({
       justifyContent="space-evenly"
     >
       <InfoAverageBonusPopover />
-      {emptyArrayToIterate.map((_, i) => {
-        return SingleInput({
-          ...averageBonus[i],
-          setValue: setAverageBonus,
-          key: averageBonus[i].id,
-          cellWidth: cellWidth,
-        });
-      })}
+      {[...Array(12)].map((_, i) => <SingleInput {...averageBonus[i]} key={averageBonus[i].id} />)}
     </Flex>
   );
 }
