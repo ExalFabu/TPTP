@@ -20,3 +20,7 @@
 // };
 
 // export default connectDB;
+/**
+ * @deprecated To Delete
+ */
+ export const TO_DELETE = "TO DELETE"
