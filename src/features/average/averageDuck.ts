@@ -138,17 +138,17 @@ export const selectFinalGrade = createSelector(
     );
     const bonusLode = Math.min(countOfLode, 6) * preferences.ptlode;
     const votoDiBase = (average * 11) / 3;
-    const bonusDiProfitto = preferences.averageBonus
-      .filter(
+    const bonusRelativo = preferences.averageBonus.filter(
         bonus =>
           (bonus.from < average && average < bonus.to) || average === bonus.eq
-      )
-      ?.at(0)?.value;
+    );
+    const bonusDiProfitto =
+      bonusRelativo.length > 0 ? bonusRelativo[0].value : 0;
     const votoFinale =
       votoDiBase +
       ((options.hasDoneErasmus && preferences.erasmus) || 0) +
       ((options.isInCorso && preferences.incorso) || 0) +
-      (bonusDiProfitto ?? 0) +
+      bonusDiProfitto +
       bonusLode;
     // TODO: aggiungere bonus di profitto
     return Math.round(votoFinale * 100) / 100;
