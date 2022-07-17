@@ -4,6 +4,8 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#BEBEBE",
   "icons": [
     {
       "src": "/images/manifest-icon-192.maskable.png",

@@ -1,4 +1,4 @@
-import { ChakraProvider, theme, useColorModeValue } from '@chakra-ui/react'
+import { ChakraProvider, theme } from '@chakra-ui/react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { Provider } from 'react-redux'
@@ -27,7 +27,6 @@ const SchemaORG = {
 
 export default function MyApp({ Component, pageProps }: AppProps) {
     const [lightBackground, darkBackground] = ["#ffffff", "#1a202c"]
-    const themeColor = useColorModeValue(lightBackground, darkBackground)
 
     return (
         <ChakraProvider theme={theme}>
@@ -71,7 +70,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 <meta name="application-name" content="TPTP" />
                 <meta name="msapplication-TileColor" content="#2b5797" />
                 <meta name="msapplication-config" content="/images/browserconfig.xml" />
-                <meta name="theme-color" content={themeColor} />
+                {/* 
+                //@ts-ignore */}
+                <meta name="theme-color" content={lightBackground} media="(prefers-color-scheme: light)"/>
+                {/* 
+                //@ts-ignore */}
+                <meta name="theme-color" content={darkBackground} media="(prefers-color-scheme: dark)"/>
 
                 <link rel="apple-touch-icon" href="/images/apple-icon-180.png" />
                 <link rel="apple-touch-startup-image" href="/images/apple-splash-2048-2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
