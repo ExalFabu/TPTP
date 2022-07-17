@@ -63,6 +63,7 @@ const TPTP : React.FC = () => {
         rowGap={2}
         columnGap={2}
         justifyContent="center"
+        mt={"1em"}
       >
         <Header gridArea="Header" w={exactWidth} />
         <LectureTable

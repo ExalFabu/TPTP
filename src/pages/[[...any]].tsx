@@ -1,6 +1,5 @@
 import {
-  Center,
-  ChakraProvider, ColorModeScript, Container, Progress, theme
+  Center, Container, Progress
 } from '@chakra-ui/react';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor } from '../app/store';
@@ -11,20 +10,17 @@ const LoadingProgress: React.FC = () => (
   <Container
   id={"LoadingPage"}
   paddingTop={"40%"}
-  width={"30%"}
+  maxWidth={"60%"}
   >
     <Center><Logo/></Center>
-    <Progress isIndeterminate color='green.300' size={"xs"} />
+    <Progress isIndeterminate color='green.300' mt={"2em"} size={"xs"} />
   </Container>)
 
 function App() {
   return (
-    <ChakraProvider theme={theme}>
       <PersistGate persistor={persistor} loading={<LoadingProgress />}>
-        <ColorModeScript initialColorMode="system" />
         <TPTP />
       </PersistGate>
-    </ChakraProvider>
   );
 }
 
