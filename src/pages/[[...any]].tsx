@@ -1,10 +1,12 @@
 import {
   Center, Container, Progress
 } from '@chakra-ui/react';
+import React, { Suspense } from 'react';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor } from '../app/store';
-import TPTP from '../app/TPTP';
 import Logo from '../common/Logo';
+
+const TPTP = React.lazy(() => import('../app/TPTP'));
 
 const LoadingProgress: React.FC = () => (
   <Container
@@ -19,7 +21,9 @@ const LoadingProgress: React.FC = () => (
 function App() {
   return (
       <PersistGate persistor={persistor} loading={<LoadingProgress />}>
+        <Suspense fallback={<LoadingProgress />}>
         <TPTP />
+        </Suspense>
       </PersistGate>
   );
 }
