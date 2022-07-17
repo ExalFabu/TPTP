@@ -35,6 +35,21 @@ function LectureTable(props: SimpleGridProps) {
       columns={1}
       rowGap={5}
       justifyItems="center"
+      overflowY="auto"
+      maxHeight={{ base: '50vh', md: '60vh', xl: '75vh' }}
+      overflowX="clip"
+      css={{
+        '&::-webkit-scrollbar': {
+          width: '2px',
+        },
+        '&::-webkit-scrollbar-track': {
+          width: '2px',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: '#888888FF',
+          borderRadius: '20px',
+        },
+      }}
       {...props}
     >
 

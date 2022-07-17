@@ -14,7 +14,7 @@ import { useAppDispatch } from './hooks';
 
 
 
-const TPTP : React.FC = () => {
+const TPTP: React.FC = () => {
   const dispatch = useAppDispatch()
   useEffect(() => {
     // Migrate from previous localStoage data
@@ -63,27 +63,10 @@ const TPTP : React.FC = () => {
         rowGap={2}
         columnGap={2}
         justifyContent="center"
+        mt={"1em"}
       >
         <Header gridArea="Header" w={exactWidth} />
-        <LectureTable
-          gridArea="LectureTable"
-          w={exactWidth}
-          overflowY="auto"
-          maxHeight={{ base: '50vh', md: '60vh', xl: '75vh' }}
-          overflowX="clip"
-          css={{
-            '&::-webkit-scrollbar': {
-              width: '2px',
-            },
-            '&::-webkit-scrollbar-track': {
-              width: '2px',
-            },
-            '&::-webkit-scrollbar-thumb': {
-              background: '#888888FF',
-              borderRadius: '20px',
-            },
-          }}
-        />
+        <LectureTable gridArea="LectureTable" w={exactWidth} />
         <Average gridArea="Average" />
         <PreferencesTab gridArea="PreferencesTab" />
       </SimpleGrid>

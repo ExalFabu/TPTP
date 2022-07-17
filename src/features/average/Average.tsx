@@ -10,7 +10,6 @@ export default function Average({
   ...props
 }) {
   const removedLectures = useAppSelector(selectRemovedLectures)
-  console.log(removedLectures)
   const options = useAppSelector(selectOptions)
   const media = useAppSelector(selectAverage);
   const votoFinale = useAppSelector(selectFinalGrade);

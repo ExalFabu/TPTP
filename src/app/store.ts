@@ -1,6 +1,16 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { createLogger } from 'redux-logger';
-import { PersistConfig, persistReducer, persistStore } from 'redux-persist';
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PersistConfig,
+  persistReducer,
+  persistStore,
+  PURGE,
+  REGISTER,
+  REHYDRATE
+} from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import averageReducer, {
   createInitialAverage,
@@ -11,7 +21,8 @@ import lecturesReducer, {
   ILecture
 } from '../features/lectures/lectureDuck';
 import preferencesReducer, {
-  createInitialPreferences, IPreferences
+  createInitialPreferences,
+  IPreferences
 } from '../features/preferences/preferencesDuck';
 
 export interface IAppState {
@@ -38,14 +49,21 @@ const initialStorageState: IAppState = {
   options: createInitialAverage(),
 };
 
-const logger = createLogger({});
+const logger = createLogger({
+  level: 'info',
+});
 
 export const store = configureStore({
   reducer: persistedReducer,
   preloadedState: initialStorageState,
-  devTools: process.env.NODE_ENV !== "production",
+  devTools: process.env.NODE_ENV !== 'production',
   middleware: getDefaultMiddleware => {
-    return getDefaultMiddleware().concat(logger);
+    return getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    })
+    // .concat(logger);
   },
 });
 
