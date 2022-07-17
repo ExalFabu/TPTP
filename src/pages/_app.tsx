@@ -44,7 +44,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 />
                 <meta property="og:url" content="https://tptp.vercel.app/" />
                 <meta property="og:type" content="website" />
-                <meta property="og:image" content="/images/TPTP-w-bgless.png" />
+                <meta property="og:image" content="/images/TPTP-b-bgless.png" />
                 <meta property="og:site_name" content="TPTP" />
                 <meta property="og:locale" content="it" />
                 {/* Twitter meta tags*/}
@@ -56,7 +56,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 />
                 <meta property="twitter:card" content="summary" />
                 <meta property="twitter:url" content="https://tptp.vercel.app/" />
-                <meta property="twitter:image" content="/images/TPTP-w-bgless.png" />
+                <meta property="twitter:image" content="/images/TPTP-b-bgless.png" />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SchemaORG) }} />
                 <script async src={'https://www.googletagmanager.com/gtag/js?id=G-NDMGLF3H9S'} />
                 <script dangerouslySetInnerHTML={{ __html: gtagCode }}
