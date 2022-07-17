@@ -32,27 +32,6 @@ const validateUrl = (url: string) => {
   );
 };
 
-// const isValidAttribute = (name : string) : name is keyof UnipaLecture => {
-//     if(VALID_KEYS.includes(name)){
-//         name = name.replaceAll("-", "")
-//     }
-// }
-
-// const parseSingleAttribute = (attribute: cheerio.Cheerio) : { name: keyof UnipaLecture; value: UnipaLecture[keyof UnipaLecture] } => {
-//     let attributeName = attribute.attr("class") ?? ""
-//     if(!isValidAttribute(attributeName)){
-//         return {} as { name: keyof UnipaLecture; value: UnipaLecture[keyof UnipaLecture] };
-//     }
-//     attributeName = attributeName.replaceAll("-", "") as keyof UnipaLecture
-//     let children = attribute
-//     while(children.children().length > 0) {children = children.children().first()}
-//     let value = children.html() ?? ""
-//   return {
-//     name: attributeName,
-//     value,
-//   };
-// };
-
 interface PropertyGetter {
   value: string | number;
   isModulo?: boolean;
@@ -62,7 +41,7 @@ const descendTree = (root: cheerio.Cheerio) => {
   let children = root;
   while (children.children().length > 0) {
     children = children.children().first();
-  } //$(attribute).children().length === 0 ? $(attribute).html() : $(attribute).children().first().html()
+  }
   return children;
 };
 
@@ -167,22 +146,10 @@ const fetchUrl = async (req: NextApiRequest, res: NextApiResponse) => {
 
   $('tr.odd, tr.even').each(function (this: string, lectureIndex) {
     const lecture = this;
-    // parseSingleRow($(lecture), $);
     lectures.push(parseSingleRow($(lecture), $));
-    // $(lecture)
-    //   .children()
-    //   .each(function (this: string, attributeIndex) {
-    //     const attribute = this
-    //     const key = ($(attribute).attr("class") ?? attributeIndex.toString()) as keyof UnipaLecture
-    //     let children = $(attribute)
-    //     while(children.children().length > 0){children=children.children().first()} //$(attribute).children().length === 0 ? $(attribute).html() : $(attribute).children().first().html()
-    //     let value = children.html() ?? ""
-    //     console.log(key, value)
-    //     lectures[lectureIndex][key] = value
-    //   });
   });
 
-  return res.status(200).json({ mimeType, lectures });
+  return res.status(200).json({lectures, length: lectures.length});
 };
 
 export default fetchUrl;
