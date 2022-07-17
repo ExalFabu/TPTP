@@ -77,7 +77,6 @@ export const {
 export default lectureSlice.reducer;
 
 export const selectLectures = (state: IAppState) => {
-  console.log(state);
   return state.lectures;
 };
 export const selectLectureById = (id: string) => (state: IAppState) =>

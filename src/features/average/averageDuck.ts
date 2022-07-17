@@ -22,14 +22,15 @@ const averageSlice = createSlice({
       average.hasDoneErasmus = !average.hasDoneErasmus;
     },
     dangerouslySetAllOptions: (current, action: PayloadAction<IOptions>) => {
-      return action.payload
-    }
+      return action.payload;
+    },
   },
 });
 
 export default averageSlice.reducer;
 
-export const { toggleErasmus, toggleInCorso, dangerouslySetAllOptions } = averageSlice.actions;
+export const { toggleErasmus, toggleInCorso, dangerouslySetAllOptions } =
+  averageSlice.actions;
 
 interface IValidLecture extends ILecture {
   cfu: number;
@@ -123,8 +124,14 @@ const _selectAverageAndRemovedLectures = createSelector(
   }
 );
 
-export const selectAverage = createSelector(_selectAverageAndRemovedLectures, (average) => average.average)
-export const selectRemovedLectures = createSelector(_selectAverageAndRemovedLectures, (removed) => removed.removedLectures)
+export const selectAverage = createSelector(
+  _selectAverageAndRemovedLectures,
+  average => average.average
+);
+export const selectRemovedLectures = createSelector(
+  _selectAverageAndRemovedLectures,
+  removed => removed.removedLectures
+);
 
 export const selectFinalGrade = createSelector(
   selectAverage,
@@ -139,8 +146,8 @@ export const selectFinalGrade = createSelector(
     const bonusLode = Math.min(countOfLode, 6) * preferences.ptlode;
     const votoDiBase = (average * 11) / 3;
     const bonusRelativo = preferences.averageBonus.filter(
-        bonus =>
-          (bonus.from < average && average < bonus.to) || average === bonus.eq
+      bonus =>
+        (bonus.from < average && average < bonus.to) || average === bonus.eq
     );
     const bonusDiProfitto =
       bonusRelativo.length > 0 ? bonusRelativo[0].value : 0;
