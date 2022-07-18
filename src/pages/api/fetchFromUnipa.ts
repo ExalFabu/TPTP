@@ -1,19 +1,22 @@
 import cheerio from 'cheerio';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import {
+  createEmptyLecture,
+  ILecture
+} from '../../features/lectures/lectureDuck';
 interface IExpectedBody {
   url?: string;
   oidCurriculum?: string;
 }
 
-interface UnipaLecture {
-  curriculuminsegnamento: string;
-  'curriculum-cfu': number;
-  'curriculum-periodo': number;
-  'curriculum-valutazione': string;
-  'curriculum-ambito': string;
-  'curriculum-ssd': string;
+interface LectureDraft {
+  nome: string;
+  cfu: number;
+  ambito: string;
+  isModulo: boolean;
+  valutazione: string;
+  isOpzionale: boolean;
 }
-
 const VALID_KEYS = [
   'curriculum-insegnamento',
   'curriculum-cfu',
@@ -21,6 +24,7 @@ const VALID_KEYS = [
   'curriculum-valutazione',
   'curriculum-ssd',
 ] as const;
+
 type ValidKeys = typeof VALID_KEYS[number];
 
 const constructUrlFromOid = (oid: string) => {
@@ -35,6 +39,7 @@ const validateUrl = (url: string) => {
 interface PropertyGetter {
   value: string | number;
   isModulo?: boolean;
+  isOpzionale?: boolean;
 }
 
 const descendTree = (root: cheerio.Cheerio) => {
@@ -49,14 +54,28 @@ const getLectureName = (
   row: cheerio.Cheerio,
   $: cheerio.Root
 ): PropertyGetter => {
+  function toTitleCase(s: string) {
+    let titled = s.replace(/([^\W_]+[^\s-\.]*) */g, function (txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+    titled.match(/i{2,}/i)?.forEach(match => {
+      titled = titled.replace(match, match.toUpperCase());
+    });
+    // titled = titled.replaceAll("Ii", "II") // Non guardate questo abominio...
+    // titled = titled.replaceAll("IIi", "III") // non ho voglia o tempo di provare le regex giuste
+    return titled;
+  }
   const td = row
     .children('.' + ('curriculum-insegnamento' as ValidKeys))
     .first();
   const isModulo = td.html()?.includes('curriculum-modulo');
+  const isOpzionale =
+    row.parent().parent().attr('id')?.includes('Gruppo') ?? false;
   const value = descendTree(td).html() ?? '';
   return {
-    value,
+    value: toTitleCase(value.replace(/^\d* - /, '')),
     isModulo,
+    isOpzionale,
   };
 };
 
@@ -77,7 +96,7 @@ const getLectureAmbito = (
   const td = row.children('.' + ('curriculum-ambito' as ValidKeys)).first();
   const value = descendTree(td).html() ?? '';
   return {
-    value,
+    value: value ?? '',
   };
 };
 
@@ -94,22 +113,100 @@ const getLectureValutazione = (
   };
 };
 
-const parseSingleRow = (row: cheerio.Cheerio, $: cheerio.Root) => {
-  function toTitleCase(s: string) {
-    return s.replace(/([^\W_]+[^\s-\.]*) */g, function (txt) {
-      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
-  }
-  const { value: nome, isModulo } = getLectureName(row, $);
+const parseSingleRow = (
+  row: cheerio.Cheerio,
+  $: cheerio.Root
+): LectureDraft => {
+  const { value: nome, isModulo, isOpzionale } = getLectureName(row, $);
   const { value: cfu } = getLectureCfu(row, $);
   const { value: ambito } = getLectureAmbito(row, $);
   const { value: valutazione } = getLectureValutazione(row, $);
+
   return {
-    nome: toTitleCase(nome.toString().replace(/^\d* - /, '')),
-    cfu,
-    caratterizzante: ambito.toString().includes('B'),
-    isModulo,
-    toSkip: valutazione.toString() !== 'V',
+    nome: nome.toString(),
+    cfu: cfu as number,
+    ambito: ambito.toString(),
+    isModulo: isModulo ?? false,
+    valutazione: valutazione.toString(),
+    isOpzionale: isOpzionale ?? false,
+  };
+};
+
+interface IFetchFromUnipaResponse {
+  name: string,
+  subname: string,
+  year: string,
+  url: string
+  lectures: ILecture[],
+  optional: ILecture[],
+  dubious: ILecture[]
+}
+
+const getCdSProperties = (
+  $: cheerio.Root
+): { name: string; subname: string; year: string } => {
+  const removeJunk = (
+    text: string,
+    otherJunk: Array<string | RegExp> = []
+  ): string => {
+    const junkToRemove: Array<string | RegExp> = [
+      'Corso di studi in ',
+      /\(Codice ?\d* ?\)/i,
+      'Descrizione Curriculum\\Profilo: ',
+      ...otherJunk,
+    ];
+    for (const junk of junkToRemove) {
+      text = text.replace(junk, '');
+    }
+    return text.trim();
+  };
+  const cdsSubname = removeJunk($('.curriculum-descrizione').text());
+  const cdsName = removeJunk($('h3.capolettera').text(), [cdsSubname]);
+  const year = $('.curriculum-field-value').first().text();
+  return {
+    name: cdsName,
+    subname: cdsSubname,
+    year,
+  };
+};
+
+const convertDraftToFinal = (draft: LectureDraft[]) => {
+  const lectures = [] as ILecture[];
+  const optional = [] as ILecture[];
+  const dubious = [] as ILecture[];
+  draft.forEach((single, idx, arr) => {
+    if (single.isModulo) return;
+    if (single.valutazione !== 'V') return;
+    if (single.ambito == '') {
+      for (let j = idx + 1; arr[j].isModulo; j++) {
+        single.ambito += '$' + arr[j].ambito;
+      }
+    }
+    let converted = createEmptyLecture();
+
+    converted = {
+      ...converted,
+      cfu: single.cfu,
+      name: single.nome,
+      caratt: single.ambito.includes('B'),
+    };
+    if (!single.isOpzionale) lectures.push(converted);
+    else optional.push(converted);
+    const ambitiDeiModuli = single.ambito.split('$').filter(v => v !== '');
+    if (
+      (ambitiDeiModuli.includes('B') && ambitiDeiModuli.some(v => v !== 'B')) ||
+      (ambitiDeiModuli.length === 1 &&
+        converted.caratt &&
+        single.ambito !== 'B')
+    ) {
+      // qualche modulo è caratterizzante e qualcuno no OPPURE ha un ambito che ha la lettera B ma non solo (e.g. "A, B")
+      dubious.push(converted);
+    }
+  });
+  return {
+    lectures,
+    optional,
+    dubious,
   };
 };
 
@@ -135,21 +232,27 @@ const fetchUrl = async (req: NextApiRequest, res: NextApiResponse) => {
       'Accept-Language': 'it',
     },
   });
-  const mimeType = response.headers.get('Content-Type')?.split(';')[0];
-  if (mimeType !== 'text/html') {
+  const mimeType = response.headers.get('Content-Type') ?? '';
+  if (!mimeType.includes('text/html') && response.status !== 200) {
     return res.status(400).json({ error: 'risposta ricevuta non idonea' });
   }
   const html = await response.text();
   const $ = cheerio.load(html);
+  const draft: LectureDraft[] = [];
 
-  const lectures: any[] = [];
-
-  $('tr.odd, tr.even').each(function (this: string, lectureIndex) {
+  $('tr.odd, tr.even').each(function (this: string) {
     const lecture = this;
-    lectures.push(parseSingleRow($(lecture), $));
+    draft.push(parseSingleRow($(lecture), $));
   });
 
-  return res.status(200).json({lectures, length: lectures.length});
+  const apiResponse : IFetchFromUnipaResponse = {
+    url: urlToParse,
+    ...getCdSProperties($),
+    ...convertDraftToFinal(draft),
+  }
+
+  return res.status(200).setHeader("Cache-Control", `max-age=0, s-maxage=${(60 * 60 * 24) * 2}`).json(apiResponse);
+  
 };
 
 export default fetchUrl;
