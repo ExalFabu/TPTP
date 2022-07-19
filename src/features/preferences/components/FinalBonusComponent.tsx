@@ -6,7 +6,7 @@ import { useBreakpointValue } from '@chakra-ui/media-query';
 import {
   Popover, PopoverArrow, PopoverBody,
   PopoverCloseButton,
-  PopoverContent, PopoverHeader, PopoverTrigger
+  PopoverContent, PopoverFooter, PopoverHeader, PopoverTrigger
 } from '@chakra-ui/popover';
 import { Center, HStack, Radio, RadioGroup, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/react';
 import React, { useState } from 'react';
@@ -41,10 +41,11 @@ const InfoAverageBonusPopover = React.memo(() => {
         </PopoverHeader>
         <PopoverBody fontSize="sm">
           Il <strong>Bonus di Profitto</strong> è un punteggio aggiunto al voto
-          finale in base alla media <i>M</i>. Per scoprire la tabella relativa
-          al tuo Corso di Studi ti suggerisco di cercarla su Google o di
-          chiedere ai tuoi rappresentanti
+          finale in base alla media <i>M</i>
         </PopoverBody>
+        <PopoverFooter fontSize="sm">
+          Controlla il regolamento del tuo CdL, o chiedi ai tuoi rappresentanti, per ulteriori dettagli
+        </PopoverFooter>
       </PopoverContent>
     </Popover>
   );
@@ -79,6 +80,9 @@ const FinalThesisBonusPopover = React.memo(() => {
           La valutazione della prova finale viene aggiunta al voto finale, dopo aver calcolato la media.
           Inserisci il valore manualmente con l'apposito slider
         </PopoverBody>
+        <PopoverFooter fontSize="sm">
+          Controlla il regolamento del tuo CdL, o chiedi ai tuoi rappresentanti, per ulteriori dettagli
+        </PopoverFooter>
       </PopoverContent>
     </Popover>
   );
@@ -205,7 +209,7 @@ function FinalBonusComponent({
         </Flex> : <Center>
           <Slider
             colorScheme="teal"
-            aria-label='slider-ex-1' defaultValue={0} min={0} max={10} step={1} my={"2em"} maxWidth={"80%"} value={temporarySliderValue} onChange={setTemporarySliderValue} onChangeEnd={endOfSliding} >
+            aria-label='slider-ex-1' defaultValue={0} min={0} max={15} step={1} my={"2em"} maxWidth={"80%"} value={temporarySliderValue} onChange={setTemporarySliderValue} onChangeEnd={endOfSliding} >
             <SliderTrack>
               <SliderFilledTrack />
             </SliderTrack>
