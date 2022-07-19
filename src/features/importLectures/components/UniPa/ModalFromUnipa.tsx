@@ -6,7 +6,7 @@ import { FaPaste } from "react-icons/fa";
 import { API_FETCH_UNIPA_URL, FetchFromUnipaResponse } from "../../../../pages/api/unipa/fetch";
 import ResultTabs from "./ResultTabs";
 
-const urlPattern = /^(https\:\/\/)?offertaformativa\.unipa\.it\/offweb\/public\/corso\/visualizzaCurriculum\.seam\?.*/;
+const urlPattern = /^(https\:\/\/)?offertaformativa\.unipa\.it\/offweb\/public\/corso\/visualizzaCurriculum\.seam.*/;
 const oidCurriculum = /oidCurriculum=(\d+)/;
 const onlyDigits = /^\d{4,}$/
 
