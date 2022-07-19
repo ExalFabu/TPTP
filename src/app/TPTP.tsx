@@ -1,4 +1,4 @@
-import { SimpleGrid } from '@chakra-ui/react';
+import { SimpleGrid, useToast } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { batch } from 'react-redux';
 import Footer from '../common/Footer';
@@ -16,6 +16,7 @@ import { useAppDispatch } from './hooks';
 
 const TPTP: React.FC = () => {
   const dispatch = useAppDispatch()
+  const toast = useToast()
   useEffect(() => {
     // Migrate from previous localStoage data
     const lectures = localStorage.getItem("lectures")
@@ -45,6 +46,22 @@ const TPTP: React.FC = () => {
     }
 
   }, [])
+
+  useEffect(()=>{
+    if(window.location.pathname.match(/\/?(\w|\d){10,}/) !== null){
+      toast({
+        title: "Link obsoleto",
+        description: "Il link che hai utilizzato è obsoleto, per importare le materie usa la funzionalità in alto a destra",
+        status: 'info',
+        duration: 5000,
+        isClosable: true,
+        position: "top-left",
+        variant: "top-accent"
+      })
+      window.history.replaceState("", "", window.location.href.replace(window.location.pathname, ""))
+    }
+  }, [])
+
   return (
     <>
       <SimpleGrid
