@@ -1,9 +1,9 @@
-import cheerio from 'cheerio';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   createEmptyLecture,
   ILecture
 } from '../../../features/lectures/lectureDuck';
+
 interface IExpectedBody {
   url?: string;
   oidCurriculum?: string;
@@ -221,7 +221,7 @@ const fetchUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   let urlToParse: string | undefined = undefined;
   const body = req.query as IExpectedBody;
-
+  
   if (body.oidCurriculum !== undefined) {
     urlToParse = constructUrlFromOid(body.oidCurriculum);
   }
@@ -241,6 +241,7 @@ const fetchUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!mimeType.includes('text/html') && response.status !== 200) {
     return res.status(400).json({ error: 'risposta ricevuta non idonea' });
   }
+  const cheerio = await import("cheerio")
   const html = await response.text();
   const $ = cheerio.load(html);
   const draft: LectureDraft[] = [];
