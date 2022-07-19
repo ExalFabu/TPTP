@@ -1,7 +1,7 @@
 import {
     AlertDialog,
     AlertDialogBody, AlertDialogCloseButton, AlertDialogContent, AlertDialogFooter,
-    AlertDialogHeader, AlertDialogOverlay, Button, Checkbox, CSSObject, Skeleton, Stack, Switch, Tab, Table, TableContainer, TabList, TabPanel, TabPanels, Tabs, Tbody, Td, Text, Th, Thead, Tr, useDisclosure
+    AlertDialogHeader, AlertDialogOverlay, Button, Checkbox, CSSObject, Skeleton, Stack, Switch, Tab, Table, TableContainer, TabList, TabPanel, TabPanels, Tabs, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue, useDisclosure
 } from "@chakra-ui/react"
 import React, { useCallback, useMemo, useReducer, useRef } from 'react'
 import { useAppDispatch } from "../../../../app/hooks"
@@ -78,6 +78,7 @@ const buildInitialImportable = (result: Extract<FetchFromUnipaResponse, { name: 
 const ImportableLecturesTable = React.memo(
     ({ list, checkboxAction, switchAction }: { list: ImportableLectures[], checkboxAction: (i: ImportableLectures) => void, switchAction?: (i: ImportableLectures) => void }) => {
         const dubiousTable: boolean = switchAction !== undefined
+        const tableColorScheme = useColorModeValue("teal", "facebook")
 
         const TableHeads = () => useMemo(() => !dubiousTable ? <><Th /><Th>Importa </Th></> : <><Th /><Th p={0.5}>Importa </Th> <Th p={0.5}>Caratterizzante</Th></>, [])
         const tdProps = dubiousTable ? { p: 1.5 } : { px: 0, py: 1 }
@@ -105,7 +106,7 @@ const ImportableLecturesTable = React.memo(
         }, [])
 
         return (
-            <Table w={"100%"} variant="striped" verticalAlign={"middle"} textAlign={"center"} colorScheme={"teal"}>
+            <Table w={"100%"} variant="striped" verticalAlign={"middle"} textAlign={"center"} colorScheme={tableColorScheme}>
                 <Thead>
                     <Tr>
                         <TableHeads />
