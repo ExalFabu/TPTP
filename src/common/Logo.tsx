@@ -8,8 +8,6 @@ const WhiteLogo = ({ display, ...props } : {display: string}) => {
   return (
     <Box display={display}>
       <Image
-        width="100%"
-        height="100%"
         alt="TPTP Logo"        
         src={'/images/TPTP-w.svg'}
         {...props}
@@ -22,8 +20,6 @@ const BlackLogo = ({ display, ...props }: {display: string}) => {
   return (
     <Box display={display}>
       <Image
-         width="100%"
-         height="100%"
          alt="TPTP Logo"        
          src={'/images/TPTP-b.svg'}
          {...props}
