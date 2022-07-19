@@ -3,7 +3,7 @@ import {
     AlertDialogBody, AlertDialogCloseButton, AlertDialogContent, AlertDialogFooter,
     AlertDialogHeader, AlertDialogOverlay, Button, Checkbox, CSSObject, Skeleton, Stack, Switch, Tab, Table, TableContainer, TabList, TabPanel, TabPanels, Tabs, Tbody, Td, Text, Th, Thead, Tr, useDisclosure
 } from "@chakra-ui/react"
-import React, { useReducer, useRef } from 'react'
+import React, { useCallback, useMemo, useReducer, useRef } from 'react'
 import { useAppDispatch } from "../../../../app/hooks"
 import { FetchFromUnipaResponse } from "../../../../pages/api/unipa/fetch"
 import { dangerouslySetAllLectures, ILecture } from "../../../lectures/lectureDuck"
@@ -75,6 +75,49 @@ const buildInitialImportable = (result: Extract<FetchFromUnipaResponse, { name: 
     return implec
 }
 
+const ImportableLecturesTable = React.memo(
+    ({ list, checkboxAction, switchAction }: { list: ImportableLectures[], checkboxAction: (i: ImportableLectures) => void, switchAction?: (i: ImportableLectures) => void }) => {
+        const dubiousTable: boolean = switchAction !== undefined
+
+        const TableHeads = () => useMemo(() => !dubiousTable ? <><Th /><Th>Importa </Th></> : <><Th /><Th p={0.5}>Importa </Th> <Th p={0.5}>Caratterizzante</Th></>, [])
+        const tdProps = dubiousTable ? { p: 1.5 } : { px: 0, py: 1 }
+        const TableBody = ({ i }: { i: ImportableLectures }) => useMemo(() => {
+            return (
+                <Tr>
+                    <Td {...tdProps}>
+                        <Text textAlign={"center"} fontSize="md">{i.name}</Text>
+                    </Td>
+                    <Td {...tdProps} textAlign={"center"}>
+                        <Checkbox size={"lg"} isChecked={i.checked} onChange={() => checkboxAction(i)} />
+                    </Td>
+                    {!dubiousTable ? <></> : (
+                        <Td {...tdProps} textAlign={"center"} w={"25%"}>
+                            <Switch
+                                colorScheme={"green"}
+                                size="lg"
+                                isChecked={i.forceCaratt}
+                                onChange={() => (switchAction as (i: ImportableLectures) => void)(i)}
+                            />
+                        </Td>
+                    )}
+                </Tr>
+            )
+        }, [])
+
+        return (
+            <Table w={"100%"} variant="striped" verticalAlign={"middle"} textAlign={"center"} colorScheme={"teal"}>
+                <Thead>
+                    <Tr>
+                        <TableHeads />
+                    </Tr>
+                </Thead>
+                <Tbody verticalAlign={"center"}>
+                    {list.map(i => <TableBody i={i} />)}
+                </Tbody>
+            </Table>
+        )
+    })
+
 
 const ResultTabs: React.FC<{ result: FetchFromUnipaResponse | undefined, closeModal: () => void }> = ({ result, closeModal }) => {
     if (result === undefined)
@@ -102,6 +145,8 @@ const ResultTabs: React.FC<{ result: FetchFromUnipaResponse | undefined, closeMo
         closeModal()
         onCloseAlert()
     }
+    const checkboxAction = useCallback((i: ImportableLectures) => { dispatch({ type: "check", payload: { lectureId: i._id } }) }, [])
+    const switchAction = useCallback((i: ImportableLectures) => { dispatch({ type: "forceCaratt", payload: { lectureId: i._id, value: !i.forceCaratt } }) }, [])
 
 
     if (importable.length === 0)
@@ -114,98 +159,26 @@ const ResultTabs: React.FC<{ result: FetchFromUnipaResponse | undefined, closeMo
             <Tabs isLazy align="center" variant="enclosed-colored" >
                 <TabList>
                     <Tab isDisabled={result.lectures.length === 0} _disabled={disabledTabCss}>
-                        Materie {`(${importable.reduce((count, curr) => (count + ((curr.kind==="regular" && !curr.isDubious) ? 1 : 0)), 0)})`}
-                        </Tab>
+                        Materie {`(${importable.reduce((count, curr) => (count + ((curr.kind === "regular" && !curr.isDubious) ? 1 : 0)), 0)})`}
+                    </Tab>
                     <Tab isDisabled={result.optional.length === 0} _disabled={disabledTabCss}>
-                        Opzionali {`(${importable.reduce((count, curr) => (count + ((curr.kind==="optional" && !curr.isDubious) ? 1 : 0)), 0)})`}
-                        </Tab>
+                        Opzionali {`(${importable.reduce((count, curr) => (count + ((curr.kind === "optional" && !curr.isDubious) ? 1 : 0)), 0)})`}
+                    </Tab>
                     <Tab isDisabled={result.dubious.length === 0} _disabled={disabledTabCss}>
                         Incongruenze {`(${result.dubious.length})`}
                     </Tab>
                 </TabList>
                 <TabPanels>
                     <TabPanel>
-                        <Table w={"100%"} variant="striped" verticalAlign={"middle"} textAlign={"center"} colorScheme={"teal"}>
-                            <Thead>
-                                <Tr>
-                                    <Th></Th>
-                                    <Th>Importa </Th>
-                                </Tr>
-                            </Thead>
-                            <Tbody verticalAlign={"center"}>
-                                {importable.filter(i => i.kind === "regular" && !i.isDubious).map(i => {
-                                    return (
-                                        <Tr key={"tp1" + i._id} py={"1em"}>
-                                            <Td p={1.5}>
-                                                <Text textAlign={"center"} fontSize="md">{i.name}</Text>
-                                            </Td>
-                                            <Td p={1.5} textAlign={"center"}>
-                                                <Checkbox size={"lg"} isChecked={i.checked} onChange={() => dispatch({ type: "check", payload: { lectureId: i._id } })} />
-                                            </Td>
-                                        </Tr>
-                                    )
-                                })}
-                            </Tbody>
-                        </Table>
+                        <ImportableLecturesTable list={importable.filter(i => i.kind === "regular" && !i.isDubious)} checkboxAction={checkboxAction} />
                     </TabPanel>
                     <TabPanel>
-                        <Table w={"100%"} variant="striped" verticalAlign={"middle"} textAlign={"center"} colorScheme={"blackAlpha"}>
-                            <Thead>
-                                <Tr>
-                                    <Th></Th>
-                                    <Th>Importa </Th>
-                                </Tr>
-                            </Thead>
-                            <Tbody verticalAlign={"center"}>
-                                {importable.filter(i => i.kind === "optional" && !i.isDubious).map(i => {
-                                    return (
-                                        <Tr key={"tp2" + i._id} py={"1em"}>
-                                            <Td p={1.5}>
-                                                <Text textAlign={"center"} fontSize="md">{i.name}</Text>
-                                            </Td>
-                                            <Td p={1.5} textAlign={"center"}>
-                                                <Checkbox size={"lg"} isChecked={i.checked} onChange={() => dispatch({ type: "check", payload: { lectureId: i._id } })} />
-                                            </Td>
-                                        </Tr>
-                                    )
-                                })}
-                            </Tbody>
-                        </Table>
+                        <ImportableLecturesTable list={importable.filter(i => i.kind === "optional" && !i.isDubious)} checkboxAction={checkboxAction} />
                     </TabPanel>
                     <TabPanel>
                         <TableContainer whiteSpace={"normal"}>
                             <Text >Non sono riuscito a determinare se le seguenti materie siano caratterizzanti o meno</Text>
-                            <Table variant="striped" verticalAlign={"middle"} textAlign={"center"} colorScheme={"blackAlpha"}>
-                                <Thead>
-                                    <Tr>
-                                        <Th></Th>
-                                        <Th p={0.5}>Importa </Th>
-                                        <Th p={0.5}>Caratterizzante</Th>
-                                    </Tr>
-                                </Thead>
-                                <Tbody verticalAlign={"center"}>
-                                    {importable.filter(i => i.isDubious).map(i => {
-                                        return (
-                                            <Tr key={"tp3" + i._id} py={"1em"}>
-                                                <Td py={1} px={0}>
-                                                    <Text textAlign={"center"} fontSize="md">{i.name}</Text>
-                                                </Td>
-                                                <Td py={1} px={0} textAlign={"center"}>
-                                                    <Checkbox size={"lg"} isChecked={i.checked} onChange={() => dispatch({ type: "check", payload: { lectureId: i._id } })} />
-                                                </Td>
-                                                <Td py={1} px={0} textAlign={"center"} w={"25%"}>
-                                                    <Switch
-                                                        colorScheme={"green"}
-                                                        size="lg"
-                                                        isChecked={i.forceCaratt}
-                                                        onChange={() => { dispatch({ type: "forceCaratt", payload: { lectureId: i._id, value: !i.forceCaratt } }) }}
-                                                    />
-                                                </Td>
-                                            </Tr>
-                                        )
-                                    })}
-                                </Tbody>
-                            </Table>
+                            <ImportableLecturesTable checkboxAction={checkboxAction} switchAction={switchAction} list={importable.filter(i => i.isDubious)} />
                         </TableContainer>
                     </TabPanel>
                 </TabPanels>
