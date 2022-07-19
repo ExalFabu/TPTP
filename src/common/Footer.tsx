@@ -1,9 +1,9 @@
 import { Button } from '@chakra-ui/button';
-import { Box, Text } from '@chakra-ui/layout';
+import { Box } from '@chakra-ui/layout';
 import React from 'react';
-import { FaGithub } from 'react-icons/fa';
+import { FaGithub, FaMugHot } from 'react-icons/fa';
 
-function Footer({...props}) {
+function Footer({ ...props }) {
   return (
     <Box
       as="footer"
@@ -13,7 +13,7 @@ function Footer({...props}) {
       display="flex"
       justifyContent="space-evenly"
     >
-      <Text fontFamily="monospace" fontSize="sm">© ExalFabu, 2021</Text>
+      <Button as="a" variant="link" rel={"nofollow"} href="https://ko-fi.com/T6T1DWHNM" target={'_blank'} leftIcon={<FaMugHot/>} fontFamily="monospace" fontSize="sm">Buy me a Coffee</Button>
       <Button
         as="a"
         href={'https://github.com/ExalFabu/TPTP'}
