@@ -18,6 +18,8 @@ export interface IPreferences {
   incorso: number;
   erasmus: number;
   averageBonus: IAverageBonus[];
+  finalThesis: number;
+  whatToSum: 'averageBonus' | 'finalThesis';
 }
 
 export const createInitialPreferences = (): IPreferences => {
@@ -50,6 +52,8 @@ export const createInitialPreferences = (): IPreferences => {
     incorso: 2,
     erasmus: 1,
     averageBonus: createInitialAverageBonus(),
+    finalThesis: 0,
+    whatToSum: 'averageBonus',
   };
 };
 
@@ -91,16 +95,27 @@ const preferencesSlice = createSlice({
           item[action.payload.key] = action.payload.value;
       });
     },
-    dangerouslySetAllPreferences: (current, action: PayloadAction<IPreferences>) => {
-      return action.payload
-    }
+    dangerouslySetAllPreferences: (
+      current,
+      action: PayloadAction<IPreferences>
+    ) => {
+      return action.payload;
+    },
   },
 });
 
 export default preferencesSlice.reducer;
 
-export const { editPreference, editAverageBonus, dangerouslySetAllPreferences } = preferencesSlice.actions;
+export const {
+  editPreference,
+  editAverageBonus,
+  dangerouslySetAllPreferences,
+} = preferencesSlice.actions;
 
 export const selectPreferences = (state: IAppState) => state.preferences;
 
-export const selectAverageBonus = (state: IAppState) => state.preferences.averageBonus;
+export const selectFinalBonus = (state: IAppState) => ({
+  averageBonus: state.preferences.averageBonus,
+  finalThesis: state.preferences.finalThesis,
+  whatToSum: state.preferences.whatToSum,
+});

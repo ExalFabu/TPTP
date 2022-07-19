@@ -155,8 +155,8 @@ export const selectFinalGrade = createSelector(
       votoDiBase +
       ((options.hasDoneErasmus && preferences.erasmus) || 0) +
       ((options.isInCorso && preferences.incorso) || 0) +
-      bonusDiProfitto +
-      bonusLode;
+      bonusLode +
+      (preferences.whatToSum === "averageBonus" ? bonusDiProfitto : preferences.finalThesis)
     // TODO: aggiungere bonus di profitto
     return Math.round(votoFinale * 100) / 100;
   }

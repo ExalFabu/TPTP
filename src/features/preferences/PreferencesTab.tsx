@@ -6,8 +6,8 @@ import {
 import { SimpleGrid } from '@chakra-ui/layout';
 import React from 'react';
 import { borderColor, exactWidth } from '../../theme';
-import AverageBonusComponent from './components/AverageBonusComponent';
 import BonusComponent from './components/BonusComponent';
+import FinalBonusComponent from './components/FinalBonusComponent';
 import RemoveComponent from './components/RemoveComponent';
 
 /**
@@ -73,7 +73,7 @@ const PreferencesTab = ({
             <BonusComponent
               gridArea="Bonus"
             />
-            <AverageBonusComponent
+            <FinalBonusComponent
               gridArea="AverageBonus"
             />
           </SimpleGrid>

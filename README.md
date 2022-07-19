@@ -3,7 +3,7 @@
 
 [:link:TPTP](https://tptp.vercel.app) è un sito che ti permette di calcolare la tua media ed il tuo voto di laurea
 
-Il calcolo del voto di laurea di default cerca di seguire gli standard di UniPa. Tuttavia la quasi totalità dei valori è personalizzabile cercando di corprire il più vasto bacino di utenti possibile.
+Il calcolo del voto di laurea di default cerca di seguire gli standard di UniPa. Tuttavia la quasi totalità dei valori è personalizzabile cercando di coprire il più vasto bacino di utenti possibile.
 - Dalla media ponderata è possibile rimuovere delle materie non caratterizzanti secondo due criteri
   - Rimozione di CFU di materie non caratterizzanti
   - Rimozioni di Materie non caratterizzanti  
