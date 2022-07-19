@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   createEmptyLecture,
   ILecture
-} from '../../features/lectures/lectureDuck';
+} from '../../../features/lectures/lectureDuck';
 interface IExpectedBody {
   url?: string;
   oidCurriculum?: string;
@@ -132,6 +132,9 @@ const parseSingleRow = (
   };
 };
 
+interface IFetchError {
+  error: string
+}
 interface IFetchFromUnipaResponse {
   name: string,
   subname: string,
@@ -141,6 +144,8 @@ interface IFetchFromUnipaResponse {
   optional: ILecture[],
   dubious: ILecture[]
 }
+
+export type FetchFromUnipaResponse = IFetchFromUnipaResponse | IFetchError
 
 const getCdSProperties = (
   $: cheerio.Root
@@ -211,11 +216,11 @@ const convertDraftToFinal = (draft: LectureDraft[]) => {
 };
 
 const fetchUrl = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== 'POST') {
+  if (req.method !== 'GET') {
     return res.json({ text: 'Ciao' });
   }
   let urlToParse: string | undefined = undefined;
-  const body = req.body as IExpectedBody;
+  const body = req.query as IExpectedBody;
 
   if (body.oidCurriculum !== undefined) {
     urlToParse = constructUrlFromOid(body.oidCurriculum);
@@ -254,5 +259,7 @@ const fetchUrl = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).setHeader("Cache-Control", `max-age=0, s-maxage=${(60 * 60 * 24) * 2}`).json(apiResponse);
   
 };
+
+export const API_FETCH_UNIPA_URL = "/api/unipa/fetch"
 
 export default fetchUrl;
