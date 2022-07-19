@@ -1,4 +1,3 @@
-import { WarningTwoIcon } from "@chakra-ui/icons"
 import {
     AlertDialog,
     AlertDialogBody, AlertDialogCloseButton, AlertDialogContent, AlertDialogFooter,
@@ -113,12 +112,16 @@ const ResultTabs: React.FC<{ result: FetchFromUnipaResponse | undefined, closeMo
     return (
         <>
             <Text>{`${result.name} - ${result.subname.length === 0 ? "" : result.subname + " -"} ${result.year}`}</Text>
-            <Tabs isLazy align="center" variant="soft-rounded" >
+            <Tabs isLazy align="center" variant="enclosed-colored" >
                 <TabList>
-                    <Tab isDisabled={result.lectures.length === 0} _disabled={disabledTabCss}>Materie</Tab>
-                    <Tab isDisabled={result.optional.length === 0} _disabled={disabledTabCss}>Opzionali</Tab>
+                    <Tab isDisabled={result.lectures.length === 0} _disabled={disabledTabCss}>
+                        Materie {`(${importable.reduce((count, curr) => (count + ((curr.kind==="regular" && !curr.isDubious) ? 1 : 0)), 0)})`}
+                        </Tab>
+                    <Tab isDisabled={result.optional.length === 0} _disabled={disabledTabCss}>
+                        Opzionali {`(${importable.reduce((count, curr) => (count + ((curr.kind==="optional" && !curr.isDubious) ? 1 : 0)), 0)})`}
+                        </Tab>
                     <Tab isDisabled={result.dubious.length === 0} _disabled={disabledTabCss}>
-                        {result.dubious.length !== 0 ? <WarningTwoIcon color={"red.600"} /> : ""} Incongruenze
+                        Incongruenze {`(${result.dubious.length})`}
                     </Tab>
                 </TabList>
                 <TabPanels>
