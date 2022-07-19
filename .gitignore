@@ -29,3 +29,7 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+sw.js*
+workbox*.js*
+package-lock.json
