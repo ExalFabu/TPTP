@@ -36,7 +36,6 @@ type ImportableAction = {
 const reducer = (state: ImportableLectures[], action: ImportableAction): ImportableLectures[] => {
     switch (action.type) {
         case "check": {
-            console.log(action)
             return state.map(lec => {
                 if (lec._id !== action.payload.lectureId)
                     return lec

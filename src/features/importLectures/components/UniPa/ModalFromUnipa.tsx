@@ -89,7 +89,6 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
                 return
             }
             const matches = input.match(oidCurriculum) as RegExpMatchArray
-            console.log(matches)
             oid = matches[1]
         }
         dispatch({ type: "fetching" })
@@ -101,13 +100,10 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
         } finally {
             dispatch({ type: "fetched", payload: result })
         }
-        if ("error" in result) {
-            console.log(result.error)
         }
-        else {
-            console.log(result.name)
+        finally {
+            dispatch({ type: "fetched", payload: result })
         }
-        console.log(result)
     }, [])
 
 
