@@ -6,8 +6,8 @@ import { FaPaste } from "react-icons/fa";
 import { API_FETCH_UNIPA_URL, FetchFromUnipaResponse } from "../../../../pages/api/unipa/fetch";
 import ResultTabs from "./ResultTabs";
 
-const urlPattern = /^(https\:\/\/)?offertaformativa\.unipa\.it\/offweb\/public\/corso\/visualizzaCurriculum\.seam.*/;
-const oidCurriculum = /oidCurriculum=(\d+)/;
+// const urlPattern = /^(https\:\/\/)?offertaformativa\.unipa\.it\/offweb\/public\/corso\/visualizzaCurriculum\.seam.*/;
+const oidCurriculum = /oidCurriculum=(\d{4,})/;
 const onlyDigits = /^\d{4,}$/
 
 const linkToSearchPage = "https://offertaformativa.unipa.it/offweb/public/corso/ricercaSemplice.seam"
@@ -76,7 +76,7 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
         if (input.match(onlyDigits)) {
             oid = input
         } else {
-            if (input.match(urlPattern) === null || input.match(oidCurriculum) === null) {
+            if (input.match(oidCurriculum) === null) {
                 toast({
                     title: 'Attenzione',
                     description: "Il testo inserito non è valido.",
@@ -97,9 +97,9 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
             result = await (await fetch(`${API_FETCH_UNIPA_URL}?oidCurriculum=${oid}`, {
                 method: 'GET',
             })).json() as FetchFromUnipaResponse
-            
-        }catch{
-            if(!navigator.onLine){
+
+        } catch {
+            if (!navigator.onLine) {
                 toast({
                     title: 'Offline',
                     description: "Non puoi importare le materie senza una connessione ad Internet",
@@ -110,7 +110,7 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
                     variant: "top-accent"
                 })
             }
-            else{
+            else {
                 toast({
                     title: 'Oops',
                     description: "Qualcosa è andato storto... riprova più tardi",
@@ -121,7 +121,7 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
                     variant: "left-accent"
                 })
             }
-        } 
+        }
         finally {
             dispatch({ type: "fetched", payload: result })
         }
@@ -136,7 +136,7 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
                 await navigator.permissions.query({ name: "clipboard-read" })
             }
             const content = inp ?? await navigator.clipboard.readText()
-            if ((content.match(urlPattern) !== null && content.match(oidCurriculum) !== null) || content.match(onlyDigits) !== null) {
+            if (content.match(oidCurriculum) !== null || content.match(onlyDigits) !== null) {
                 setUrl(content)
                 toastMessage = {
                     title: 'Ottimo',
@@ -197,9 +197,8 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
                                 <Input placeholder={"https://offertaformativa.unipa.it/offweb/public/corso/visualizzaCurriculum.seam?oidCurriculum=11111"}
                                     isInvalid={
                                         url !== ""
-                                        && (url.match(urlPattern) === null
-                                            && url.match(oidCurriculum) === null
-                                            && url.match(onlyDigits) === null)
+                                        && url.match(oidCurriculum) === null
+                                        && url.match(onlyDigits) === null
                                     }
                                     type="url"
                                     value={url}
@@ -212,12 +211,12 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
                                         const pastedData = clipboardData.getData('Text');
                                         pasteClipboard(pastedData)
                                     }}
-                                    onKeyUp={(e)=>{
-                                        if(e.key === 'Enter' || e.keyCode === 13){
+                                    onKeyUp={(e) => {
+                                        if (e.key === 'Enter' || e.keyCode === 13) {
                                             fetchFromUnipa(url)
                                         }
                                     }}
-                                    onClick={(e) => {(e.target as HTMLInputElement).select()}}
+                                    onClick={(e) => { (e.target as HTMLInputElement).select() }}
                                 />
                                 <IconButton colorScheme={"blue"} aria-label="incolla" icon={<FaPaste />} onClick={() => pasteClipboard()} />
                             </InputGroup>
@@ -226,7 +225,7 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
                                     Recupera le lezioni
                                 </Button>
                             </ButtonGroup>
-                            <ResultTabs result={data.response} closeModal={onClose}/>
+                            <ResultTabs result={data.response} closeModal={onClose} />
                         </VStack>
                         {/* </Center> */}
                     </ModalBody>
