@@ -97,10 +97,31 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
             result = await (await fetch(`${API_FETCH_UNIPA_URL}?oidCurriculum=${oid}`, {
                 method: 'GET',
             })).json() as FetchFromUnipaResponse
-        } finally {
-            dispatch({ type: "fetched", payload: result })
-        }
-        }
+            
+        }catch{
+            if(!navigator.onLine){
+                toast({
+                    title: 'Offline',
+                    description: "Non puoi importare le materie senza una connessione ad Internet",
+                    status: 'info',
+                    duration: 1500,
+                    isClosable: false,
+                    position: "top",
+                    variant: "top-accent"
+                })
+            }
+            else{
+                toast({
+                    title: 'Oops',
+                    description: "Qualcosa è andato storto... riprova più tardi",
+                    status: 'error',
+                    duration: 1500,
+                    isClosable: true,
+                    position: "top",
+                    variant: "left-accent"
+                })
+            }
+        } 
         finally {
             dispatch({ type: "fetched", payload: result })
         }
