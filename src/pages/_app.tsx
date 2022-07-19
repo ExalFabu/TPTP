@@ -1,6 +1,7 @@
 import { ChakraProvider, theme } from '@chakra-ui/react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import Script from 'next/script'
 import { Provider } from 'react-redux'
 import { store } from '../app/store'
 
@@ -57,9 +58,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 <meta property="twitter:url" content="https://tptp.vercel.app/" />
                 <meta property="twitter:image" content="/images/TPTP-b-bgless.png" />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SchemaORG) }} />
-                <script async src={'https://www.googletagmanager.com/gtag/js?id=G-NDMGLF3H9S'} />
-                <script dangerouslySetInnerHTML={{ __html: gtagCode }}
-                />
+                <Script async src={'https://www.googletagmanager.com/gtag/js?id=G-NDMGLF3H9S'} />
+                <Script dangerouslySetInnerHTML={{ __html: gtagCode }} />
                 {/* Images */}
 
                 <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />

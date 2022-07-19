@@ -1,14 +1,12 @@
 import { Box, useColorModeValue } from '@chakra-ui/react';
-import React from 'react';
-// import logo_black from './logos/logofhd-b.png';
-// import logo_white from './logos/logofhd-w.png';
 import Image from 'next/image';
+import React from 'react';
 
-const WhiteLogo = ({ display, ...props } : {display: string}) => {
+const WhiteLogo = ({ display = "inherit", ...props }: { display?: string }) => {
   return (
     <Box display={display}>
       <Image
-        alt="TPTP Logo"        
+        alt="TPTP Logo"
         src={'/images/TPTP-w.svg'}
         {...props}
       />
@@ -16,26 +14,25 @@ const WhiteLogo = ({ display, ...props } : {display: string}) => {
   );
 };
 
-const BlackLogo = ({ display, ...props }: {display: string}) => {
+const BlackLogo = ({ display = "inherit", ...props }: { display?: string }) => {
   return (
     <Box display={display}>
       <Image
-         alt="TPTP Logo"        
-         src={'/images/TPTP-b.svg'}
-         {...props}
+        alt="TPTP Logo"
+        src={'/images/TPTP-b.svg'}
+        {...props}
       />
     </Box>
   );
 };
 
-const Logo = ({...props}) => {
+const Logo = ({ ...props }) => {
   const colorMode = useColorModeValue('white', 'black');
-  return (
-    <>
-      <BlackLogo display={colorMode === 'white' ? 'inherit' : 'none'} {...props} />
-
-      <WhiteLogo display={colorMode === 'black' ? 'inherit' : 'none'} {...props} />
-    </>
-  );
+  if (colorMode === "white")
+    return <BlackLogo {...props} />
+  else
+    return (
+      <WhiteLogo  {...props} />
+    );
 };
 export default React.memo(Logo)
