@@ -32,3 +32,4 @@ yarn-error.log*
 
 sw.js*
 workbox*.js*
+package-lock.json

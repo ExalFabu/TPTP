@@ -1,4 +1,5 @@
 import { Flex, FlexProps, SimpleGrid } from '@chakra-ui/layout';
+import ImportLectures from '../features/importLectures/ImportLectures';
 import AddLectureButton from '../features/lectures/AddLectureButton';
 import ColorModeSwitcher from './ColorModeSwitcher';
 // import CopyUrlButton from './CopyUrlButton';
@@ -10,6 +11,7 @@ export default function Header(props: FlexProps = {}) {
       <Logo maxHeight="5em"/>
       <SimpleGrid columns={1} gap={2}>
         <ColorModeSwitcher />
+        <ImportLectures/>
         {/* <CopyUrlButton allLectures={allLectures} options={options} averageBonus={averageBonus}/> */}
         <AddLectureButton />
       </SimpleGrid>
