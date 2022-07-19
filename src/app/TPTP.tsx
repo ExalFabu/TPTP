@@ -29,7 +29,11 @@ const TPTP: React.FC = () => {
       localStorage.removeItem("finalAverage")
       const previousStoredLectures = (JSON.parse(lectures)) as ILecture[]
       const previousStoredAverageBonus = JSON.parse(avBonus) as IAverageBonus[]
-      const previousStoredPreferences = JSON.parse(pref) as IPreferences
+      const previousStoredPreferences: IPreferences = {
+        whatToSum: "averageBonus",
+        finalThesis: 0,
+        ...JSON.parse(pref) as Omit<IPreferences, "whatToSum" | "finalThesis">
+      }
       previousStoredPreferences.averageBonus = previousStoredAverageBonus
       const previousStoredOptions = JSON.parse(finalAverage) as IOptions
       console.log("Migrating from previous version... this should happen only once")
