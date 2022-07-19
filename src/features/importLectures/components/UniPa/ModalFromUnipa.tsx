@@ -195,6 +195,11 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
                                         const pastedData = clipboardData.getData('Text');
                                         pasteClipboard(pastedData)
                                     }}
+                                    onKeyUp={(e)=>{
+                                        if(e.key === 'Enter' || e.keyCode === 13){
+                                            fetchFromUnipa(url)
+                                        }
+                                    }}
                                 />
                                 <IconButton colorScheme={"blue"} aria-label="incolla" icon={<FaPaste />} onClick={() => pasteClipboard()} />
                             </InputGroup>
