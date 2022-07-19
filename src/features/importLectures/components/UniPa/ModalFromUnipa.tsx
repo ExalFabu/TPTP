@@ -184,7 +184,7 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
                     <ModalBody>
                         <Text>
                             Cerca il tuo Corso di Studi{' '}
-                            <Link target={"_blank"} textColor={"#0000EE"} href={linkToSearchPage} rel="nofollow">
+                            <Link target={"_blank"} textColor={"blue.600"} href={linkToSearchPage} rel="nofollow">
                                 in questa pagina <ExternalLinkIcon />
                             </Link>,
                             copia il link ed incollalo qui sotto. {"  "}
@@ -217,6 +217,7 @@ const ModalFromUnipa: React.FC<{ isOpen: boolean, onClose: () => void, onOpen: (
                                             fetchFromUnipa(url)
                                         }
                                     }}
+                                    onClick={(e) => {(e.target as HTMLInputElement).select()}}
                                 />
                                 <IconButton colorScheme={"blue"} aria-label="incolla" icon={<FaPaste />} onClick={() => pasteClipboard()} />
                             </InputGroup>
