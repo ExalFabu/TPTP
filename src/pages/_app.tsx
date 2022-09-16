@@ -16,9 +16,8 @@ const SchemaORG = {
     "@type": "WebApplication",
     "name": "TPTP - Calcola il tuo voto finale e la tua media universitaria",
     "url": "https://tptp.vercel.app",
-    "description": "TPTP ti permette di calcolare il tuo Voto di Laurea e la tua Media Universitaria. \
-                    Inserisci i tuoi corsi ed i relativi voti ed il calcolo sarà automatico. \
-                    Se possibile, potrai importare le materie automaticamente",
+    "description": "TPTP ti permette di calcolare il tuo Voto di Laurea e la tua Media Universitaria. " +
+        "Inserisci i tuoi corsi ed i relativi voti ed il calcolo sarà automatico. ",
     "image": "https://tptp.vercel.app/images/TPTP-b-bgless.png",
     "alternateName": "TPTP",
     "keywords": "università,media,unipa,calcolo media,media ponderata,voto finale laurea,voto finale,voto",
