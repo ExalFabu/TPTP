@@ -41,7 +41,7 @@ const generateOptions = (cookie: string, anno: number) =>
     },
     body: new URLSearchParams({
       frc: 'frc',
-      'frc%3AannoDecorate%3Aanno': anno.toString(),
+      'frc:annoDecorate:anno': anno.toString(),
       'frc%3AtipoCorsoDecorate%3AidTipoCorso': ``,
       'frc%3AsuggestCorso': '',
       'frc%3Aj_id119_selection': '0',
@@ -51,17 +51,20 @@ const generateOptions = (cookie: string, anno: number) =>
 
 const parseResponse = ($: cheerio.Root): SearchResult[] => {
   const results = [] as SearchResult[];
-  console.log($(".corso").first().children('* > a').length)
+  console.log($('.corso').first().children('* > a').length);
 
-  $('.corso').each((_, elem) => {    
+  $('.corso').each((_, elem) => {
     const name = $(elem).children('.denominazione').first().text();
     const links = [] as { name: string; url: string }[];
     $(elem)
       .find('.sito > a, .sito > * > a')
       .each((_, link) => {
-        links.push({ 
-            name: $(link).text().trim(), 
-            url: (($(link).attr('href') ?? '').match(/oidCurriculum=(\d{4,})/)?.at(1) ?? "" )
+        links.push({
+          name: $(link).text().trim(),
+          url:
+            ($(link).attr('href') ?? '')
+              .match(/oidCurriculum=(\d{4,})/)
+              ?.at(1) ?? '',
         });
       });
     results.push({
@@ -73,34 +76,37 @@ const parseResponse = ($: cheerio.Root): SearchResult[] => {
 };
 
 const searchFromUnipa = async (req: NextApiRequest, res: NextApiResponse) => {
-  const q = req.query
-  if(q.anno === undefined ||  (q.anno instanceof Array) ) {
-    res.status(400).json({error: "Inserisci l'anno di ricerca"})
-    return
+  const q = req.query;
+  if (q.anno === undefined || q.anno instanceof Array) {
+    res.status(400).json({ error: "Inserisci l'anno di ricerca" });
+    return;
   }
-  const anno = parseInt(q.anno)
+  const anno = parseInt(q.anno);
   const cookie_getter = await fetch(SEARCH_URL);
   const _cookie_header = cookie_getter.headers.get('set-cookie');
-  if (_cookie_header === null) {
+  if (_cookie_header === null || _cookie_header === undefined) {
     console.log('Nessun cookie, danno');
-    res.status(500).send('Qualcosa è andato storto');
+    res.status(500).json({ error: 'Qualcosa è andato storto' });
     return;
   }
   const response = await fetch(
     SEARCH_URL,
     generateOptions(_cookie_header, anno)
   );
+
   const body = await response.text();
   const cheerio = await import('cheerio');
   const $ = cheerio.load(body);
   if (!$('#app')) {
-    res.status(500).send('Qualcosa è andato storto');
-    return;
+    return res.status(500).json({ error: 'Qualcosa è andato storto' });
   }
-
-  return res.status(200).setHeader("Cache-Control", `max-age=0, s-maxage=${(60 * 60 * 24) * 1}`).json(parseResponse($));
+  // return res.setHeader("Content-Type", "text/html").send(body)
+  return res
+    .status(200)
+    .setHeader('Cache-Control', `max-age=0, s-maxage=${60 * 60 * 24 * 1}`)
+    .json(parseResponse($));
 };
 
-export const API_SEARCH_UNIPA_URL = "/api/unipa/search"
+export const API_SEARCH_UNIPA_URL = '/api/unipa/search';
 
 export default searchFromUnipa;
