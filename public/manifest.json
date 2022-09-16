@@ -1,5 +1,5 @@
 {
-  "name": "TPTP",
+  "name": "TPTP - Calcola il tuo voto di Laurea",
   "short_name": "TPTP",
   "start_url": "/",
   "scope": "/",
@@ -7,11 +7,9 @@
   "theme_color": "#ffffff",
   "background_color": "#BEBEBE",
   "auhor": "ExalFabu",
-  "optional_permissions": [
-    "clipboardRead"
-  ],
-  "version": "2.0.0a0",
-  "version_name": "2.0.0-alpha-0",
+  "description": "TPTP ti permette di calcolare il tuo Voto di Laurea e la tua Media Universitaria. Inserisci i tuoi corsi ed i relativi voti ed il calcolo sarà automatico. Se possibile, potrai importare le materie automaticamente",
+  "version": "2.1.0a0",
+  "version_name": "2.1.0-alpha-0",
   "icons": [
     {
       "src": "/images/manifest-icon-192.maskable.png",

@@ -14,15 +14,17 @@ const gtagCode = `window.dataLayer = window.dataLayer || [];
 const SchemaORG = {
     "@context": "https://schema.org/",
     "@type": "WebApplication",
-    "name": "TPTP",
+    "name": "TPTP - Calcola il tuo voto finale e la tua media universitaria",
     "url": "https://tptp.vercel.app",
-    "description": "Calcola il voto finale e la tua media universitaria",
-    "image": "https://tptp.vercel.app/images/TPTP-w-bgless.png",
-    "alternateName": "TPTP - Calcola il voto finale e la tua media universitaria",
-    "keywords": "università,media,unipa,calcolo media",
+    "description": "TPTP ti permette di calcolare il tuo Voto di Laurea e la tua Media Universitaria. \
+                    Inserisci i tuoi corsi ed i relativi voti ed il calcolo sarà automatico. \
+                    Se possibile, potrai importare le materie automaticamente",
+    "image": "https://tptp.vercel.app/images/TPTP-b-bgless.png",
+    "alternateName": "TPTP",
+    "keywords": "università,media,unipa,calcolo media,media ponderata,voto finale laurea,voto finale,voto",
     "applicationCategory": "Utility",
     "operatingSystem": "Windows,Linux,MacOS,iOS,Android",
-    "softwareVersion": "2.0"
+    "softwareVersion": "2.1"
 }
 
 
@@ -32,14 +34,14 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     return (
         <ChakraProvider theme={theme}>
             <Head>
-                <title>TPTP</title>
+                <title>{SchemaORG['name']}</title>
                 <meta name="viewport" content="width=device-width,initial-scale=1" />
-                <meta name="description" content="Calcola il voto finale e la tua media universitaria" />
+                <meta name="description" content={SchemaORG['description']} />
                 {/* Facebook meta tags*/}
                 <meta property="og:title" content="TPTP" key="og:title" />
                 <meta
                     property="og:description"
-                    content="Calcola il voto finale e la tua media universitaria"
+                    content={SchemaORG['description']}
                     key="og:description"
                 />
                 <meta property="og:url" content="https://tptp.vercel.app/" />
@@ -51,7 +53,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 <meta property="twitter:title" content="TPTP" key="twitter:title" />
                 <meta
                     property="twitter:description"
-                    content="Calcola il voto finale e la tua media universitaria"
+                    content={SchemaORG['description']}
                     key="twitter:description"
                 />
                 <meta property="twitter:card" content="summary" />
@@ -72,10 +74,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 <meta name="msapplication-config" content="/images/browserconfig.xml" />
                 {/* 
                 //@ts-ignore */}
-                <meta name="theme-color" content={lightBackground} media="(prefers-color-scheme: light)"/>
+                <meta name="theme-color" content={lightBackground} media="(prefers-color-scheme: light)" />
                 {/* 
                 //@ts-ignore */}
-                <meta name="theme-color" content={darkBackground} media="(prefers-color-scheme: dark)"/>
+                <meta name="theme-color" content={darkBackground} media="(prefers-color-scheme: dark)" />
 
                 <link rel="apple-touch-icon" href="/images/apple-icon-180.png" />
                 <link rel="apple-touch-startup-image" href="/images/apple-splash-2048-2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
