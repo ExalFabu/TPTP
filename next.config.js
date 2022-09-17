@@ -27,6 +27,14 @@ const nextConfig = {
     return config;
   },
   productionBrowserSourceMaps: true,
+  rewrites: async () => {
+    return [
+      {
+        source: '/sitemap.xml',
+        destination: '/api/sitemap',
+      },
+    ];
+  },
 };
 
 module.exports = withPlugins([withBundleAnalyzer, pwa], nextConfig);
