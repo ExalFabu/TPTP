@@ -23,7 +23,7 @@ const SchemaORG = {
     "keywords": "università,media,unipa,calcolo media,media ponderata,voto finale laurea,voto finale,voto",
     "applicationCategory": "Utility",
     "operatingSystem": "Windows,Linux,MacOS,iOS,Android",
-    "softwareVersion": "2.1"
+    "softwareVersion": "2.2"
 }
 
 
