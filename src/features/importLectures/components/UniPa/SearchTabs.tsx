@@ -85,7 +85,7 @@ const SearchResultList: React.FC<{ results: SearchResult[], setUrl: Dispatch<Set
             if (cds.links.length === 1) {
                 return <Box pt={2} fontWeight={"semibold"} textDecorationLine={"underline"} as="button" w="100%" boxShadow={"0 -1px 0 #fff"} key={cds.links[0].url} onClick={() => setUrl(cds.links[0].url)}>{cds.name}</Box>
             }
-            return <Grid gridTemplateColumns={"1fr 1fr"} pt={2} w="100%" boxShadow={"0 -1px 0 #fff"} gap={2} justifyItems="center" textAlign={"center"} alignItems="center">
+            return <Grid gridTemplateColumns={"1fr 1fr"} key={cds.name} pt={2} w="100%" boxShadow={"0 -1px 0 #fff"} gap={2} justifyItems="center" textAlign={"center"} alignItems="center">
                 <GridItem className="cdsmultiple" rowSpan={cds.links.length} colSpan={1}>
                     <Box>{cds.name}</Box>
                 </GridItem>

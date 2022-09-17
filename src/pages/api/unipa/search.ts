@@ -59,12 +59,14 @@ const parseResponse = ($: cheerio.Root): SearchResult[] => {
     $(elem)
       .find('.sito > a, .sito > * > a')
       .each((_, link) => {
+        let match = ($(link).attr('href') ?? '').match(
+          /oidCurriculum=(\d{4,})/
+        );
+        const url = Array.isArray(match) && match.length > 1 ? match[1] : null;
+        if (url === null) return;
         links.push({
           name: $(link).text().trim(),
-          url:
-            ($(link).attr('href') ?? '')
-              .match(/oidCurriculum=(\d{4,})/)
-              ?.at(1) ?? '',
+          url,
         });
       });
     results.push({
