@@ -1,7 +1,7 @@
 import { Button, Menu, MenuButton, MenuItem, MenuList, useDisclosure } from "@chakra-ui/react"
 import React from "react"
 import { FaCloudDownloadAlt } from "react-icons/fa"
-import ModalFromUnipa, { UnipaLabel } from "./components/UniPa/ModalFromUnipa"
+import ModalFromUnipa, { UnipaLabel } from "./components/UniPa/ModalWrapper"
 
 const ImportLecture: React.FC = () => {
     const { isOpen: isOpenUnipa, onOpen: onOpenUnipa, onClose: onCloseUnipa } = useDisclosure()
