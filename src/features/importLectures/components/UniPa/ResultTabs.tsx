@@ -1,7 +1,9 @@
 import {
     AlertDialog,
     AlertDialogBody, AlertDialogCloseButton, AlertDialogContent, AlertDialogFooter,
-    AlertDialogHeader, AlertDialogOverlay, Button, Checkbox, CSSObject, Flex, Grid, GridItem, Skeleton, Stack, Switch, Tab, Table, TableContainer, TabList, TabPanel, TabPanels, Tabs, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue, useDisclosure
+    AlertDialogHeader, AlertDialogOverlay, Button, Checkbox, CSSObject, Grid, GridItem,
+    Switch, Tab, Table, TableContainer, TabList, TabPanel, TabPanels, Tabs, Tbody, Td,
+    Text, Th, Thead, Tr, useColorModeValue, useDisclosure
 } from "@chakra-ui/react"
 import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import { useAppDispatch } from "../../../../app/hooks"
@@ -89,7 +91,7 @@ const ImportableLecturesTable = ({ list, checkboxAction, switchAction }: { list:
     const tdProps = dubiousTable ? { p: 1.5 } : { px: 0, py: 1 }
     const TableBody = ({ i }: { i: ImportableLectures }) => useMemo(() => {
         return (
-            <Tr>
+            <Tr key={i._id}>
                 <Td {...tdProps}>
                     <Text textAlign={"center"} fontSize="md">{i.name}</Text>
                 </Td>
@@ -118,7 +120,7 @@ const ImportableLecturesTable = ({ list, checkboxAction, switchAction }: { list:
                 </Tr>
             </Thead>
             <Tbody verticalAlign={"center"}>
-                {list.map(i => <TableBody i={i} />)}
+                {list.map(i => <TableBody key={i._id} i={i} />)}
             </Tbody>
         </Table>
     )

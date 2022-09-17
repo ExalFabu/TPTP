@@ -1,4 +1,4 @@
-import { ChakraProvider, theme } from '@chakra-ui/react'
+import { ChakraProvider, theme, VisuallyHidden } from '@chakra-ui/react'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import Script from 'next/script'
@@ -133,6 +133,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 <link rel="apple-touch-startup-image" href="/images/apple-splash-dark-640-1136.png" media="(prefers-color-scheme: dark) and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
                 <link rel="apple-touch-startup-image" href="/images/apple-splash-dark-1136-640.png" media="(prefers-color-scheme: dark) and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" />
             </Head>
+            <VisuallyHidden>
+                <h1>{SchemaORG['name']}</h1>
+                <p>{SchemaORG['description']}</p>
+            </VisuallyHidden>
             <Provider store={store}>
                 <Component {...pageProps} />
             </Provider>

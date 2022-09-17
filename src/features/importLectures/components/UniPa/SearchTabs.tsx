@@ -1,9 +1,10 @@
-import { LinkIcon, DownloadIcon, ArrowDownIcon } from '@chakra-ui/icons'
-import { InputGroup, InputLeftAddon, Input, IconButton, ButtonGroup, Button, HStack, Grid, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, GridItem, Container, Box, VStack } from '@chakra-ui/react'
-import { data } from 'cheerio/lib/api/attributes'
+import { ArrowDownIcon } from '@chakra-ui/icons'
+import {
+    InputGroup, Input, Button, Grid, NumberInput,
+    NumberInputField, GridItem, Box, VStack, useToast
+} from '@chakra-ui/react'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import { unstable_batchedUpdates } from 'react-dom'
-import { FaPaste } from 'react-icons/fa'
 import { API_SEARCH_UNIPA_URL, SearchResult } from '../../../../pages/api/unipa/search'
 
 const SearchForm: React.FC<{ updateResults: (name: string, year: number) => void }> = React.memo(({ updateResults }) => {
@@ -103,6 +104,7 @@ const SearchWrapper: React.FC<{ setUrl: Dispatch<SetStateAction<string>> }> = ({
     const [cdsFound, setCdsFound] = useState([] as SearchResult[])
     const [cdsFiltered, setCdsFiltered] = useState([] as SearchResult[])
     const [lastYearRequested, setLastYear] = useState(0)
+    const toast = useToast()
 
     const updateResults: (name: string, year: number) => void = async (name, year) => {
         if (lastYearRequested === year) {
@@ -111,20 +113,44 @@ const SearchWrapper: React.FC<{ setUrl: Dispatch<SetStateAction<string>> }> = ({
             ))
             return
         }
-        const response = await fetch(`${API_SEARCH_UNIPA_URL}?anno=${year}`)
-        if (response.status !== 200) {
-            return
+        try {
+            const response = await fetch(`${API_SEARCH_UNIPA_URL}?anno=${year}`)
+            if (response.status !== 200) {
+                throw new Error("Something went horribly wrong");
+            }
+            const results = await response.json() as SearchResult[]
+            unstable_batchedUpdates(() => {
+                setCdsFound(results)
+                setCdsFiltered(results.filter(
+                    result => result.name.toLowerCase().includes(name.toLowerCase())
+                ))
+                setLastYear(year)
+            })
+        } catch {
+            if (!navigator.onLine) {
+                toast({
+                    title: 'Offline',
+                    description: "Non puoi importare le materie senza una connessione ad Internet",
+                    status: 'info',
+                    duration: 1500,
+                    isClosable: false,
+                    position: "top",
+                    variant: "top-accent"
+                })
+            }
+            else {
+                toast({
+                    title: 'Oops',
+                    description: "Qualcosa è andato storto... riprova più tardi",
+                    status: 'error',
+                    duration: 1500,
+                    isClosable: true,
+                    position: "top",
+                    variant: "left-accent"
+                })
+            }
         }
-        const results = await response.json() as SearchResult[]
-        unstable_batchedUpdates(() => {
-            setCdsFound(results)
-            setCdsFiltered(results.filter(
-                result => result.name.toLowerCase().includes(name.toLowerCase())
-            ))
-            setLastYear(year)
-        })
         return
-
     }
 
     return <>
