@@ -55,7 +55,7 @@ const parseResponse = ($: cheerio.Root /*, sc: typeof import ('string-comparison
 
 const searchFromPolito = async (req: NextApiRequest, res: NextApiResponse) => {
   const q = req.query;
-  if(q.tipo === undefined || q.tipo instanceof Array) {
+  if(q.tipo === undefined || q.tipo instanceof Array || (q.tipo !== CourseType.LT && q.tipo !== CourseType.LM)) {
     res.status(400).json({ error: "Inserisci il tipo di corso" });
     return;
   }
@@ -63,8 +63,8 @@ const searchFromPolito = async (req: NextApiRequest, res: NextApiResponse) => {
   //   res.status(400).json({ error: "Inserisci il nome del corso" });
   //   return;
   // }
-  const tipo = q.tipo as keyof typeof CourseType;
-  const response = await fetch(SEARCH_URL[CourseType[tipo]]);
+  const tipo = q.tipo as CourseType;
+  const response = await fetch(SEARCH_URL[tipo]);
   const body = await response.text();
   const cheerio = await import('cheerio');
   const sc = await import('string-comparison');
