@@ -13,7 +13,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"> 
       <url>
         <loc>https://tptp.vercel.app/</loc>
-        <lastmod>2022-09-17</lastmod>
+        <lastmod>2023-03-10</lastmod>
       </url>
       </urlset>`
   
